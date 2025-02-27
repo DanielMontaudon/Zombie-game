@@ -2,55 +2,116 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    private CharacterController controller;
 
-    public float speed = 12f;
-    public float gravity = -18f;
-    public float jumpHeight = 3f;
+    [Header("Movement")]
+    public float moveSpeed;
 
-    public Transform groundCheck;
-    public float groundDistance = 0.4f;
-    public LayerMask groundMask;
+    public float groundDrag;
 
-    private float x;
-    private float z;
+    public float jumpForce;
+    public float jumpCooldown;
+    public float airMultiplier;
+    bool readyToJump = true;
 
-    Vector3 velocity;
-    bool isGrounded;
+    [Header("Keybinds")]
+    public KeyCode jumpKey = KeyCode.Space;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [Header("Ground Check")]
+    public float playerHeight;
+    public LayerMask whatIsGround;
+    bool grounded;
+
+    public Transform orientation;
+
+    float horizontalInput;
+    float verticalInput;
+
+    Vector3 moveDirection;
+
+    Rigidbody rb;
+
+    private void Start()
     {
-        controller = GetComponent<CharacterController>();
+        rb = GetComponent<Rigidbody>();
+        rb.freezeRotation = true;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void FixedUpdate()
     {
-        //Makes a point on groundcheck object to see if collides with anything
-        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
-
-        //Reset velocity once on ground
-        if(isGrounded && velocity.y < 0)
-        {
-            velocity.y = -2f;
-            x = Input.GetAxis("Horizontal");
-            z = Input.GetAxis("Vertical");
-        }
+        MovePlayer();
+    }
+    private void Update()
+    {
+        //ground check
+        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
         
-        Vector3 move = transform.right * x + transform.forward * z;
+        MyInput();
+        SpeedControl();
 
-        controller.Move(move * Time.deltaTime * speed);
+        //handle drag
+        if (grounded)
+            rb.linearDamping = groundDrag;
+        else
+            rb.linearDamping = 0;
 
-
-        if(Input.GetButtonDown("Jump") && isGrounded)
-        {
-            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
-        }
-
-        //gravity of y = 1/2gravity * time^2
-        velocity.y += gravity * Time.deltaTime;
-
-        controller.Move(velocity * Time.deltaTime);
     }
+
+    //Take input from wasd
+    private void MyInput()
+    {
+        horizontalInput = Input.GetAxisRaw("Horizontal");
+        verticalInput = Input.GetAxisRaw("Vertical");
+
+        //when to jump
+        if(Input.GetKey(jumpKey) && readyToJump && grounded)
+        {
+            readyToJump = false;
+            Jump();
+
+            //lets you continue to jump if key is held down
+            Invoke(nameof(ResetJump), jumpCooldown);
+        }
+    }
+
+    private void MovePlayer()
+    {
+        //calculate movement direction
+        moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
+
+        // on ground
+        if(grounded)
+            rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
+        // in air
+        else if(!grounded)
+            rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
+
+    }
+
+    private void SpeedControl()
+    {
+        Vector3 flatVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+
+        // limit velocity if needed,
+        // if faster than moveSpeed, apply new velocity to rigidBody
+        if(flatVel.magnitude > moveSpeed)
+        {
+            Vector3 limitedVel = flatVel.normalized * moveSpeed;
+            rb.linearVelocity = new Vector3(limitedVel.x, rb.linearVelocity.y, limitedVel.z);
+        }
+    }
+
+    private void Jump()
+    {
+        //reset y velocity to always jump to same height
+        rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+
+        //Impulse only applies once
+        rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+    }
+
+    private void ResetJump()
+    {
+        readyToJump = true;
+    }
+
 }
