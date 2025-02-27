@@ -15,6 +15,8 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Keybinds")]
     public KeyCode jumpKey = KeyCode.Space;
+    public KeyCode sprintKey = KeyCode.LeftShift;
+
 
     [Header("Ground Check")]
     public float playerHeight;
@@ -26,6 +28,12 @@ public class PlayerMovement : MonoBehaviour
     float horizontalInput;
     float verticalInput;
 
+    float timeInterval = 0f;
+    float setMoveSpeed;
+    PlayerAttributes stats;
+
+    public bool isSprinting = false;
+
     Vector3 moveDirection;
 
     Rigidbody rb;
@@ -34,6 +42,10 @@ public class PlayerMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
+
+        setMoveSpeed = moveSpeed;
+
+        stats = GetComponent<PlayerAttributes>();
     }
 
     private void FixedUpdate()
@@ -70,6 +82,20 @@ public class PlayerMovement : MonoBehaviour
 
             //lets you continue to jump if key is held down
             Invoke(nameof(ResetJump), jumpCooldown);
+        }
+        print(stats.stamina);
+        if (Input.GetKey(sprintKey) && grounded && stats.stamina > 0)
+        {
+            isSprinting = true;
+            moveSpeed = setMoveSpeed * 2f;
+            DrainStamina(1f);
+            //print(isSprinting);
+        }
+        else
+        {
+            moveSpeed = setMoveSpeed;
+            isSprinting = false;
+            //print(isSprinting);
         }
     }
 
@@ -114,4 +140,18 @@ public class PlayerMovement : MonoBehaviour
         readyToJump = true;
     }
 
+    private void Sprint()
+    {
+
+    }
+
+    private void DrainStamina(float stamCost)
+    {
+        timeInterval += Time.deltaTime;
+        if (timeInterval >= .1f)
+        {
+            timeInterval = 0;
+            stats.stamina -= stamCost;
+        }
+    }
 }
