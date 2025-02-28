@@ -21,7 +21,7 @@ public class PlayerAttributes : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        RechargeStamina();
+        //RechargeStamina();
     }
     private void RechargeStamina()
     {

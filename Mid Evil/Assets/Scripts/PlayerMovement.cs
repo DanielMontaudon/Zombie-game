@@ -4,18 +4,28 @@ public class PlayerMovement : MonoBehaviour
 {
 
     [Header("Movement")]
-    public float moveSpeed;
+    private float moveSpeed;
+    public float walkSpeed;
+    public float sprintSpeed;
 
     public float groundDrag;
 
+    [Header("Jumping")]
     public float jumpForce;
     public float jumpCooldown;
     public float airMultiplier;
-    bool readyToJump = true;
+    bool readyToJump;
+
+    [Header("Crouching")]
+    public float crouchSpeed;
+    public float crouchYScale;
+    private float startYScale;
 
     [Header("Keybinds")]
     public KeyCode jumpKey = KeyCode.Space;
     public KeyCode sprintKey = KeyCode.LeftShift;
+    public KeyCode crouchKey = KeyCode.LeftControl;
+        
 
 
     [Header("Ground Check")]
@@ -28,22 +38,32 @@ public class PlayerMovement : MonoBehaviour
     float horizontalInput;
     float verticalInput;
 
-    float timeInterval = 0f;
-    float setMoveSpeed;
-    PlayerAttributes stats;
-
-    public bool isSprinting = false;
-
     Vector3 moveDirection;
 
     Rigidbody rb;
+
+    public MovementState state;
+    public enum MovementState
+    {
+        walking,
+        sprinting,
+        crouching,
+        air
+    }
+
+    //My stuff
+    float timeInterval = 0f;
+    PlayerAttributes stats;
+    public bool isSprinting = false;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
 
-        setMoveSpeed = moveSpeed;
+        readyToJump = true;
+
+        startYScale = transform.localScale.y;
 
         stats = GetComponent<PlayerAttributes>();
     }
@@ -59,12 +79,13 @@ public class PlayerMovement : MonoBehaviour
         
         MyInput();
         SpeedControl();
+        StateHandler();
 
         //handle drag
         if (grounded)
             rb.linearDamping = groundDrag;
         else
-            rb.linearDamping = 0;
+            rb.linearDamping = 0.5f;
 
     }
 
@@ -83,19 +104,45 @@ public class PlayerMovement : MonoBehaviour
             //lets you continue to jump if key is held down
             Invoke(nameof(ResetJump), jumpCooldown);
         }
-        print(stats.stamina);
-        if (Input.GetKey(sprintKey) && grounded && stats.stamina > 0)
+
+        //start crouch
+        if(Input.GetKey(crouchKey))
         {
-            isSprinting = true;
-            moveSpeed = setMoveSpeed * 2f;
-            DrainStamina(1f);
-            //print(isSprinting);
+            transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
         }
+
+        //stop crouch
+        if (Input.GetKeyUp(crouchKey))
+        {
+            transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
+        }
+    }
+
+    private void StateHandler()
+    {
+        //Mode - Crouching
+        if(Input.GetKey(crouchKey) && grounded)
+        {
+            state = MovementState.crouching;
+            moveSpeed = crouchSpeed;
+            rb.AddForce(Vector3.down * 0.5f, ForceMode.Impulse);
+        }
+        //Mode - Sprinting
+        else if(grounded && Input.GetKey(sprintKey))
+        {
+            state = MovementState.sprinting;
+            moveSpeed = sprintSpeed;
+        }
+        //Mode - Walking
+        else if(grounded)
+        {
+            state = MovementState.sprinting;
+            moveSpeed = walkSpeed;
+        }
+        //Mode Air
         else
         {
-            moveSpeed = setMoveSpeed;
-            isSprinting = false;
-            //print(isSprinting);
+            state = MovementState.air;
         }
     }
 
@@ -138,11 +185,6 @@ public class PlayerMovement : MonoBehaviour
     private void ResetJump()
     {
         readyToJump = true;
-    }
-
-    private void Sprint()
-    {
-
     }
 
     private void DrainStamina(float stamCost)
