@@ -34,7 +34,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Ground Check")]
     public float playerHeight;
     public LayerMask whatIsGround;
-    bool grounded;
+    public bool grounded;
 
     [Header("Slope Handling")]
     public float maxSlopeAngle;
@@ -81,10 +81,20 @@ public class PlayerMovement : MonoBehaviour
     }
     private void Update()
     {
+
+        print(moveSpeed);
+
         //ground check
-        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.3f, whatIsGround);
-        roofAbove = Physics.Raycast(transform.position, Vector3.up, playerHeight * 0.5f + 0.3f, whatIsGround);
-        Debug.DrawRay(transform.position, Vector3.up * (playerHeight * 0.5f));
+        grounded = Physics.Raycast(transform.position, Vector3.down, 0.3f, whatIsGround);
+        //grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.3f, whatIsGround);
+
+        roofAbove = Physics.Raycast(transform.position, Vector3.up, playerHeight + 0.3f, whatIsGround);
+        //roofAbove = Physics.Raycast(transform.position, Vector3.up, playerHeight * 0.5f + 0.3f, whatIsGround);
+
+        //Make a debug mode function
+        //Debug.DrawRay(transform.position, Vector3.up * playerHeight);
+        Debug.DrawRay(transform.position, Vector3.down * 0.3f);
+
         //Physics.CapsuleCast(transform.position, 2f, Vector3.up, out crouchHit, playerHeight * 0.5f + 0.3f));
 
         MyInput();
@@ -143,10 +153,10 @@ public class PlayerMovement : MonoBehaviour
         {
             state = MovementState.crouching;
             moveSpeed = crouchSpeed;
-            rb.AddForce(Vector3.down * 0.5f, ForceMode.Impulse);
+            //rb.AddForce(Vector3.down * 0.5f, ForceMode.Impulse);
         }
         //Mode - Sprinting
-        else if(grounded && Input.GetKey(sprintKey))
+        else if(grounded && Input.GetKey(sprintKey) && !roofAbove)
         {
             state = MovementState.sprinting;
             moveSpeed = sprintSpeed;
@@ -154,7 +164,7 @@ public class PlayerMovement : MonoBehaviour
         //Mode - Walking
         else if(grounded)
         {
-            state = MovementState.sprinting;
+            state = MovementState.walking;
             moveSpeed = walkSpeed;
         }
         //Mode - Air
@@ -232,7 +242,8 @@ public class PlayerMovement : MonoBehaviour
     private bool OnSlope()
     {
         //Shoot a raycast down from middle of player, down to the floor (half player hight) and a little more 
-        if(Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight * 0.5f + 0.3f))
+        //if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight * 0.5f + 0.3f))
+        if(Physics.Raycast(transform.position, Vector3.down, out slopeHit, 0.3f))
         {
             //How steep the slope player is standing on is
             float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
