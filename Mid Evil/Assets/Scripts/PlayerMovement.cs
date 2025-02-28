@@ -20,6 +20,9 @@ public class PlayerMovement : MonoBehaviour
     public float crouchSpeed;
     public float crouchYScale;
     private float startYScale;
+    private RaycastHit crouchHit;
+    bool roofAbove;
+
 
     [Header("Keybinds")]
     public KeyCode jumpKey = KeyCode.Space;
@@ -32,6 +35,10 @@ public class PlayerMovement : MonoBehaviour
     public float playerHeight;
     public LayerMask whatIsGround;
     bool grounded;
+
+    [Header("Slope Handling")]
+    public float maxSlopeAngle;
+    private RaycastHit slopeHit;
 
     public Transform orientation;
 
@@ -75,8 +82,11 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         //ground check
-        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
-        
+        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.3f, whatIsGround);
+        roofAbove = Physics.Raycast(transform.position, Vector3.up, playerHeight * 0.5f + 0.3f, whatIsGround);
+        Debug.DrawRay(transform.position, Vector3.up * (playerHeight * 0.5f));
+        //Physics.CapsuleCast(transform.position, 2f, Vector3.up, out crouchHit, playerHeight * 0.5f + 0.3f));
+
         MyInput();
         SpeedControl();
         StateHandler();
@@ -108,11 +118,19 @@ public class PlayerMovement : MonoBehaviour
         //start crouch
         if(Input.GetKey(crouchKey))
         {
+            //Vector3 crouchScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
+            //transform.localScale = Vector3.Lerp(transform.localScale, crouchScale, Time.deltaTime * 10f);
             transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
         }
 
         //stop crouch
-        if (Input.GetKeyUp(crouchKey))
+        if (Input.GetKeyUp(crouchKey) && roofAbove)
+        {
+            //Vector3 uncrouchScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
+            //transform.localScale = Vector3.Lerp(transform.localScale, uncrouchScale, Time.deltaTime * 10f);
+            //transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
+        }
+        else if(!Input.GetKey(crouchKey) && !roofAbove)
         {
             transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
         }
@@ -139,7 +157,7 @@ public class PlayerMovement : MonoBehaviour
             state = MovementState.sprinting;
             moveSpeed = walkSpeed;
         }
-        //Mode Air
+        //Mode - Air
         else
         {
             state = MovementState.air;
@@ -151,25 +169,49 @@ public class PlayerMovement : MonoBehaviour
         //calculate movement direction
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
+        //on slope
+        if (OnSlope())
+        {
+            rb.AddForce(GetSlopemoveDirection() * moveSpeed * 10f, ForceMode.Force);
+
+            //if (rb.linearVelocity.y > 0)
+                //rb.AddForce(Vector3.down * 80f, ForceMode.Force);
+        }
+
         // on ground
-        if(grounded)
+        else if (grounded)
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
         // in air
-        else if(!grounded)
+        else if (!grounded)
+        {
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
+            rb.AddForce(Vector3.down * 1.5f, ForceMode.Impulse);
+        }
+
+        //turn gravity off while on slope
+        rb.useGravity = !OnSlope();
 
     }
 
     private void SpeedControl()
     {
-        Vector3 flatVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
-
-        // limit velocity if needed,
-        // if faster than moveSpeed, apply new velocity to rigidBody
-        if(flatVel.magnitude > moveSpeed)
+        if (OnSlope())
         {
-            Vector3 limitedVel = flatVel.normalized * moveSpeed;
-            rb.linearVelocity = new Vector3(limitedVel.x, rb.linearVelocity.y, limitedVel.z);
+            if (rb.linearVelocity.magnitude > moveSpeed)
+                rb.linearVelocity = rb.linearVelocity.normalized * moveSpeed;
+        }
+        //limiting spped on ground or in air
+        else
+        {
+            Vector3 flatVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+
+            // limit velocity if needed,
+            // if faster than moveSpeed, apply new velocity to rigidBody
+            if (flatVel.magnitude > moveSpeed)
+            {
+                Vector3 limitedVel = flatVel.normalized * moveSpeed;
+                rb.linearVelocity = new Vector3(limitedVel.x, rb.linearVelocity.y, limitedVel.z);
+            }
         }
     }
 
@@ -185,6 +227,25 @@ public class PlayerMovement : MonoBehaviour
     private void ResetJump()
     {
         readyToJump = true;
+    }
+
+    private bool OnSlope()
+    {
+        //Shoot a raycast down from middle of player, down to the floor (half player hight) and a little more 
+        if(Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight * 0.5f + 0.3f))
+        {
+            //How steep the slope player is standing on is
+            float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
+            //print(angle);
+            return angle < maxSlopeAngle && angle != 0;
+        }
+
+        return false;
+    }
+
+    private Vector3 GetSlopemoveDirection()
+    {
+        return Vector3.ProjectOnPlane(moveDirection, slopeHit.normal).normalized;
     }
 
     private void DrainStamina(float stamCost)
