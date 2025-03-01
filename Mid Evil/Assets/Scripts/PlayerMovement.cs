@@ -61,7 +61,6 @@ public class PlayerMovement : MonoBehaviour
     //My stuff
     float timeInterval = 0f;
     PlayerAttributes stats;
-    public bool isSprinting = false;
 
     private void Start()
     {
@@ -82,7 +81,7 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
 
-        print(moveSpeed);
+        print(stats.stamina);
 
         //ground check
         grounded = Physics.Raycast(transform.position, Vector3.down, 0.3f, whatIsGround);
@@ -92,8 +91,8 @@ public class PlayerMovement : MonoBehaviour
         //roofAbove = Physics.Raycast(transform.position, Vector3.up, playerHeight * 0.5f + 0.3f, whatIsGround);
 
         //Make a debug mode function
-        //Debug.DrawRay(transform.position, Vector3.up * playerHeight);
-        Debug.DrawRay(transform.position, Vector3.down * 0.3f);
+        Debug.DrawRay(transform.position, Vector3.up * playerHeight);
+        //Debug.DrawRay(transform.position, Vector3.down * 0.3f);
 
         //Physics.CapsuleCast(transform.position, 2f, Vector3.up, out crouchHit, playerHeight * 0.5f + 0.3f));
 
@@ -128,9 +127,9 @@ public class PlayerMovement : MonoBehaviour
         //start crouch
         if(Input.GetKey(crouchKey))
         {
-            //Vector3 crouchScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
-            //transform.localScale = Vector3.Lerp(transform.localScale, crouchScale, Time.deltaTime * 10f);
-            transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
+            Vector3 crouchScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
+            transform.localScale = Vector3.Lerp(transform.localScale, crouchScale, Time.deltaTime * 10f);
+            //transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
         }
 
         //stop crouch
@@ -142,7 +141,9 @@ public class PlayerMovement : MonoBehaviour
         }
         else if(!Input.GetKey(crouchKey) && !roofAbove)
         {
-            transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
+            Vector3 uncrouchScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
+            transform.localScale = Vector3.Lerp(transform.localScale, uncrouchScale, Time.deltaTime * 10f);
+            //transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
         }
     }
 
@@ -156,8 +157,9 @@ public class PlayerMovement : MonoBehaviour
             //rb.AddForce(Vector3.down * 0.5f, ForceMode.Impulse);
         }
         //Mode - Sprinting
-        else if(grounded && Input.GetKey(sprintKey) && !roofAbove)
+        else if(grounded && Input.GetKey(sprintKey) && !roofAbove && stats.stamina > 5f)
         {
+            DrainStamina(5f);
             state = MovementState.sprinting;
             moveSpeed = sprintSpeed;
         }
@@ -259,13 +261,17 @@ public class PlayerMovement : MonoBehaviour
         return Vector3.ProjectOnPlane(moveDirection, slopeHit.normal).normalized;
     }
 
+    //Drains stamina at >= float seconds
     private void DrainStamina(float stamCost)
     {
         timeInterval += Time.deltaTime;
-        if (timeInterval >= .1f)
+        if (timeInterval >= .2f)
         {
             timeInterval = 0;
             stats.stamina -= stamCost;
+
+            if (stats.stamina < 0)
+                stats.stamina = 0;
         }
     }
 }

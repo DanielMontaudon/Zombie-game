@@ -8,28 +8,42 @@ public class PlayerAttributes : MonoBehaviour
 
 
     float timeInterval = 0f;
-    public PlayerMovement characterMovement;
+    public PlayerMovement playerMovement;
 
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        characterMovement = gameObject.GetComponent<PlayerMovement>();
+        playerMovement = gameObject.GetComponent<PlayerMovement>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        //RechargeStamina();
+        RechargeStamina();
     }
     private void RechargeStamina()
     {
         timeInterval += Time.deltaTime;
-        if (timeInterval >= .1f && stamina < 100 && !characterMovement.isSprinting)
+        if (playerMovement.state == PlayerMovement.MovementState.walking || playerMovement.state == PlayerMovement.MovementState.crouching)
         {
-            timeInterval = 0;
-            stamina += 1;
+            if (stamina < 20)
+            {
+                if (timeInterval >= .5f && stamina < 100)
+                {
+                    timeInterval = 0;
+                    stamina += 1;
+                }
+            }
+            else
+            {
+                if (timeInterval >= .1f && stamina < 100)
+                {
+                    timeInterval = 0;
+                    stamina += 1;
+                }
+            }
         }
     }
 }
