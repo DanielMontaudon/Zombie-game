@@ -81,20 +81,17 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
 
-        print(stats.stamina);
+        //Debug
+        //OnDrawGizmos();
 
         //ground check
-        grounded = Physics.Raycast(transform.position, Vector3.down, 0.3f, whatIsGround);
+        //grounded = Physics.Raycast(transform.position, Vector3.down, 0.3f, whatIsGround);
+        grounded = Physics.CheckSphere(transform.position, 0.3f, whatIsGround);
         //grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.3f, whatIsGround);
 
+        //roof check
         roofAbove = Physics.Raycast(transform.position, Vector3.up, playerHeight + 0.3f, whatIsGround);
         //roofAbove = Physics.Raycast(transform.position, Vector3.up, playerHeight * 0.5f + 0.3f, whatIsGround);
-
-        //Make a debug mode function
-        Debug.DrawRay(transform.position, Vector3.up * playerHeight);
-        //Debug.DrawRay(transform.position, Vector3.down * 0.3f);
-
-        //Physics.CapsuleCast(transform.position, 2f, Vector3.up, out crouchHit, playerHeight * 0.5f + 0.3f));
 
         MyInput();
         SpeedControl();
@@ -133,13 +130,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         //stop crouch
-        if (Input.GetKeyUp(crouchKey) && roofAbove)
-        {
-            //Vector3 uncrouchScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
-            //transform.localScale = Vector3.Lerp(transform.localScale, uncrouchScale, Time.deltaTime * 10f);
-            //transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
-        }
-        else if(!Input.GetKey(crouchKey) && !roofAbove)
+        if(!Input.GetKey(crouchKey) && !roofAbove)
         {
             Vector3 uncrouchScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
             transform.localScale = Vector3.Lerp(transform.localScale, uncrouchScale, Time.deltaTime * 10f);
@@ -273,5 +264,19 @@ public class PlayerMovement : MonoBehaviour
             if (stats.stamina < 0)
                 stats.stamina = 0;
         }
+    }
+
+
+    private void OnDrawGizmos()
+    {
+
+        //roofAbove Ray
+        //Debug.DrawRay(transform.position, Vector3.up * playerHeight);
+
+        //grounded Ray
+        Debug.DrawRay(transform.position, Vector3.down * 0.3f);
+
+        Gizmos.color = new Color(1f,0f,1f,0.3f);
+        Gizmos.DrawSphere(transform.position, 0.3f);
     }
 }
