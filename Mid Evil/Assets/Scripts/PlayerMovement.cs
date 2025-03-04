@@ -85,13 +85,10 @@ public class PlayerMovement : MonoBehaviour
         //OnDrawGizmos();
 
         //ground check
-        //grounded = Physics.Raycast(transform.position, Vector3.down, 0.3f, whatIsGround);
         grounded = Physics.CheckSphere(transform.position, 0.3f, whatIsGround);
-        //grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.3f, whatIsGround);
 
         //roof check
         roofAbove = Physics.Raycast(transform.position, Vector3.up, playerHeight + 0.3f, whatIsGround);
-        //roofAbove = Physics.Raycast(transform.position, Vector3.up, playerHeight * 0.5f + 0.3f, whatIsGround);
 
         MyInput();
         SpeedControl();

@@ -2365,6 +2365,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 100
   stamina: 100
+  mana: 100
   playerMovement: {fileID: 0}
 --- !u!114 &2115770602
 MonoBehaviour:
@@ -2378,10 +2379,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 810274f460d60c446befe295787af863, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerCam: {fileID: 1415311926}
   leftHand: {fileID: 841177660}
   rightHand: {fileID: 2111981722}
-  leftSpell: {fileID: 0}
-  rigtSpell: {fileID: 0}
+  leftSpell: {fileID: 11400000, guid: cc7a7333c24999f4fb72eefb22ef7ae2, type: 2}
+  rightSpell: {fileID: 11400000, guid: 8bc21b76b2190e048b71625674c53f15, type: 2}
   leftKeybind: 323
   rightKeybind: 324
 --- !u!1660057539 &9223372036854775807
