@@ -1974,7 +1974,7 @@ GameObject:
   - component: {fileID: 2067131058}
   - component: {fileID: 2067131057}
   - component: {fileID: 2067131056}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Box 1 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2386,6 +2386,9 @@ MonoBehaviour:
   rightSpell: {fileID: 11400000, guid: 8bc21b76b2190e048b71625674c53f15, type: 2}
   leftKeybind: 323
   rightKeybind: 324
+  whatIsEnemy:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: AirSpell
   m_EditorClassIdentifier: 
   damage: 5
-  range: 50
+  range: 20
   spellType: 1
   manaCost: 20
   cooldown: 20
