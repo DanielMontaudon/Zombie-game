@@ -84,11 +84,22 @@ public class PlayerCombat : MonoBehaviour
     {
         if (spell.spellType == Spell.damageType.Lightning && playerStats.mana >= spell.manaCost)
         {
-            //Fix so you dont shoot through walls
-            //Debug.DrawRay(playerCam.position, playerCam.transform.forward * leftSpell.range);
-            if (Physics.Raycast(playerCam.position, playerCam.transform.forward, spell.range, whatIsEnemy))
+            RaycastHit raycastHit;
+            //Cast Ray straight in front of player 
+            bool rayHit = Physics.Raycast(playerCam.position, playerCam.transform.forward, out raycastHit, spell.range);
+            
+            //If something was hit
+            if (rayHit)
             {
-                print("Lightning casted");
+                //If that something was a Enemy
+                if(raycastHit.collider.CompareTag("Enemy"))
+                {
+                    //do something with enemy hit (take damage, shock, apply force)
+                    //raycastHit.collider.gameObject.GetComponent<EnemyAttributes>();
+                    print("Lightning casted on: " + raycastHit.collider.tag);
+                }
+
+                //Add some other spicy tags persay? (Explosive barrels, water)
             }
             playerStats.mana -= spell.manaCost;
         }

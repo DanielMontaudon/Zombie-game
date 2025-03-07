@@ -132,7 +132,7 @@ GameObject:
   - component: {fileID: 62787432}
   - component: {fileID: 62787431}
   m_Layer: 6
-  m_Name: Box 1 (2)
+  m_Name: Box 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -351,7 +351,7 @@ GameObject:
   - component: {fileID: 132714152}
   - component: {fileID: 132714151}
   m_Layer: 6
-  m_Name: Box 1 (4)
+  m_Name: Wall 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -666,7 +666,7 @@ GameObject:
   - component: {fileID: 294494913}
   - component: {fileID: 294494912}
   m_Layer: 6
-  m_Name: Ramp
+  m_Name: Ramp 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -774,7 +774,7 @@ GameObject:
   - component: {fileID: 334993330}
   - component: {fileID: 334993329}
   m_Layer: 6
-  m_Name: Box 1 (3)
+  m_Name: Box 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -971,8 +971,8 @@ Transform:
   m_GameObject: {fileID: 518576966}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 500, y: 0.47, z: 514.42}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 500, y: 1.27, z: 514.42}
+  m_LocalScale: {x: 1, y: 3, z: 3.32}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1773569562}
@@ -1021,7 +1021,7 @@ GameObject:
   - component: {fileID: 827497853}
   - component: {fileID: 827497852}
   m_Layer: 6
-  m_Name: Ramp (2)
+  m_Name: Roof
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1237,7 +1237,7 @@ GameObject:
   - component: {fileID: 858389392}
   - component: {fileID: 858389391}
   m_Layer: 6
-  m_Name: Box 1 (7)
+  m_Name: Wall 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1345,7 +1345,7 @@ GameObject:
   - component: {fileID: 969884728}
   - component: {fileID: 969884727}
   m_Layer: 6
-  m_Name: Box 1 (5)
+  m_Name: Wall 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1609,7 +1609,7 @@ GameObject:
   - component: {fileID: 1664886396}
   - component: {fileID: 1664886395}
   m_Layer: 6
-  m_Name: Box 1 (6)
+  m_Name: Wall 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1842,13 +1842,12 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 518576970}
+  - {fileID: 62787434}
+  - {fileID: 334993332}
   - {fileID: 132714150}
   - {fileID: 1664886394}
   - {fileID: 969884726}
   - {fileID: 858389390}
-  - {fileID: 2067131059}
-  - {fileID: 62787434}
-  - {fileID: 334993332}
   - {fileID: 294494915}
   - {fileID: 827497851}
   - {fileID: 1873112717}
@@ -1867,7 +1866,7 @@ GameObject:
   - component: {fileID: 1873112719}
   - component: {fileID: 1873112718}
   m_Layer: 6
-  m_Name: Ramp (1)
+  m_Name: Ramp 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1975,8 +1974,8 @@ GameObject:
   - component: {fileID: 2067131057}
   - component: {fileID: 2067131056}
   m_Layer: 7
-  m_Name: Box 1 (1)
-  m_TagString: Untagged
+  m_Name: Enemy
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2064,11 +2063,11 @@ Transform:
   m_GameObject: {fileID: 2067131055}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 495.36, y: 0.47, z: 518.05}
+  m_LocalPosition: {x: -5.33, y: 1.31, z: 15.659973}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1773569562}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2075654271
 GameObject:
@@ -2388,7 +2387,7 @@ MonoBehaviour:
   rightKeybind: 324
   whatIsEnemy:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -2396,4 +2395,5 @@ SceneRoots:
   - {fileID: 216644623}
   - {fileID: 2115770598}
   - {fileID: 1708107330}
+  - {fileID: 2067131059}
   - {fileID: 1773569562}

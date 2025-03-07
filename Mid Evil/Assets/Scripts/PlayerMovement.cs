@@ -80,10 +80,6 @@ public class PlayerMovement : MonoBehaviour
     }
     private void Update()
     {
-
-        //Debug
-        //OnDrawGizmos();
-
         //ground check
         grounded = Physics.CheckSphere(transform.position, 0.3f, whatIsGround);
 
@@ -137,8 +133,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void StateHandler()
     {
-        //Mode - Crouching
-        if(Input.GetKey(crouchKey) && grounded)
+        //Mode - Crouching (pressing key or forced into crouch)
+        if((Input.GetKey(crouchKey) && grounded) || (roofAbove && grounded))
         {
             state = MovementState.crouching;
             moveSpeed = crouchSpeed;
@@ -232,7 +228,6 @@ public class PlayerMovement : MonoBehaviour
     private bool OnSlope()
     {
         //Shoot a raycast down from middle of player, down to the floor (half player hight) and a little more 
-        //if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight * 0.5f + 0.3f))
         if(Physics.Raycast(transform.position, Vector3.down, out slopeHit, 0.3f))
         {
             //How steep the slope player is standing on is
@@ -268,10 +263,10 @@ public class PlayerMovement : MonoBehaviour
     {
 
         //roofAbove Ray
-        //Debug.DrawRay(transform.position, Vector3.up * playerHeight);
+        Debug.DrawRay(transform.position, Vector3.up * playerHeight);
 
         //grounded Ray
-        Debug.DrawRay(transform.position, Vector3.down * 0.3f);
+        //Debug.DrawRay(transform.position, Vector3.down * 0.3f);
 
         Gizmos.color = new Color(1f,0f,1f,0.3f);
         Gizmos.DrawSphere(transform.position, 0.3f);
