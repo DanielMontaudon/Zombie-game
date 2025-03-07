@@ -24,7 +24,7 @@ public class PlayerAttributes : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        print("Mana: " + mana + ", Stamina: " + stamina);
+        //print("Mana: " + mana + ", Stamina: " + stamina);
         RechargeStamina();
         RechargeMana();
     }

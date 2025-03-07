@@ -17,7 +17,7 @@ public class PlayerCombat : MonoBehaviour
 
     float startY;
     PlayerAttributes playerStats;
-
+    public LayerMask whatIsEnemy;
     bool leftOffCooldown = true;
     bool rightOffCooldown = true;
 
@@ -34,7 +34,7 @@ public class PlayerCombat : MonoBehaviour
         MovementHandle();
         SpellLogic();
     }
-
+    //Raise hand/animation
     void MovementHandle()
     {
         if (Input.GetKey(leftKeybind))
@@ -60,7 +60,7 @@ public class PlayerCombat : MonoBehaviour
         }
     }
 
-
+    //if spell can be casted, spell cooldown if held down
     void SpellLogic()
     {
         if (Input.GetKey(leftKeybind) && leftOffCooldown && playerStats.mana > leftSpell.manaCost)
@@ -79,11 +79,17 @@ public class PlayerCombat : MonoBehaviour
         }
     }
 
+    //Handle Raycasting and such
     void CastSpell(Spell spell)
     {
         if (spell.spellType == Spell.damageType.Lightning && playerStats.mana >= spell.manaCost)
         {
-            print("Lightning casted");
+            //Fix so you dont shoot through walls
+            //Debug.DrawRay(playerCam.position, playerCam.transform.forward * leftSpell.range);
+            if (Physics.Raycast(playerCam.position, playerCam.transform.forward, spell.range, whatIsEnemy))
+            {
+                print("Lightning casted");
+            }
             playerStats.mana -= spell.manaCost;
         }
         else if (spell.spellType == Spell.damageType.Air && playerStats.mana >= spell.manaCost)
