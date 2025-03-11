@@ -97,6 +97,7 @@ public class PlayerCombat : MonoBehaviour
                     //do something with enemy hit (take damage, shock, apply force)
                     //raycastHit.collider.gameObject.GetComponent<EnemyAttributes>();
                     print("Lightning casted on: " + raycastHit.collider.tag);
+                    CheckIfAttacked(raycastHit.collider);
                 }
 
                 //Add some other spicy tags persay? (Explosive barrels, water)
@@ -128,5 +129,16 @@ public class PlayerCombat : MonoBehaviour
     void RightCooldown()
     {
         rightOffCooldown = true;
+    }
+
+    private void CheckIfAttacked(Collider collider)
+    {
+        GameObject enemy = collider.gameObject;
+        EnemyMovement enemyMovement = enemy.GetComponent<EnemyMovement>();
+        if(!enemyMovement.targetFound)
+        {
+            enemyMovement.target = this.transform;
+            enemyMovement.targetFound = true;
+        }
     }
 }

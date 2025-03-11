@@ -7,18 +7,19 @@ public class EnemyMovement : MonoBehaviour
 {
 
     private NavMeshAgent agent;
-    private SphereCollider triggerRadius;
 
     public Transform target;
     public bool targetFound = false;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
+    Collider[] players;
+    public LayerMask playerMask;
+    public float triggerRadius = 10f;
+
     void Start()
     {
         agent = gameObject.GetComponent<NavMeshAgent>();
-        triggerRadius = gameObject.GetComponent<SphereCollider>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if(targetFound)
@@ -27,7 +28,10 @@ public class EnemyMovement : MonoBehaviour
         }
         else
         {
+            CheckRadius();
 
+            //Some slow patrol thing 
+            //Patrol();
         }
     }
     private void FollowTarget()
@@ -35,13 +39,29 @@ public class EnemyMovement : MonoBehaviour
         agent.destination = target.position;
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void CheckRadius()
     {
-        if(other.tag.Equals("Player"))
+        players = Physics.OverlapSphere(gameObject.transform.position, triggerRadius, playerMask);
+        if (players.Length > 0)
         {
-            target = other.transform;
-            targetFound = true;
+            RaycastHit playerHit;
+            Physics.Linecast(gameObject.transform.position + (Vector3.up * agent.height), players[0].transform.position, out playerHit);
+            print(players[0].transform.position);
+
+            if (playerHit.collider.CompareTag("Player"))
+            {
+                target = players[0].transform;
+                targetFound = true;
+                print("Target has been marked");
+            }
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = new Color(0f, 1f, 1f, 0.3f);
+
+        Gizmos.DrawSphere(gameObject.transform.position, triggerRadius);
     }
 
 }
