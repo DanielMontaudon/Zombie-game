@@ -97,6 +97,7 @@ public class PlayerCombat : MonoBehaviour
                     //do something with enemy hit (take damage, shock, apply force)
                     //raycastHit.collider.gameObject.GetComponent<EnemyAttributes>();
                     print("Lightning casted on: " + raycastHit.collider.tag);
+                    DealDamage(raycastHit.collider, spell.damage);
                     CheckIfAttacked(raycastHit.collider);
                 }
 
@@ -111,6 +112,7 @@ public class PlayerCombat : MonoBehaviour
         }
         else if (spell.spellType == Spell.damageType.Fire && playerStats.mana >= spell.manaCost)
         {
+            //sphere check, for each apply damage and check if chase
             print("Fire casted");
             playerStats.mana -= spell.manaCost;
         }
@@ -140,5 +142,12 @@ public class PlayerCombat : MonoBehaviour
             enemyMovement.target = this.transform;
             enemyMovement.targetFound = true;
         }
+    }
+
+    private void DealDamage(Collider collider, float damage)
+    {
+        GameObject enemy = collider.gameObject;
+        EnemyAttributes enemyAttributes = enemy.GetComponent<EnemyAttributes>();
+        enemyAttributes.ApplyDamage(damage);
     }
 }
