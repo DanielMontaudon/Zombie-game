@@ -36,7 +36,9 @@ public class EnemyMovement : MonoBehaviour
     }
     private void FollowTarget()
     {
-        agent.destination = target.position;
+        //agent.destination = target.position;
+        agent.SetDestination(target.position);
+
     }
 
     private void CheckRadius()

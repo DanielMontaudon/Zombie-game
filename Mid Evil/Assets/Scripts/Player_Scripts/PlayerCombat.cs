@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.AI;
+
 
 public class PlayerCombat : MonoBehaviour
 {
@@ -100,6 +102,7 @@ public class PlayerCombat : MonoBehaviour
                     //do something with enemy hit (take damage, shock, apply force)
                     print("Lightning casted on: " + raycastHit.collider.tag);
                     DealDamage(raycastHit.collider, spell.damage);
+                    ApplyKnockback(raycastHit.collider);
                     CheckIfAttacked(raycastHit.collider);
                 }
 
@@ -109,13 +112,12 @@ public class PlayerCombat : MonoBehaviour
         }
         else if (spell.spellType == Spell.damageType.Air && playerStats.mana >= spell.manaCost)
         {
+            //Maybe the grippy stun or maybe just a dash like jett? defensive
             print("Air casted");
             playerStats.mana -= spell.manaCost;
         }
         else if (spell.spellType == Spell.damageType.Fire && playerStats.mana >= spell.manaCost)
         {
-            print("Fire casted");
-
             //Cast AOE Fire Spell, Sphere Check
             LayerMask enemyLayer = LayerMask.GetMask("Enemy");
             Collider[] enemys = Physics.OverlapSphere(gameObject.transform.position, spell.range, enemyLayer);
@@ -128,13 +130,13 @@ public class PlayerCombat : MonoBehaviour
                 foreach(Collider enemy in enemys)
                 {
                     RaycastHit spellHit;
-                    Physics.Linecast(gameObject.transform.position + (Vector3.up * playerMovement.playerHeight / 2f), enemy.transform.position, out spellHit);
+                    Physics.Linecast(gameObject.transform.position + (Vector3.up * playerMovement.playerHeight / 2f), enemy.transform.position + (Vector3.up * playerMovement.playerHeight / 2f), out spellHit);
 
                     //Otherwise apply damage and such
                     if(spellHit.collider.CompareTag("Enemy"))
                     {
-                        print("Fire casted on enemy");
                         DealDamage(enemy, spell.damage);
+                        ApplyKnockback(enemy);
                         CheckIfAttacked(enemy);
                     }
                     
@@ -145,6 +147,7 @@ public class PlayerCombat : MonoBehaviour
         }
         else if (spell.spellType == Spell.damageType.Earth && playerStats.mana >= spell.manaCost)
         {
+            //Melee of L4D knocking back while still generating mana?
             print("Earth casted");
             playerStats.mana -= spell.manaCost;
         }
@@ -176,5 +179,22 @@ public class PlayerCombat : MonoBehaviour
         GameObject enemy = collider.gameObject;
         EnemyAttributes enemyAttributes = enemy.GetComponent<EnemyAttributes>();
         enemyAttributes.ApplyDamage(damage);
+    }
+
+    //NEEDS MORE WORK
+    private void ApplyKnockback(Collider enemy)
+    {
+        Rigidbody enemyRigidbody = enemy.gameObject.GetComponent<Rigidbody>();
+        NavMeshAgent enemyAgent = enemy.gameObject.GetComponent<NavMeshAgent>();
+
+        enemyRigidbody.isKinematic = false;
+        enemyAgent.enabled = false;
+        enemyRigidbody.AddForce(-enemy.gameObject.transform.forward * 1000, ForceMode.Impulse);
+
+        if(enemyRigidbody.linearVelocity.magnitude <= 0.01f)
+        {
+            enemyRigidbody.isKinematic = true;
+            enemyAgent.enabled = true;
+        }
     }
 }
