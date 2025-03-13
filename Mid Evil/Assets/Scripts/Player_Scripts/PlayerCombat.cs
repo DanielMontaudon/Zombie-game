@@ -17,6 +17,7 @@ public class PlayerCombat : MonoBehaviour
 
     float startY;
     PlayerAttributes playerStats;
+    PlayerMovement playerMovement;
     public LayerMask whatIsEnemy;
     bool leftOffCooldown = true;
     bool rightOffCooldown = true;
@@ -25,6 +26,8 @@ public class PlayerCombat : MonoBehaviour
     {
         startY = leftHand.localPosition.y;
         playerStats = gameObject.GetComponent<PlayerAttributes>();
+        playerMovement = gameObject.GetComponent<PlayerMovement>();
+
     }
 
     // Update is called once per frame
@@ -95,7 +98,6 @@ public class PlayerCombat : MonoBehaviour
                 if(raycastHit.collider.CompareTag("Enemy"))
                 {
                     //do something with enemy hit (take damage, shock, apply force)
-                    //raycastHit.collider.gameObject.GetComponent<EnemyAttributes>();
                     print("Lightning casted on: " + raycastHit.collider.tag);
                     DealDamage(raycastHit.collider, spell.damage);
                     CheckIfAttacked(raycastHit.collider);
@@ -112,8 +114,33 @@ public class PlayerCombat : MonoBehaviour
         }
         else if (spell.spellType == Spell.damageType.Fire && playerStats.mana >= spell.manaCost)
         {
-            //sphere check, for each apply damage and check if chase
             print("Fire casted");
+
+            //Cast AOE Fire Spell, Sphere Check
+            LayerMask enemyLayer = LayerMask.GetMask("Enemy");
+            Collider[] enemys = Physics.OverlapSphere(gameObject.transform.position, spell.range, enemyLayer);
+            //Add same sphere check for interactables? barrels persay??
+
+            //If enemys are within range
+            if(enemys.Length > 0)
+            {
+                //for each enemy, see if they are behind structures/walls when in range
+                foreach(Collider enemy in enemys)
+                {
+                    RaycastHit spellHit;
+                    Physics.Linecast(gameObject.transform.position + (Vector3.up * playerMovement.playerHeight / 2f), enemy.transform.position, out spellHit);
+
+                    //Otherwise apply damage and such
+                    if(spellHit.collider.CompareTag("Enemy"))
+                    {
+                        print("Fire casted on enemy");
+                        DealDamage(enemy, spell.damage);
+                        CheckIfAttacked(enemy);
+                    }
+                    
+                }
+            }
+            
             playerStats.mana -= spell.manaCost;
         }
         else if (spell.spellType == Spell.damageType.Earth && playerStats.mana >= spell.manaCost)

@@ -46,7 +46,7 @@ public class EnemyMovement : MonoBehaviour
         {
             RaycastHit playerHit;
             Physics.Linecast(gameObject.transform.position + (Vector3.up * agent.height), players[0].transform.position, out playerHit);
-            print(players[0].transform.position);
+            //print(players[0].transform.position);
 
             if (playerHit.collider.CompareTag("Player"))
             {
