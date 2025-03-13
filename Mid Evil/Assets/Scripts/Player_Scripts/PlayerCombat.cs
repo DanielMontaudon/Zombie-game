@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using System.Collections;
 
 
 public class PlayerCombat : MonoBehaviour
@@ -172,6 +173,7 @@ public class PlayerCombat : MonoBehaviour
             enemyMovement.target = this.transform;
             enemyMovement.targetFound = true;
         }
+
     }
 
     private void DealDamage(Collider collider, float damage)
@@ -181,20 +183,9 @@ public class PlayerCombat : MonoBehaviour
         enemyAttributes.ApplyDamage(damage);
     }
 
-    //NEEDS MORE WORK
     private void ApplyKnockback(Collider enemy)
     {
-        Rigidbody enemyRigidbody = enemy.gameObject.GetComponent<Rigidbody>();
-        NavMeshAgent enemyAgent = enemy.gameObject.GetComponent<NavMeshAgent>();
-
-        enemyRigidbody.isKinematic = false;
-        enemyAgent.enabled = false;
-        enemyRigidbody.AddForce(-enemy.gameObject.transform.forward * 1000, ForceMode.Impulse);
-
-        if(enemyRigidbody.linearVelocity.magnitude <= 0.01f)
-        {
-            enemyRigidbody.isKinematic = true;
-            enemyAgent.enabled = true;
-        }
+        EnemyMovement enemyMovement = enemy.gameObject.GetComponent<EnemyMovement>();
+        enemyMovement.Knockback(transform.position);
     }
 }

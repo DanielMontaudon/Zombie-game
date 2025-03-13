@@ -1,4 +1,7 @@
 using UnityEngine;
+using UnityEngine.AI;
+
+using System.Collections;
 
 public class EnemyAttributes : MonoBehaviour
 {
@@ -18,7 +21,19 @@ public class EnemyAttributes : MonoBehaviour
 
         if(enemyHealth <= 0)
         {
-            Destroy(this.gameObject);
+            StartCoroutine(KillEnemy());
+            //Add some obvious fluidity
+            //coroutines help
+            //Destroy(this.gameObject);
         }
+    }
+
+    private IEnumerator KillEnemy()
+    {
+        NavMeshAgent agent = gameObject.GetComponent<NavMeshAgent>();
+        agent.enabled = false;
+        
+        yield return new WaitForSeconds(0.5f);
+        Destroy(this.gameObject);
     }
 }

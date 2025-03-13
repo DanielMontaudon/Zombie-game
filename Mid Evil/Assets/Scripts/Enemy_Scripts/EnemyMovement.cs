@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using System.Collections;
 
 
 
@@ -7,6 +8,7 @@ public class EnemyMovement : MonoBehaviour
 {
 
     private NavMeshAgent agent;
+    private Rigidbody rb;
 
     public Transform target;
     public bool targetFound = false;
@@ -18,20 +20,24 @@ public class EnemyMovement : MonoBehaviour
     void Start()
     {
         agent = gameObject.GetComponent<NavMeshAgent>();
+        rb = gameObject.GetComponent<Rigidbody>();
     }
 
     void Update()
     {
-        if(targetFound)
+        if (agent.enabled)
         {
-            FollowTarget();
-        }
-        else
-        {
-            CheckRadius();
+            if (targetFound)
+            {
+                FollowTarget();
+            }
+            else
+            {
+                CheckRadius();
 
-            //Some slow patrol thing 
-            //Patrol();
+                //Some slow patrol thing 
+                //Patrol();
+            }
         }
     }
     private void FollowTarget()
@@ -57,6 +63,24 @@ public class EnemyMovement : MonoBehaviour
                 print("Target has been marked");
             }
         }
+    }
+
+    public void Knockback(Vector3 forcePosition)
+    {
+        rb.isKinematic = false;
+        agent.enabled = false;
+
+        rb.AddForce((transform.position - forcePosition).normalized * 1000);
+        StartCoroutine(ResetEnemy());
+    }
+
+    private IEnumerator ResetEnemy()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        rb.isKinematic = true;
+        agent.enabled = true;
+
     }
 
     private void OnDrawGizmos()
