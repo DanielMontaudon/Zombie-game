@@ -149,7 +149,7 @@ public class PlayerCombat : MonoBehaviour
                     //do something with enemy hit (take damage, shock, apply force)
                     print("Lightning casted on: " + raycastHit.collider.tag);
                     DealDamage(raycastHit.collider, spell.damage);
-                    //ApplyKnockback(raycastHit.collider);
+                    ApplyKnockback(raycastHit.collider, spell.knockback);
                     CheckIfAttacked(raycastHit.collider);
                 }
 
@@ -185,7 +185,7 @@ public class PlayerCombat : MonoBehaviour
                     if(spellHit.collider.CompareTag("Enemy"))
                     {
                         DealDamage(enemy, spell.damage);
-                        ApplyKnockback(enemy);
+                        ApplyKnockback(enemy, spell.knockback);
                         CheckIfAttacked(enemy);
                     }
                     
@@ -253,10 +253,10 @@ public class PlayerCombat : MonoBehaviour
         enemyAttributes.ApplyDamage(damage);
     }
 
-    private void ApplyKnockback(Collider enemy)
+    private void ApplyKnockback(Collider enemy, float force)
     {
         EnemyMovement enemyMovement = enemy.gameObject.GetComponent<EnemyMovement>();
-        enemyMovement.Knockback(transform.position);
+        enemyMovement.Knockback(transform.position, force);
     }
 
     private IEnumerator Dash()

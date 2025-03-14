@@ -33,7 +33,7 @@ public class EnemyAttributes : MonoBehaviour
         NavMeshAgent agent = gameObject.GetComponent<NavMeshAgent>();
         agent.enabled = false;
         
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.1f);
         Destroy(this.gameObject);
     }
 }

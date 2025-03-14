@@ -65,18 +65,18 @@ public class EnemyMovement : MonoBehaviour
         }
     }
 
-    public void Knockback(Vector3 forcePosition)
+    public void Knockback(Vector3 forcePosition, float force)
     {
         rb.isKinematic = false;
         agent.enabled = false;
 
-        rb.AddForce((transform.position - forcePosition).normalized * 1000);
+        rb.AddForce((transform.position - forcePosition).normalized * force);
         StartCoroutine(ResetEnemy());
     }
 
     private IEnumerator ResetEnemy()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.25f);
 
         rb.isKinematic = true;
         agent.enabled = true;

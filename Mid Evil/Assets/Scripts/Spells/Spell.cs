@@ -8,6 +8,7 @@ public class Spell : ScriptableObject
     public damageType spellType;
     public float manaCost;
     public float cooldown;
+    public float knockback;
 
     //Help Denote for ray type
     //Lightning - Primary
