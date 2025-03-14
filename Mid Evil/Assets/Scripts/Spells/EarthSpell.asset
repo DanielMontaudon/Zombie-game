@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 347de9e9d82bc274382c799c403d89d4, type: 3}
-  m_Name: LightningSpell
+  m_Name: EarthSpell
   m_EditorClassIdentifier: 
-  damage: 10
-  range: 25
-  spellType: 0
-  manaCost: 5
-  cooldown: 0.5
+  damage: 0
+  range: 0
+  spellType: 3
+  manaCost: 0
+  cooldown: 0

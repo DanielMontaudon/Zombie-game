@@ -13,10 +13,17 @@ public class PlayerCombat : MonoBehaviour
     [Header("Loadout")]
     public Spell leftSpell;
     public Spell rightSpell;
+    public Spell specialSpell;
+    public Spell defensiveSpell;
+
 
     [Header("Keybinds")]
     public KeyCode leftKeybind = KeyCode.Mouse0;
     public KeyCode rightKeybind = KeyCode.Mouse1;
+    public KeyCode specialKeybind = KeyCode.Q;
+    public KeyCode defensiveKeybind = KeyCode.E;
+
+
 
     float startY;
     PlayerAttributes playerStats;
@@ -24,6 +31,9 @@ public class PlayerCombat : MonoBehaviour
     public LayerMask whatIsEnemy;
     bool leftOffCooldown = true;
     bool rightOffCooldown = true;
+    bool specialOffCooldown = true;
+    bool defensiveOffCooldown = true;
+
 
     private void Start()
     {
@@ -83,11 +93,22 @@ public class PlayerCombat : MonoBehaviour
 
             Invoke(nameof(RightCooldown), rightSpell.cooldown);
         }
+
+        if (Input.GetKey(specialKeybind) && specialOffCooldown && playerStats.mana > specialSpell.manaCost)
+        {
+
+        }
+
+        if (Input.GetKey(defensiveKeybind) && defensiveOffCooldown && playerStats.mana > defensiveSpell.manaCost)
+        {
+
+        }
     }
 
     //Handle Raycasting and such
     void CastSpell(Spell spell)
     {
+        //Lightning Spell
         if (spell.spellType == Spell.damageType.Lightning && playerStats.mana >= spell.manaCost)
         {
             RaycastHit raycastHit;
@@ -111,12 +132,14 @@ public class PlayerCombat : MonoBehaviour
             }
             playerStats.mana -= spell.manaCost;
         }
+        //Air Spell
         else if (spell.spellType == Spell.damageType.Air && playerStats.mana >= spell.manaCost)
         {
             //Maybe the grippy stun or maybe just a dash like jett? defensive
             print("Air casted");
             playerStats.mana -= spell.manaCost;
         }
+        //Fire Spell
         else if (spell.spellType == Spell.damageType.Fire && playerStats.mana >= spell.manaCost)
         {
             //Cast AOE Fire Spell, Sphere Check
@@ -142,16 +165,17 @@ public class PlayerCombat : MonoBehaviour
                     }
                     
                 }
-            }
-            
+            }          
             playerStats.mana -= spell.manaCost;
         }
+        //Earth Spell
         else if (spell.spellType == Spell.damageType.Earth && playerStats.mana >= spell.manaCost)
         {
             //Melee of L4D knocking back while still generating mana?
             print("Earth casted");
             playerStats.mana -= spell.manaCost;
         }
+        //Water Spell ??
     }
 
     void LeftCooldown()
@@ -162,6 +186,14 @@ public class PlayerCombat : MonoBehaviour
     void RightCooldown()
     {
         rightOffCooldown = true;
+    }
+    void specialCooldown()
+    {
+        specialOffCooldown = true;
+    }
+    void defensiveCooldown()
+    {
+        defensiveOffCooldown = true;
     }
 
     private void CheckIfAttacked(Collider collider)
