@@ -11,7 +11,7 @@ public class PlayerAttributes : MonoBehaviour
     float staminaTimeInterval = 0f;
     float manaTimeInterval = 0f;
 
-    public PlayerMovement playerMovement;
+    PlayerMovement playerMovement;
 
 
 

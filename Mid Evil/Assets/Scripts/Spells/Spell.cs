@@ -10,16 +10,19 @@ public class Spell : ScriptableObject
     public float cooldown;
 
     //Help Denote for ray type
-    //Lightning - Ray
-    //Air - Ray
-    //Fire - Sphere
-    //Earth - 
+    //Lightning - Primary
+    //Air - Secondary
+    //Fire - Special
+    //Earth - Defensive
+    //Dash 
     public enum damageType
     {
         Lightning,
         Air,
         Fire,
-        Earth
+        Earth,
+        Water,
+        Dash
     }
 
 }

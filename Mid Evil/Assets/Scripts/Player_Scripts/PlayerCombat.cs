@@ -15,6 +15,8 @@ public class PlayerCombat : MonoBehaviour
     public Spell rightSpell;
     public Spell specialSpell;
     public Spell defensiveSpell;
+    public Spell dashSpell;
+
 
 
     [Header("Keybinds")]
@@ -22,17 +24,19 @@ public class PlayerCombat : MonoBehaviour
     public KeyCode rightKeybind = KeyCode.Mouse1;
     public KeyCode specialKeybind = KeyCode.Q;
     public KeyCode defensiveKeybind = KeyCode.E;
+    public KeyCode dashKeybind = KeyCode.LeftAlt;
 
 
 
     float startY;
     PlayerAttributes playerStats;
     PlayerMovement playerMovement;
-    public LayerMask whatIsEnemy;
+    //public LayerMask whatIsEnemy;
     bool leftOffCooldown = true;
     bool rightOffCooldown = true;
     bool specialOffCooldown = true;
     bool defensiveOffCooldown = true;
+    bool dashOffCooldown = true;
 
 
     private void Start()
@@ -79,29 +83,50 @@ public class PlayerCombat : MonoBehaviour
     //if spell can be casted, spell cooldown if held down
     void SpellLogic()
     {
+        //Primary Fire
         if (Input.GetKey(leftKeybind) && leftOffCooldown && playerStats.mana > leftSpell.manaCost)
         {
             leftOffCooldown = false;
             CastSpell(leftSpell);
+            //Add some UI elements for CD (function to create a timer)
             Invoke(nameof(LeftCooldown), leftSpell.cooldown);
         }
-
+        
+        //Secondary Fire
         if (Input.GetKey(rightKeybind) && rightOffCooldown && playerStats.mana > rightSpell.manaCost)
         {
             rightOffCooldown = false;
             CastSpell(rightSpell);
-
+            //Add some UI elements for CD (function to create a timer)
             Invoke(nameof(RightCooldown), rightSpell.cooldown);
         }
 
+        //Special Ability
         if (Input.GetKey(specialKeybind) && specialOffCooldown && playerStats.mana > specialSpell.manaCost)
         {
+            specialOffCooldown = false;
+            CastSpell(specialSpell);
+            //Add some UI elements for CD (function to create a timer)
+            Invoke(nameof(SpecialCooldown), specialSpell.cooldown);
 
         }
 
+        //Defensive Ability
         if (Input.GetKey(defensiveKeybind) && defensiveOffCooldown && playerStats.mana > defensiveSpell.manaCost)
         {
+            defensiveOffCooldown = false;
+            CastSpell(defensiveSpell);
+            //Add some UI elements for CD (function to create a timer)
+            Invoke(nameof(DefensiveCooldown), defensiveSpell.cooldown);
+        }
 
+        //Dash Ability
+        if (Input.GetKey(dashKeybind) && dashOffCooldown && playerStats.mana > dashSpell.manaCost)
+        {
+            dashOffCooldown = false;
+            CastSpell(dashSpell);
+            //Add some UI elements for CD (function to create a timer)
+            Invoke(nameof(DashCooldown), dashSpell.cooldown);
         }
     }
 
@@ -124,7 +149,7 @@ public class PlayerCombat : MonoBehaviour
                     //do something with enemy hit (take damage, shock, apply force)
                     print("Lightning casted on: " + raycastHit.collider.tag);
                     DealDamage(raycastHit.collider, spell.damage);
-                    ApplyKnockback(raycastHit.collider);
+                    //ApplyKnockback(raycastHit.collider);
                     CheckIfAttacked(raycastHit.collider);
                 }
 
@@ -132,19 +157,19 @@ public class PlayerCombat : MonoBehaviour
             }
             playerStats.mana -= spell.manaCost;
         }
-        //Air Spell
+        //Air Spell - 
         else if (spell.spellType == Spell.damageType.Air && playerStats.mana >= spell.manaCost)
         {
-            //Maybe the grippy stun or maybe just a dash like jett? defensive
             print("Air casted");
             playerStats.mana -= spell.manaCost;
         }
-        //Fire Spell
+        //Fire Spell - AoE Sphere that does massive damage
         else if (spell.spellType == Spell.damageType.Fire && playerStats.mana >= spell.manaCost)
         {
-            //Cast AOE Fire Spell, Sphere Check
+            //Sphere Check
             LayerMask enemyLayer = LayerMask.GetMask("Enemy");
             Collider[] enemys = Physics.OverlapSphere(gameObject.transform.position, spell.range, enemyLayer);
+
             //Add same sphere check for interactables? barrels persay??
 
             //If enemys are within range
@@ -168,14 +193,22 @@ public class PlayerCombat : MonoBehaviour
             }          
             playerStats.mana -= spell.manaCost;
         }
-        //Earth Spell
+        //Earth Spell - Defensive stance that roots player and makes player invulnrable, healing and regen in the process
         else if (spell.spellType == Spell.damageType.Earth && playerStats.mana >= spell.manaCost)
         {
-            //Melee of L4D knocking back while still generating mana?
             print("Earth casted");
             playerStats.mana -= spell.manaCost;
         }
+        //Dash Spell - Dash in direction player is facing pushing enemies aside
+        else if (spell.spellType == Spell.damageType.Dash && playerStats.mana >= spell.manaCost)
+        {
+            StartCoroutine(Dash());
+            
+            print("Dash casted");
+            playerStats.mana -= spell.manaCost;
+        }
         //Water Spell ??
+
     }
 
     void LeftCooldown()
@@ -187,13 +220,18 @@ public class PlayerCombat : MonoBehaviour
     {
         rightOffCooldown = true;
     }
-    void specialCooldown()
+    void SpecialCooldown()
     {
         specialOffCooldown = true;
     }
-    void defensiveCooldown()
+    void DefensiveCooldown()
     {
         defensiveOffCooldown = true;
+    }
+
+    void DashCooldown()
+    {
+        dashOffCooldown = true;
     }
 
     private void CheckIfAttacked(Collider collider)
@@ -219,5 +257,18 @@ public class PlayerCombat : MonoBehaviour
     {
         EnemyMovement enemyMovement = enemy.gameObject.GetComponent<EnemyMovement>();
         enemyMovement.Knockback(transform.position);
+    }
+
+    private IEnumerator Dash()
+    {
+        Rigidbody rb = gameObject.GetComponent<Rigidbody>();
+        rb.useGravity = false;
+        rb.mass = 1;
+        rb.AddForce(playerMovement.orientation.forward * 50f, ForceMode.Impulse);
+
+        yield return new WaitForSeconds(0.15f);
+
+        rb.mass = 5;
+        rb.useGravity = true;
     }
 }

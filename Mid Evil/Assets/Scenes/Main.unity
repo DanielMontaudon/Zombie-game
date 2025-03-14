@@ -2643,7 +2643,6 @@ MonoBehaviour:
   health: 100
   stamina: 100
   mana: 100
-  playerMovement: {fileID: 0}
 --- !u!114 &2115770602
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2660,12 +2659,15 @@ MonoBehaviour:
   leftHand: {fileID: 841177660}
   rightHand: {fileID: 2111981722}
   leftSpell: {fileID: 11400000, guid: cc7a7333c24999f4fb72eefb22ef7ae2, type: 2}
-  rightSpell: {fileID: 11400000, guid: 8bc21b76b2190e048b71625674c53f15, type: 2}
+  rightSpell: {fileID: 11400000, guid: 24f94f5775272274b9a7af510b3be6a4, type: 2}
+  specialSpell: {fileID: 11400000, guid: 8bc21b76b2190e048b71625674c53f15, type: 2}
+  defensiveSpell: {fileID: 11400000, guid: 5debef6903dc01c45886bc6bda2a4fec, type: 2}
+  dashSpell: {fileID: 11400000, guid: 4d6dc0115c330ad4ab85288f4c20a133, type: 2}
   leftKeybind: 323
   rightKeybind: 324
-  whatIsEnemy:
-    serializedVersion: 2
-    m_Bits: 0
+  specialKeybind: 113
+  defensiveKeybind: 101
+  dashKeybind: 308
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
