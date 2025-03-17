@@ -136,7 +136,8 @@ public class PlayerCombat : MonoBehaviour
         //Lightning Spell
         if (spell.spellType == Spell.damageType.Lightning && playerStats.mana >= spell.manaCost)
         {
-            RaycastHit raycastHit;
+           print("Lightning casted");
+           RaycastHit raycastHit;
             //Cast Ray straight in front of player 
             bool rayHit = Physics.Raycast(playerCam.position, playerCam.transform.forward, out raycastHit, spell.range);
             
@@ -161,6 +162,17 @@ public class PlayerCombat : MonoBehaviour
         else if (spell.spellType == Spell.damageType.Air && playerStats.mana >= spell.manaCost)
         {
             print("Air casted");
+            //LayerMask enemyLayer = LayerMask.GetMask("Enemy");
+            RaycastHit[] raycastHits = Physics.RaycastAll(playerCam.position, playerCam.transform.forward, spell.range);
+
+            foreach(RaycastHit hit in raycastHits)
+            {
+                if(hit.collider.CompareTag("Enemy"))
+                {
+                    //Maybe channge to Orientation.forward and make it CapsuleCast
+                }
+                //print(hit.collider.tag);
+            }
             playerStats.mana -= spell.manaCost;
         }
         //Fire Spell - AoE Sphere that does massive damage
