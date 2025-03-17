@@ -7,6 +7,7 @@ public class PlayerCombat : MonoBehaviour
 {
     [Header("Game Objects")]
     public Transform playerCam;
+    public Transform orientation;
     public Transform leftHand;
     public Transform rightHand;
 
@@ -50,7 +51,7 @@ public class PlayerCombat : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.DrawRay(playerCam.position, playerCam.transform.forward * leftSpell.range);
+        //Debug.DrawRay(playerCam.position, playerCam.transform.forward * leftSpell.range);
         MovementHandle();
         SpellLogic();
     }
@@ -158,14 +159,16 @@ public class PlayerCombat : MonoBehaviour
             }
             playerStats.mana -= spell.manaCost;
         }
-        //Air Spell - 
+        //Air Spell - Tornado that lifts enemies for set time
         else if (spell.spellType == Spell.damageType.Air && playerStats.mana >= spell.manaCost)
         {
             print("Air casted");
             //LayerMask enemyLayer = LayerMask.GetMask("Enemy");
-            RaycastHit[] raycastHits = Physics.RaycastAll(playerCam.position, playerCam.transform.forward, spell.range);
+            //RaycastHit[] raycastHits = Physics.RaycastAll(playerCam.position, playerCam.transform.forward, spell.range);
+            RaycastHit[] raycastHits = Physics.SphereCastAll(playerCam.position, 1f, orientation.transform.forward, spell.range);
 
-            foreach(RaycastHit hit in raycastHits)
+            //SphereCast(Vector3 origin, float radius, Vector3 direction, out RaycastHit hitInfo, float maxDistance);
+            foreach (RaycastHit hit in raycastHits)
             {
                 if(hit.collider.CompareTag("Enemy"))
                 {
@@ -282,5 +285,21 @@ public class PlayerCombat : MonoBehaviour
 
         rb.mass = 5;
         rb.useGravity = true;
+    }
+
+
+
+    private void OnDrawGizmos()
+    {
+        //Lightning Debug
+        Debug.DrawRay(playerCam.position, playerCam.transform.forward * leftSpell.range);
+
+        //Air Debug
+        Debug.DrawRay(orientation.position, orientation.transform.forward * rightSpell.range);
+
+        //Fire Debug
+        Gizmos.color = new Color(1f, 1f, 0.5f, 0.25f);
+        Gizmos.DrawSphere(gameObject.transform.position, specialSpell.range);
+
     }
 }

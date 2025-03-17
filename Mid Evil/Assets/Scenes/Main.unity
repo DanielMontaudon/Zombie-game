@@ -2656,6 +2656,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerCam: {fileID: 1415311926}
+  orientation: {fileID: 2075654272}
   leftHand: {fileID: 841177660}
   rightHand: {fileID: 2111981722}
   leftSpell: {fileID: 11400000, guid: cc7a7333c24999f4fb72eefb22ef7ae2, type: 2}

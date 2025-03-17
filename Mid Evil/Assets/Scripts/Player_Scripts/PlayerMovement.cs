@@ -264,10 +264,7 @@ public class PlayerMovement : MonoBehaviour
 
         //roofAbove Ray
         Debug.DrawRay(transform.position, Vector3.up * playerHeight);
-
-        //grounded Ray
-        //Debug.DrawRay(transform.position, Vector3.down * 0.3f);
-
+        //grounded Sphere Check
         Gizmos.color = new Color(1f,0f,1f,0.3f);
         Gizmos.DrawSphere(transform.position, 0.3f);
     }
