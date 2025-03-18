@@ -12,10 +12,15 @@ public class EnemyMovement : MonoBehaviour
 
     public Transform target;
     public bool targetFound = false;
+    public bool stunned = false;
+    public bool knocked = false;
 
     Collider[] players;
     public LayerMask playerMask;
     public float triggerRadius = 10f;
+
+    //public LayerMask whatIsGround;
+    //public bool grounded;
 
     void Start()
     {
@@ -25,7 +30,10 @@ public class EnemyMovement : MonoBehaviour
 
     void Update()
     {
-        if (agent.enabled)
+        //grounded = Physics.CheckSphere(transform.position, 0.3f, whatIsGround);
+
+
+        if (!knocked && !stunned)
         {
             if (targetFound)
             {
@@ -39,6 +47,7 @@ public class EnemyMovement : MonoBehaviour
                 //Patrol();
             }
         }
+
     }
     private void FollowTarget()
     {
@@ -64,30 +73,66 @@ public class EnemyMovement : MonoBehaviour
             }
         }
     }
-
+    /// <summary>
+    /// Functions are called from PlayerCombat.cs/CastSpell function
+    /// </summary>
+    //Apply spell knockback from player position with specified spell force
     public void Knockback(Vector3 forcePosition, float force)
     {
+        knocked = true;
         rb.isKinematic = false;
         agent.enabled = false;
 
         rb.AddForce((transform.position - forcePosition).normalized * force);
-        StartCoroutine(ResetEnemy());
+        StartCoroutine(ResetEnemy(0.25f));
     }
 
-    private IEnumerator ResetEnemy()
+    private IEnumerator ResetEnemy(float time)
     {
-        yield return new WaitForSeconds(0.25f);
+        yield return new WaitForSeconds(time);
 
         rb.isKinematic = true;
         agent.enabled = true;
+        knocked = false;
 
+    }
+
+    //lifts enemy into air and resumes chase after landing
+    public void StopNav()
+    {
+        stunned = true;
+        rb.isKinematic = false;
+        rb.useGravity = false;
+        agent.enabled = false;
+
+        rb.AddForce(transform.up * 1000f);
+
+        StartCoroutine(ResumeNav());
+
+
+    }
+    private IEnumerator ResumeNav()
+    {
+        yield return new WaitForSeconds(1f);
+        rb.useGravity = true;
+
+        yield return new WaitForSeconds(1.5f);
+        rb.isKinematic = true;
+        agent.enabled = true;
+        stunned = false;
+        //print("Enemy has landed");
+        //rb.AddForce(transform.up * -1000f);
     }
 
     private void OnDrawGizmos()
     {
+        //trigger radius
         Gizmos.color = new Color(0f, 1f, 1f, 0.3f);
-
         Gizmos.DrawSphere(gameObject.transform.position, triggerRadius);
+
+        //ground check
+        Gizmos.color = new Color(1f, 0f, 1f, 0.3f);
+        Gizmos.DrawSphere(transform.position, 0.3f);
     }
 
 }

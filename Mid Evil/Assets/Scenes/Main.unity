@@ -812,6 +812,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 0}
   targetFound: 0
+  stunned: 0
+  knocked: 0
   playerMask:
     serializedVersion: 2
     m_Bits: 256

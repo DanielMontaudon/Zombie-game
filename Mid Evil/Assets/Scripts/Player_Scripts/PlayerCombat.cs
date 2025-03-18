@@ -167,12 +167,11 @@ public class PlayerCombat : MonoBehaviour
             //RaycastHit[] raycastHits = Physics.RaycastAll(playerCam.position, playerCam.transform.forward, spell.range);
             RaycastHit[] raycastHits = Physics.SphereCastAll(playerCam.position, 1f, orientation.transform.forward, spell.range);
 
-            //SphereCast(Vector3 origin, float radius, Vector3 direction, out RaycastHit hitInfo, float maxDistance);
             foreach (RaycastHit hit in raycastHits)
             {
                 if(hit.collider.CompareTag("Enemy"))
                 {
-                    //Maybe channge to Orientation.forward and make it CapsuleCast
+                    CCEnemy(hit.collider);
                 }
                 //print(hit.collider.tag);
             }
@@ -271,7 +270,8 @@ public class PlayerCombat : MonoBehaviour
     private void ApplyKnockback(Collider enemy, float force)
     {
         EnemyMovement enemyMovement = enemy.gameObject.GetComponent<EnemyMovement>();
-        enemyMovement.Knockback(transform.position, force);
+        if(!enemyMovement.stunned)
+            enemyMovement.Knockback(transform.position, force);
     }
 
     private IEnumerator Dash()
@@ -285,6 +285,12 @@ public class PlayerCombat : MonoBehaviour
 
         rb.mass = 5;
         rb.useGravity = true;
+    }
+
+    private void CCEnemy(Collider enemy)
+    {
+        EnemyMovement enemyMovement = enemy.gameObject.GetComponent<EnemyMovement>();
+        enemyMovement.StopNav();
     }
 
 
