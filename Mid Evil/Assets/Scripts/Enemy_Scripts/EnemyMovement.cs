@@ -14,6 +14,7 @@ public class EnemyMovement : MonoBehaviour
     public bool targetFound = false;
     public bool stunned = false;
     public bool knocked = false;
+    public bool attacking = false;
 
     Collider[] players;
     public LayerMask playerMask;
@@ -43,16 +44,37 @@ public class EnemyMovement : MonoBehaviour
             {
                 CheckRadius();
 
-                //Some slow patrol thing 
+                //Some slow patrol thing with coroutine that uses CheckRadius inside
                 //Patrol();
             }
         }
 
     }
+    private IEnumerator SwingAttack()
+    {
+        agent.enabled = false;
+        //Physics check
+        //Animation
+        print("Attacking");
+        yield return new WaitForSeconds(1.5f);
+
+        attacking = false;
+        agent.enabled = true;
+
+    }
     private void FollowTarget()
     {
+        if(Vector3.Distance(target.position, gameObject.transform.position) < 5 && !attacking)
+        {
+            attacking = true;
+            StartCoroutine(SwingAttack());
+        }
+        else if(agent.enabled)
+        {
+            agent.SetDestination(target.position);
+        }
         //agent.destination = target.position;
-        agent.SetDestination(target.position);
+        //agent.SetDestination(target.position);
 
     }
 
@@ -105,7 +127,7 @@ public class EnemyMovement : MonoBehaviour
         rb.useGravity = false;
         agent.enabled = false;
 
-        rb.AddForce(transform.up * 1000f);
+        rb.AddForce(transform.up * 1500f);
 
         StartCoroutine(ResumeNav());
 
@@ -115,6 +137,7 @@ public class EnemyMovement : MonoBehaviour
     {
         yield return new WaitForSeconds(1f);
         rb.useGravity = true;
+        rb.AddForce(transform.up * -1000f);
 
         yield return new WaitForSeconds(1.5f);
         rb.isKinematic = true;
@@ -124,8 +147,12 @@ public class EnemyMovement : MonoBehaviour
         //rb.AddForce(transform.up * -1000f);
     }
 
+
+
     private void OnDrawGizmos()
     {
+
+
         //trigger radius
         Gizmos.color = new Color(0f, 1f, 1f, 0.3f);
         Gizmos.DrawSphere(gameObject.transform.position, triggerRadius);
