@@ -7,6 +7,8 @@ public class EnemyAttributes : MonoBehaviour
 {
     public float enemyHealth = 100f;
     public float enemyArmor = 100f;
+    public float enemyRange = 1f;
+    public float enemyDamage = 2f;
 
 
     // Update is called once per frame

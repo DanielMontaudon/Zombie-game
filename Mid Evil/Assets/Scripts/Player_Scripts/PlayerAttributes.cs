@@ -62,4 +62,9 @@ public class PlayerAttributes : MonoBehaviour
 
     }
 
+    public void ApplyDamage(float damage)
+    {
+        health -= damage;
+    }
+
 }

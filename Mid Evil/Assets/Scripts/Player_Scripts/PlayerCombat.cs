@@ -137,8 +137,8 @@ public class PlayerCombat : MonoBehaviour
         //Lightning Spell
         if (spell.spellType == Spell.damageType.Lightning && playerStats.mana >= spell.manaCost)
         {
-           print("Lightning casted");
-           RaycastHit raycastHit;
+            print("Lightning casted");
+            RaycastHit raycastHit;
             //Cast Ray straight in front of player 
             bool rayHit = Physics.Raycast(playerCam.position, playerCam.transform.forward, out raycastHit, spell.range);
             

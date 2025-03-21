@@ -9,6 +9,7 @@ public class EnemyMovement : MonoBehaviour
 
     private NavMeshAgent agent;
     private Rigidbody rb;
+    private EnemyAttributes ea;
 
     public Transform target;
     public bool targetFound = false;
@@ -27,6 +28,8 @@ public class EnemyMovement : MonoBehaviour
     {
         agent = gameObject.GetComponent<NavMeshAgent>();
         rb = gameObject.GetComponent<Rigidbody>();
+        ea = gameObject.GetComponent<EnemyAttributes>();
+
     }
 
     void Update()
@@ -56,6 +59,23 @@ public class EnemyMovement : MonoBehaviour
         //Physics check
         //Animation
         print("Attacking");
+        RaycastHit hitInfo;
+        bool rayHit = Physics.Raycast(gameObject.transform.position + (Vector3.up * 1.5f), gameObject.transform.forward, out hitInfo, ea.enemyRange);
+        //Maybe add a WaitForSeconds to give player a small window to dodge the attack instead of guarentee play is hit when swung
+        if (rayHit)
+        {
+            if(hitInfo.collider.CompareTag("Player"))
+            {
+                print("hit player");
+                PlayerAttributes pa = hitInfo.collider.GetComponentInParent<PlayerAttributes>();
+                pa.ApplyDamage(ea.enemyDamage);
+            }
+            else
+            {
+                print("missed player");
+            }
+        }
+            //Raycast(Vector3 origin, Vector3 direction, out RaycastHit hitInfo, float maxDistance);
         yield return new WaitForSeconds(1.5f);
 
         attacking = false;

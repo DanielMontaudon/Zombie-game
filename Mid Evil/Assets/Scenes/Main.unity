@@ -814,6 +814,7 @@ MonoBehaviour:
   targetFound: 0
   stunned: 0
   knocked: 0
+  attacking: 0
   playerMask:
     serializedVersion: 2
     m_Bits: 256
@@ -855,6 +856,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyHealth: 100
   enemyArmor: 0
+  enemyRange: 6
+  enemyDamage: 2
 --- !u!54 &237255854
 Rigidbody:
   m_ObjectHideFlags: 0
