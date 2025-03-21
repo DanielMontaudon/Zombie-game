@@ -9,6 +9,7 @@ public class EnemyAttributes : MonoBehaviour
     public float enemyArmor = 100f;
     public float enemyRange = 1f;
     public float enemyDamage = 2f;
+    public float enemyAttackSpeed = 1f;
 
 
     // Update is called once per frame

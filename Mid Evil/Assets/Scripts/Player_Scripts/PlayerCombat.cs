@@ -270,7 +270,7 @@ public class PlayerCombat : MonoBehaviour
     private void ApplyKnockback(Collider enemy, float force)
     {
         EnemyMovement enemyMovement = enemy.gameObject.GetComponent<EnemyMovement>();
-        if(!enemyMovement.stunned)
+        if(enemyMovement.state != EnemyMovement.EnemyState.stunned)
             enemyMovement.Knockback(transform.position, force);
     }
 

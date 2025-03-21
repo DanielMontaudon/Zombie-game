@@ -14,18 +14,30 @@ public class EnemyMovement : MonoBehaviour
     public Transform target;
     public bool targetFound = false;
     public bool stunned = false;
+    public bool readyToAttack = true;
+    /*
     public bool knocked = false;
-    public bool attacking = false;
+    */
 
     Collider[] players;
     public LayerMask playerMask;
     public float triggerRadius = 10f;
 
-    //public LayerMask whatIsGround;
-    //public bool grounded;
+    public EnemyState state;
+    public enum EnemyState
+    {
+        idle,
+        chasing,
+        stunned,
+        knocked,
+        attacking
+    }
+
+    private Coroutine attackingCoroutine;
 
     void Start()
     {
+        state = EnemyState.idle;
         agent = gameObject.GetComponent<NavMeshAgent>();
         rb = gameObject.GetComponent<Rigidbody>();
         ea = gameObject.GetComponent<EnemyAttributes>();
@@ -34,60 +46,72 @@ public class EnemyMovement : MonoBehaviour
 
     void Update()
     {
-        //grounded = Physics.CheckSphere(transform.position, 0.3f, whatIsGround);
-
-
-        if (!knocked && !stunned)
+        //print(Time.deltaTime);
+        if(state == EnemyState.idle)
         {
-            if (targetFound)
-            {
-                FollowTarget();
-            }
-            else
-            {
-                CheckRadius();
-
-                //Some slow patrol thing with coroutine that uses CheckRadius inside
-                //Patrol();
-            }
+            CheckRadius();
+        }
+        else if (state == EnemyState.chasing)
+        {
+            FollowTarget();
         }
 
     }
-    private IEnumerator SwingAttack()
+
+    /*
+            RaycastHit hitInfo;
+            bool rayHit = Physics.Raycast(gameObject.transform.position + (Vector3.up * 1.5f), gameObject.transform.forward, out hitInfo, ea.enemyRange);
+            //Maybe add a WaitForSeconds to give player a small window to dodge the attack instead of guarentee play is hit when swung
+            if (rayHit)
+            {
+                if (hitInfo.collider.CompareTag("Player"))
+                {
+                    //print("hit player");
+                    PlayerAttributes pa = hitInfo.collider.GetComponent<PlayerAttributes>();
+                    pa.ApplyDamage(ea.enemyDamage);
+                }
+            }
+    */
+    private void SwingAttack()
     {
+
+        state = EnemyState.attacking;
         agent.enabled = false;
-        //Physics check
-        //Animation
+        //add while loop logic
         print("Attacking");
         RaycastHit hitInfo;
         bool rayHit = Physics.Raycast(gameObject.transform.position + (Vector3.up * 1.5f), gameObject.transform.forward, out hitInfo, ea.enemyRange);
         //Maybe add a WaitForSeconds to give player a small window to dodge the attack instead of guarentee play is hit when swung
         if (rayHit)
         {
-            if(hitInfo.collider.CompareTag("Player"))
+            if (hitInfo.collider.CompareTag("Player"))
             {
-                print("hit player");
-                PlayerAttributes pa = hitInfo.collider.GetComponentInParent<PlayerAttributes>();
+                //print("hit player");
+                PlayerAttributes pa = hitInfo.collider.GetComponent<PlayerAttributes>();
                 pa.ApplyDamage(ea.enemyDamage);
             }
-            else
-            {
-                print("missed player");
-            }
         }
-            //Raycast(Vector3 origin, Vector3 direction, out RaycastHit hitInfo, float maxDistance);
-        yield return new WaitForSeconds(1.5f);
 
-        attacking = false;
         agent.enabled = true;
+        state = EnemyState.chasing;
 
+    }
+
+    private void ResetAttack()
+    {
+        readyToAttack = true;
     }
     private void FollowTarget()
     {
-        if(Vector3.Distance(target.position, gameObject.transform.position) < 5 && !attacking)
+        //Make Head of enemy transform.LookAt
+        //Make body update using clamp motions
+
+        if(Vector3.Distance(target.position, gameObject.transform.position) < (ea.enemyRange))
         {
-            attacking = true;
-            StartCoroutine(SwingAttack());
+            readyToAttack = false;
+            SwingAttack();
+            //Look at invoke stuff idk im struggling
+            Invoke("ResetAttack", ea.enemyAttackSpeed);
         }
         else if(agent.enabled)
         {
@@ -100,17 +124,19 @@ public class EnemyMovement : MonoBehaviour
 
     private void CheckRadius()
     {
+        //Are there players within the trigger sphere
         players = Physics.OverlapSphere(gameObject.transform.position, triggerRadius, playerMask);
         if (players.Length > 0)
         {
+            //Are the players in sight or are there obstacles in the way
             RaycastHit playerHit;
             Physics.Linecast(gameObject.transform.position + (Vector3.up * agent.height), players[0].transform.position, out playerHit);
-            //print(players[0].transform.position);
 
+            //If they are in sight chase first in array
             if (playerHit.collider.CompareTag("Player"))
             {
                 target = players[0].transform;
-                targetFound = true;
+                state = EnemyState.chasing;
                 print("Target has been marked");
             }
         }
@@ -121,7 +147,8 @@ public class EnemyMovement : MonoBehaviour
     //Apply spell knockback from player position with specified spell force
     public void Knockback(Vector3 forcePosition, float force)
     {
-        knocked = true;
+        //StopCoroutine(SwingAttack());
+        state = EnemyState.knocked;
         rb.isKinematic = false;
         agent.enabled = false;
 
@@ -129,20 +156,28 @@ public class EnemyMovement : MonoBehaviour
         StartCoroutine(ResetEnemy(0.25f));
     }
 
+    //Reset physics to knockbacked enemy
     private IEnumerator ResetEnemy(float time)
     {
         yield return new WaitForSeconds(time);
 
         rb.isKinematic = true;
         agent.enabled = true;
-        knocked = false;
+        state = EnemyState.chasing;
 
     }
 
     //lifts enemy into air and resumes chase after landing
     public void StopNav()
     {
+        if(attackingCoroutine != null)
+        {
+            StopCoroutine(attackingCoroutine);
+            attackingCoroutine = null;
+        }
+        //StopCoroutine(SwingAttack());
         stunned = true;
+        state = EnemyState.stunned;
         rb.isKinematic = false;
         rb.useGravity = false;
         agent.enabled = false;
@@ -153,6 +188,8 @@ public class EnemyMovement : MonoBehaviour
 
 
     }
+
+    //Resume Agent after enemy has landed
     private IEnumerator ResumeNav()
     {
         yield return new WaitForSeconds(1f);
@@ -163,8 +200,7 @@ public class EnemyMovement : MonoBehaviour
         rb.isKinematic = true;
         agent.enabled = true;
         stunned = false;
-        //print("Enemy has landed");
-        //rb.AddForce(transform.up * -1000f);
+        state = EnemyState.chasing;
     }
 
 
