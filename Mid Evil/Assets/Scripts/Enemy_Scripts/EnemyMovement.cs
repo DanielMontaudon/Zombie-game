@@ -58,30 +58,16 @@ public class EnemyMovement : MonoBehaviour
 
     }
 
-    /*
-            RaycastHit hitInfo;
-            bool rayHit = Physics.Raycast(gameObject.transform.position + (Vector3.up * 1.5f), gameObject.transform.forward, out hitInfo, ea.enemyRange);
-            //Maybe add a WaitForSeconds to give player a small window to dodge the attack instead of guarentee play is hit when swung
-            if (rayHit)
-            {
-                if (hitInfo.collider.CompareTag("Player"))
-                {
-                    //print("hit player");
-                    PlayerAttributes pa = hitInfo.collider.GetComponent<PlayerAttributes>();
-                    pa.ApplyDamage(ea.enemyDamage);
-                }
-            }
-    */
     private void SwingAttack()
     {
 
         state = EnemyState.attacking;
         agent.enabled = false;
-        //add while loop logic
-        print("Attacking");
+        
+        //print("Attacking");
         RaycastHit hitInfo;
         bool rayHit = Physics.Raycast(gameObject.transform.position + (Vector3.up * 1.5f), gameObject.transform.forward, out hitInfo, ea.enemyRange);
-        //Maybe add a WaitForSeconds to give player a small window to dodge the attack instead of guarentee play is hit when swung
+        //Change Raycast to SphereCast persay? 
         if (rayHit)
         {
             if (hitInfo.collider.CompareTag("Player"))
@@ -106,12 +92,29 @@ public class EnemyMovement : MonoBehaviour
         //Make Head of enemy transform.LookAt
         //Make body update using clamp motions
 
-        if(Vector3.Distance(target.position, gameObject.transform.position) < (ea.enemyRange))
+        if(Vector3.Distance(target.position, gameObject.transform.position) < (ea.enemyRange) && readyToAttack)
         {
-            readyToAttack = false;
-            SwingAttack();
-            //Look at invoke stuff idk im struggling
-            Invoke("ResetAttack", ea.enemyAttackSpeed);
+            //RaycastHit sphereCastHit;
+            //Physics.SphereCast(new Ray(transform.position + (Vector3.up * 1.5f), transform.forward), 1f, ea.enemyRange, playerMask);
+            //players = Physics.OverlapSphere(transform.position + (Vector3.up * 1.5f) + (Vector3.forward * ea.enemyRange / 2f), ea.enemyRange / 2f, playerMask);
+            //if(players.Length > 0)
+            if(Physics.SphereCast(new Ray(transform.position + (Vector3.up * 1.5f), transform.forward), 1f, ea.enemyRange, playerMask))
+            {
+                print("Attacking");
+                readyToAttack = false;
+                SwingAttack();
+                
+                Invoke("ResetAttack", ea.enemyAttackSpeed);
+            }
+            else
+            {
+                print("Rotating");
+                //transform.LookAt(Vector3.Lerp(transform.rotation.eulerAngles, target.position, Time.deltaTime * 5f));
+                Vector3 direction = target.position - transform.position;
+                Quaternion targetRotation = Quaternion.LookRotation(direction);
+
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f);
+            }
         }
         else if(agent.enabled)
         {
@@ -216,6 +219,8 @@ public class EnemyMovement : MonoBehaviour
         //ground check
         Gizmos.color = new Color(1f, 0f, 1f, 0.3f);
         Gizmos.DrawSphere(transform.position, 0.3f);
+
+        Gizmos.DrawRay(transform.position + (Vector3.up * 1.5f), transform.forward * 4f);
     }
 
 }
