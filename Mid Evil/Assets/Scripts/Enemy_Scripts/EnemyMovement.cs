@@ -66,7 +66,9 @@ public class EnemyMovement : MonoBehaviour
         
         //print("Attacking");
         RaycastHit hitInfo;
-        bool rayHit = Physics.Raycast(gameObject.transform.position + (Vector3.up * 1.5f), gameObject.transform.forward, out hitInfo, ea.enemyRange);
+        bool rayHit = Physics.SphereCast(transform.position + (Vector3.up * 1.5f), 1f, transform.forward, out hitInfo, ea.enemyRange);
+        //(Vector3 origin, float radius, Vector3 direction, out RaycastHit hitInfo, float maxDistance, int layerMask);
+        //bool rayHit = Physics.Raycast(gameObject.transform.position + (Vector3.up * 1.5f), gameObject.transform.forward, out hitInfo, ea.enemyRange);
         //Change Raycast to SphereCast persay? 
         if (rayHit)
         {
@@ -94,11 +96,10 @@ public class EnemyMovement : MonoBehaviour
 
         if(Vector3.Distance(target.position, gameObject.transform.position) < (ea.enemyRange) && readyToAttack)
         {
-            //RaycastHit sphereCastHit;
-            //Physics.SphereCast(new Ray(transform.position + (Vector3.up * 1.5f), transform.forward), 1f, ea.enemyRange, playerMask);
-            //players = Physics.OverlapSphere(transform.position + (Vector3.up * 1.5f) + (Vector3.forward * ea.enemyRange / 2f), ea.enemyRange / 2f, playerMask);
-            //if(players.Length > 0)
-            if(Physics.SphereCast(new Ray(transform.position + (Vector3.up * 1.5f), transform.forward), 1f, ea.enemyRange, playerMask))
+            //Check if player/target is infront of them
+            //Physics.Raycast(gameObject.transform.position + (Vector3.up * 1.5f), gameObject.transform.forward, out hitInfo, ea.enemyRange)
+            //Physics.SphereCast(new Ray(transform.position + (Vector3.up * 1.5f), transform.forward), 1f, ea.enemyRange, playerMask)
+            if (Physics.Raycast(transform.position + (Vector3.up * 1.5f), transform.forward, ea.enemyRange, playerMask))
             {
                 print("Attacking");
                 readyToAttack = false;
@@ -106,6 +107,7 @@ public class EnemyMovement : MonoBehaviour
                 
                 Invoke("ResetAttack", ea.enemyAttackSpeed);
             }
+            //else turn towards player
             else
             {
                 print("Rotating");
