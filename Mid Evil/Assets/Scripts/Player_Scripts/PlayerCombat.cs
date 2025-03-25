@@ -210,6 +210,10 @@ public class PlayerCombat : MonoBehaviour
         //Earth Spell - Defensive stance that roots player and makes player invulnrable, healing and regen in the process
         else if (spell.spellType == Spell.damageType.Earth && playerStats.mana >= spell.manaCost)
         {
+            playerMovement.pauseInput = true;
+            Rigidbody rb = gameObject.GetComponent<Rigidbody>();
+            rb.linearVelocity = Vector3.zero;
+
             print("Earth casted");
             playerStats.mana -= spell.manaCost;
         }

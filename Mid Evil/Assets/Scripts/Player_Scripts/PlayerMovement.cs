@@ -9,6 +9,7 @@ public class PlayerMovement : MonoBehaviour
     public float sprintSpeed;
 
     public float groundDrag;
+    public bool pauseInput = false;
 
     [Header("Jumping")]
     public float jumpForce;
@@ -76,7 +77,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        MovePlayer();
+        if (!pauseInput)
+        {
+            MovePlayer();
+        }
     }
     private void Update()
     {
@@ -85,10 +89,13 @@ public class PlayerMovement : MonoBehaviour
 
         //roof check
         roofAbove = Physics.Raycast(transform.position, Vector3.up, playerHeight + 0.3f, whatIsGround);
-
-        MyInput();
-        SpeedControl();
-        StateHandler();
+        if (!pauseInput)
+        {
+            MyInput();
+            SpeedControl();
+            StateHandler();
+        }
+        //StateHandler();
 
         //handle drag
         if (grounded)
@@ -138,7 +145,6 @@ public class PlayerMovement : MonoBehaviour
         {
             state = MovementState.crouching;
             moveSpeed = crouchSpeed;
-            //rb.AddForce(Vector3.down * 0.5f, ForceMode.Impulse);
         }
         //Mode - Sprinting
         else if(grounded && Input.GetKey(sprintKey) && !roofAbove && stats.stamina > 5f)
