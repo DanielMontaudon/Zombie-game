@@ -15,6 +15,6 @@ MonoBehaviour:
   damage: 10
   range: 25
   spellType: 0
-  manaCost: 5
+  manaCost: 2
   cooldown: 1
   knockback: 5

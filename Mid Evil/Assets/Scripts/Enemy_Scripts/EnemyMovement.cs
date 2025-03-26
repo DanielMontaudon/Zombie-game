@@ -76,7 +76,10 @@ public class EnemyMovement : MonoBehaviour
             {
                 //print("hit player");
                 PlayerAttributes pa = hitInfo.collider.GetComponent<PlayerAttributes>();
-                pa.ApplyDamage(ea.enemyDamage);
+                if (!pa.stasis)
+                {
+                    pa.ApplyDamage(ea.enemyDamage);
+                }
             }
         }
 
@@ -101,7 +104,6 @@ public class EnemyMovement : MonoBehaviour
             //Physics.SphereCast(new Ray(transform.position + (Vector3.up * 1.5f), transform.forward), 1f, ea.enemyRange, playerMask)
             if (Physics.Raycast(transform.position + (Vector3.up * 1.5f), transform.forward, ea.enemyRange, playerMask))
             {
-                print("Attacking");
                 readyToAttack = false;
                 SwingAttack();
                 
@@ -110,8 +112,7 @@ public class EnemyMovement : MonoBehaviour
             //else turn towards player
             else
             {
-                print("Rotating");
-                //transform.LookAt(Vector3.Lerp(transform.rotation.eulerAngles, target.position, Time.deltaTime * 5f));
+                //print("Rotating");
                 Vector3 direction = target.position - transform.position;
                 Quaternion targetRotation = Quaternion.LookRotation(direction);
 

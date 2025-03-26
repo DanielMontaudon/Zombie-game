@@ -6,7 +6,7 @@ public class PlayerAttributes : MonoBehaviour
     public float health = 100f;
     public float stamina = 100f;
     public float mana = 100f;
-
+    public bool stasis = false;
 
     float staminaTimeInterval = 0f;
     float manaTimeInterval = 0f;
@@ -25,6 +25,10 @@ public class PlayerAttributes : MonoBehaviour
     void Update()
     {
         //print("Mana: " + mana + ", Stamina: " + stamina);
+        if (health > 100)
+            health = 100;
+        if (mana > 100)
+            mana = 100;
         RechargeStamina();
         RechargeMana();
     }

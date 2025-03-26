@@ -134,98 +134,103 @@ public class PlayerCombat : MonoBehaviour
     //Handle Raycasting and such
     void CastSpell(Spell spell)
     {
-        //Lightning Spell
-        if (spell.spellType == Spell.damageType.Lightning && playerStats.mana >= spell.manaCost)
+        if (playerStats.stasis != true)
         {
-            print("Lightning casted");
-            RaycastHit raycastHit;
-            //Cast Ray straight in front of player 
-            bool rayHit = Physics.Raycast(playerCam.position, playerCam.transform.forward, out raycastHit, spell.range);
-            
-            //If something was hit
-            if (rayHit)
+            //Lightning Spell
+            if (spell.spellType == Spell.damageType.Lightning && playerStats.mana >= spell.manaCost)
             {
-                //If that something was a Enemy
-                if(raycastHit.collider.CompareTag("Enemy"))
+                print("Lightning casted");
+                RaycastHit raycastHit;
+                //Cast Ray straight in front of player 
+                bool rayHit = Physics.Raycast(playerCam.position, playerCam.transform.forward, out raycastHit, spell.range);
+
+                //If something was hit
+                if (rayHit)
                 {
-                    //do something with enemy hit (take damage, shock, apply force)
-                    print("Lightning casted on: " + raycastHit.collider.tag);
-                    DealDamage(raycastHit.collider, spell.damage);
-                    ApplyKnockback(raycastHit.collider, spell.knockback);
-                    CheckIfAttacked(raycastHit.collider);
-                }
-
-                //Add some other spicy tags persay? (Explosive barrels, water)
-            }
-            playerStats.mana -= spell.manaCost;
-        }
-        //Air Spell - Tornado that lifts enemies for set time
-        else if (spell.spellType == Spell.damageType.Air && playerStats.mana >= spell.manaCost)
-        {
-            print("Air casted");
-            //LayerMask enemyLayer = LayerMask.GetMask("Enemy");
-            //RaycastHit[] raycastHits = Physics.RaycastAll(playerCam.position, playerCam.transform.forward, spell.range);
-            RaycastHit[] raycastHits = Physics.SphereCastAll(playerCam.position, 1f, orientation.transform.forward, spell.range);
-
-            foreach (RaycastHit hit in raycastHits)
-            {
-                if(hit.collider.CompareTag("Enemy"))
-                {
-                    CCEnemy(hit.collider);
-                }
-                //print(hit.collider.tag);
-            }
-            playerStats.mana -= spell.manaCost;
-        }
-        //Fire Spell - AoE Sphere that does massive damage
-        else if (spell.spellType == Spell.damageType.Fire && playerStats.mana >= spell.manaCost)
-        {
-            //Sphere Check
-            LayerMask enemyLayer = LayerMask.GetMask("Enemy");
-            Collider[] enemys = Physics.OverlapSphere(gameObject.transform.position, spell.range, enemyLayer);
-
-            //Add same sphere check for interactables? barrels persay??
-
-            //If enemys are within range
-            if(enemys.Length > 0)
-            {
-                //for each enemy, see if they are behind structures/walls when in range
-                foreach(Collider enemy in enemys)
-                {
-                    RaycastHit spellHit;
-                    Physics.Linecast(gameObject.transform.position + (Vector3.up * playerMovement.playerHeight / 2f), enemy.transform.position + (Vector3.up * playerMovement.playerHeight / 2f), out spellHit);
-
-                    //Otherwise apply damage and such
-                    if(spellHit.collider.CompareTag("Enemy"))
+                    //If that something was a Enemy
+                    if (raycastHit.collider.CompareTag("Enemy"))
                     {
-                        DealDamage(enemy, spell.damage);
-                        ApplyKnockback(enemy, spell.knockback);
-                        CheckIfAttacked(enemy);
+                        //do something with enemy hit (take damage, shock, apply force)
+                        print("Lightning casted on: " + raycastHit.collider.tag);
+                        DealDamage(raycastHit.collider, spell.damage);
+                        ApplyKnockback(raycastHit.collider, spell.knockback);
+                        CheckIfAttacked(raycastHit.collider);
                     }
-                    
-                }
-            }          
-            playerStats.mana -= spell.manaCost;
-        }
-        //Earth Spell - Defensive stance that roots player and makes player invulnrable, healing and regen in the process
-        else if (spell.spellType == Spell.damageType.Earth && playerStats.mana >= spell.manaCost)
-        {
-            playerMovement.pauseInput = true;
-            Rigidbody rb = gameObject.GetComponent<Rigidbody>();
-            rb.linearVelocity = Vector3.zero;
 
-            print("Earth casted");
-            playerStats.mana -= spell.manaCost;
+                    //Add some other spicy tags persay? (Explosive barrels, water)
+                }
+                playerStats.mana -= spell.manaCost;
+            }
+            //Air Spell - Tornado that lifts enemies for set time
+            else if (spell.spellType == Spell.damageType.Air && playerStats.mana >= spell.manaCost)
+            {
+                print("Air casted");
+                //LayerMask enemyLayer = LayerMask.GetMask("Enemy");
+                //RaycastHit[] raycastHits = Physics.RaycastAll(playerCam.position, playerCam.transform.forward, spell.range);
+                RaycastHit[] raycastHits = Physics.SphereCastAll(playerCam.position, 1f, orientation.transform.forward, spell.range);
+
+                foreach (RaycastHit hit in raycastHits)
+                {
+                    if (hit.collider.CompareTag("Enemy"))
+                    {
+                        CCEnemy(hit.collider);
+                    }
+                    //print(hit.collider.tag);
+                }
+                playerStats.mana -= spell.manaCost;
+            }
+            //Fire Spell - AoE Sphere that does massive damage
+            else if (spell.spellType == Spell.damageType.Fire && playerStats.mana >= spell.manaCost)
+            {
+                //Sphere Check
+                LayerMask enemyLayer = LayerMask.GetMask("Enemy");
+                Collider[] enemys = Physics.OverlapSphere(transform.position, spell.range, enemyLayer);
+
+                //Add same sphere check for interactables? barrels persay??
+
+                //If enemys are within range
+                if (enemys.Length > 0)
+                {
+                    //for each enemy, see if they are behind structures/walls when in range
+                    foreach (Collider enemy in enemys)
+                    {
+                        RaycastHit spellHit;
+                        Physics.Linecast(gameObject.transform.position + (Vector3.up * playerMovement.playerHeight / 2f), enemy.transform.position + (Vector3.up * playerMovement.playerHeight / 2f), out spellHit);
+
+                        //Otherwise apply damage and such
+                        if (spellHit.collider.CompareTag("Enemy"))
+                        {
+                            DealDamage(enemy, spell.damage);
+                            ApplyKnockback(enemy, spell.knockback);
+                            CheckIfAttacked(enemy);
+                        }
+
+                    }
+                }
+                playerStats.mana -= spell.manaCost;
+            }
+            //Earth Spell - Defensive stance that roots player and makes player invulnrable, healing and regen in the process
+            else if (spell.spellType == Spell.damageType.Earth && playerStats.mana >= spell.manaCost)
+            {
+                playerMovement.pauseInput = true;
+                Rigidbody rb = gameObject.GetComponent<Rigidbody>();
+                rb.linearVelocity = Vector3.zero;
+
+                StartCoroutine(Tremor(spell));
+
+                print("Earth casted");
+                playerStats.mana -= spell.manaCost;
+            }
+            //Dash Spell - Dash in direction player is facing pushing enemies aside
+            else if (spell.spellType == Spell.damageType.Dash && playerStats.mana >= spell.manaCost)
+            {
+                StartCoroutine(Dash());
+
+                print("Dash casted");
+                playerStats.mana -= spell.manaCost;
+            }
+            //Water Spell ??
         }
-        //Dash Spell - Dash in direction player is facing pushing enemies aside
-        else if (spell.spellType == Spell.damageType.Dash && playerStats.mana >= spell.manaCost)
-        {
-            StartCoroutine(Dash());
-            
-            print("Dash casted");
-            playerStats.mana -= spell.manaCost;
-        }
-        //Water Spell ??
 
     }
 
@@ -295,6 +300,58 @@ public class PlayerCombat : MonoBehaviour
     {
         EnemyMovement enemyMovement = enemy.gameObject.GetComponent<EnemyMovement>();
         enemyMovement.StopNav();
+    }
+
+    private IEnumerator Tremor(Spell spell)
+    {
+        playerStats.stasis = true;
+        int extraRegen = KnockbackLogic(spell);
+        playerStats.health += 10 + extraRegen;
+        playerStats.mana += 10 + extraRegen;
+
+        yield return new WaitForSeconds(0.5f);
+
+        extraRegen = KnockbackLogic(spell);
+        playerStats.health += 10 + extraRegen;
+        playerStats.mana += 10 + extraRegen;
+
+        yield return new WaitForSeconds(0.5f);
+
+        extraRegen = KnockbackLogic(spell);
+        playerStats.health += 10 + extraRegen;
+        playerStats.mana += 10 + extraRegen;
+
+        playerMovement.pauseInput = false;
+        playerStats.stasis = false;
+
+    }
+
+    private int KnockbackLogic(Spell spell)
+    {
+        LayerMask enemyLayer = LayerMask.GetMask("Enemy");
+        Collider[] enemys = Physics.OverlapSphere(transform.position, spell.range, enemyLayer);
+        int hitCount = 0;
+        if (enemys.Length > 0)
+        {
+            //for each enemy, see if they are behind structures/walls when in range
+            foreach (Collider enemy in enemys)
+            {
+                RaycastHit spellHit;
+                Physics.Linecast(transform.position + (Vector3.up * playerMovement.playerHeight / 2f), enemy.transform.position + (Vector3.up * playerMovement.playerHeight / 2f), out spellHit);
+
+                //Otherwise apply damage and such
+                if (spellHit.collider.CompareTag("Enemy"))
+                {
+                    hitCount += 1;
+                    ApplyKnockback(enemy, spell.knockback);
+                    CheckIfAttacked(enemy);
+
+                }
+
+            }
+        }
+
+        return hitCount;
     }
 
 
