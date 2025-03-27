@@ -162,21 +162,39 @@ public class PlayerCombat : MonoBehaviour
                 playerStats.mana -= spell.manaCost;
             }
             //Air Spell - Tornado that lifts enemies for set time
+            //Maybe Not tornado persay but wall of air, think moses
             else if (spell.spellType == Spell.damageType.Air && playerStats.mana >= spell.manaCost)
             {
                 print("Air casted");
                 //LayerMask enemyLayer = LayerMask.GetMask("Enemy");
                 //RaycastHit[] raycastHits = Physics.RaycastAll(playerCam.position, playerCam.transform.forward, spell.range);
                 RaycastHit[] raycastHits = Physics.SphereCastAll(playerCam.position, 1f, orientation.transform.forward, spell.range);
-
-                foreach (RaycastHit hit in raycastHits)
+                float closestWall = float.MaxValue;
+                //foreach (RaycastHit hit in raycastHits)
+                for(int i = 0; i < raycastHits.Length; i++)
                 {
-                    if (hit.collider.CompareTag("Enemy"))
+                    if (!raycastHits[i].collider.CompareTag("Player"))
                     {
-                        CCEnemy(hit.collider);
+                        print(raycastHits[i].collider.tag + ": " + Vector3.Distance(raycastHits[i].point, transform.position));
+                        if (!raycastHits[i].collider.CompareTag("Enemy"))
+                        {
+                            if(Vector3.Distance(transform.position, raycastHits[i].point) < closestWall)
+                            {
+                                closestWall = Vector3.Distance(transform.position, raycastHits[i].point);
+                            }
+                        }
                     }
-                    //print(hit.collider.tag);
                 }
+                print("Closest Wall Located at: " + closestWall);
+                for (int j = 0; j < raycastHits.Length; j++)
+                {
+                    if (raycastHits[j].collider.CompareTag("Enemy") && Vector3.Distance(transform.position, raycastHits[j].point) < closestWall)
+                    {
+                        CheckIfAttacked(raycastHits[j].collider);
+                        CCEnemy(raycastHits[j].collider);
+                    }
+                }
+            
                 playerStats.mana -= spell.manaCost;
             }
             //Fire Spell - AoE Sphere that does massive damage
