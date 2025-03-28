@@ -169,6 +169,7 @@ public class EnemyMovement : MonoBehaviour
 
         rb.isKinematic = true;
         agent.enabled = true;
+  
         state = EnemyState.chasing;
 
     }

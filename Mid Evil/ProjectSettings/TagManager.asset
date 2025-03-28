@@ -8,6 +8,7 @@ TagManager:
   - Wall
   - Ramp
   - Terrain
+  - Barrel
   layers:
   - Default
   - TransparentFX

@@ -157,7 +157,12 @@ public class PlayerCombat : MonoBehaviour
                         CheckIfAttacked(raycastHit.collider);
                     }
 
-                    //Add some other spicy tags persay? (Explosive barrels, water)
+                    if (raycastHit.collider.CompareTag("Barrel"))
+                    {
+                        ExplosiveBarrel eb = raycastHit.collider.gameObject.GetComponent<ExplosiveBarrel>();
+                        eb.LightningHit(transform, raycastHit.point, spell.knockback);
+                    }
+                        //Add some other spicy tags persay? (Explosive barrels, water)
                 }
                 playerStats.mana -= spell.manaCost;
             }
@@ -205,6 +210,7 @@ public class PlayerCombat : MonoBehaviour
                 Collider[] enemys = Physics.OverlapSphere(transform.position, spell.range, enemyLayer);
 
                 //Add same sphere check for interactables? barrels persay??
+                //THIS IS WHERE YOU WOULD PUT THE FIREHIT INTERRACTION
 
                 //If enemys are within range
                 if (enemys.Length > 0)
