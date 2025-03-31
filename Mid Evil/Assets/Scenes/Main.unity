@@ -1810,7 +1810,7 @@ GameObject:
   - component: {fileID: 1321843501}
   - component: {fileID: 1321843504}
   - component: {fileID: 1321843503}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cylinder
   m_TagString: Barrel
   m_Icon: {fileID: 0}
@@ -2053,7 +2053,7 @@ GameObject:
   - component: {fileID: 1491873303}
   - component: {fileID: 1491873305}
   - component: {fileID: 1491873306}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Barrel
   m_TagString: Barrel
   m_Icon: {fileID: 0}
@@ -2096,7 +2096,7 @@ Transform:
   m_GameObject: {fileID: 1491873302}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -13.82, y: 1.425, z: -5.61}
+  m_LocalPosition: {x: -18.15, y: 1.425, z: -16.78}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2117,6 +2117,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   barrelBlast: {fileID: 11400000, guid: 8bc21b76b2190e048b71625674c53f15, type: 2}
   lastHitBy: {fileID: 0}
+  primed: 0
 --- !u!64 &1491873306
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -2907,7 +2908,7 @@ Transform:
   m_GameObject: {fileID: 2115770595}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -17.87, y: 0, z: -24.21}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

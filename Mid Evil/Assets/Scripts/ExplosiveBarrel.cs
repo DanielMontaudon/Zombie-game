@@ -2,9 +2,13 @@ using UnityEngine;
 
 public class ExplosiveBarrel : MonoBehaviour
 {
+    /*
+     * Maybe create a way for each of the elements to interact with the barrel for later roguelike aspects
+    */
     Rigidbody rb;
     public Spell barrelBlast;
     public Transform lastHitBy;
+    public bool primed = false;
 
     private void Start()
     {
@@ -13,17 +17,30 @@ public class ExplosiveBarrel : MonoBehaviour
 
     public void LightningHit(Transform player, Vector3 hitPosition, float force)
     {
-        lastHitBy = player;
-        //transform.position
-        rb.AddForce((hitPosition - player.position).normalized * (force * 1000));
+        if(!primed)
+        {
+            primed = true;
 
-        Invoke("Explode", 1f);
+            lastHitBy = player;
+            //transform.position
+            rb.useGravity = false;
+            rb.AddTorque((hitPosition - player.position).normalized * force, ForceMode.Impulse);
+            //rb.AddForce(hitPosition.normalized * (force * 1000));
+            rb.AddForce((hitPosition - player.position).normalized * (force * 1000));
+
+            Invoke("Explode", 1f);
+        }
     }
 
     public void FireHit(Transform player)
     {
-        lastHitBy = player;
-        Explode();
+        if (!primed)
+        {
+            primed = true;
+
+            lastHitBy = player;
+            Explode();
+        }
     }
 
     public void Explode()

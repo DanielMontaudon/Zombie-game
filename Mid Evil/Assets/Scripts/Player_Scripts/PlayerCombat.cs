@@ -210,6 +210,23 @@ public class PlayerCombat : MonoBehaviour
                 Collider[] enemys = Physics.OverlapSphere(transform.position, spell.range, enemyLayer);
 
                 //Add same sphere check for interactables? barrels persay??
+                LayerMask interactableLayer = LayerMask.GetMask("Interactable");
+                Collider[] interactables = Physics.OverlapSphere(transform.position, spell.range, interactableLayer);
+
+                if(interactables.Length > 0)
+                {
+                    foreach(Collider interactable in interactables)
+                    {
+                        RaycastHit spellHit;
+                        Physics.Linecast(transform.position + (Vector3.up * playerMovement.playerHeight / 2f), interactable.transform.position, out spellHit);
+
+                        if (spellHit.collider.CompareTag("Barrel"))
+                        {
+                            ExplosiveBarrel eb = spellHit.collider.gameObject.GetComponent<ExplosiveBarrel>();
+                            eb.FireHit(transform);
+                        }
+                    }
+                }
                 //THIS IS WHERE YOU WOULD PUT THE FIREHIT INTERRACTION
 
                 //If enemys are within range
@@ -219,7 +236,7 @@ public class PlayerCombat : MonoBehaviour
                     foreach (Collider enemy in enemys)
                     {
                         RaycastHit spellHit;
-                        Physics.Linecast(gameObject.transform.position + (Vector3.up * playerMovement.playerHeight / 2f), enemy.transform.position + (Vector3.up * playerMovement.playerHeight / 2f), out spellHit);
+                        Physics.Linecast(transform.position + (Vector3.up * playerMovement.playerHeight / 2f), enemy.transform.position + (Vector3.up * playerMovement.playerHeight / 2f), out spellHit);
 
                         //Otherwise apply damage and such
                         if (spellHit.collider.CompareTag("Enemy"))
