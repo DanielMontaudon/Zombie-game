@@ -147,7 +147,7 @@ public class PlayerCombat : MonoBehaviour
                 //If something was hit
                 if (rayHit)
                 {
-                    //If that something was a Enemy
+                    //If Enemy was hit
                     if (raycastHit.collider.CompareTag("Enemy"))
                     {
                         //do something with enemy hit (take damage, shock, apply force)
@@ -157,11 +157,22 @@ public class PlayerCombat : MonoBehaviour
                         CheckIfAttacked(raycastHit.collider);
                     }
 
+                    //If Barrel was hit
                     if (raycastHit.collider.CompareTag("Barrel"))
                     {
                         ExplosiveBarrel eb = raycastHit.collider.gameObject.GetComponent<ExplosiveBarrel>();
                         eb.LightningHit(transform, raycastHit.point, spell.knockback);
                     }
+
+                    //If Puddle was hit
+                    if (raycastHit.collider.CompareTag("Puddle"))
+                    {
+                        print("Lightning casted on: " + raycastHit.collider.tag);
+                        ArcanePuddle ap = raycastHit.collider.gameObject.GetComponent<ArcanePuddle>();
+                        ap.LightningArcane(spell.damage);
+                        //Do arcane stuff
+                    }
+
                         //Add some other spicy tags persay? (Explosive barrels, water)
                 }
                 playerStats.mana -= spell.manaCost;
@@ -213,6 +224,7 @@ public class PlayerCombat : MonoBehaviour
                 LayerMask interactableLayer = LayerMask.GetMask("Interactable");
                 Collider[] interactables = Physics.OverlapSphere(transform.position, spell.range, interactableLayer);
 
+                //If interactables (barrels, oil/arcane slick)
                 if(interactables.Length > 0)
                 {
                     foreach(Collider interactable in interactables)
@@ -227,7 +239,6 @@ public class PlayerCombat : MonoBehaviour
                         }
                     }
                 }
-                //THIS IS WHERE YOU WOULD PUT THE FIREHIT INTERRACTION
 
                 //If enemys are within range
                 if (enemys.Length > 0)

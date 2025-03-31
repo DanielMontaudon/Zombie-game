@@ -9,6 +9,7 @@ TagManager:
   - Ramp
   - Terrain
   - Barrel
+  - Puddle
   layers:
   - Default
   - TransparentFX
