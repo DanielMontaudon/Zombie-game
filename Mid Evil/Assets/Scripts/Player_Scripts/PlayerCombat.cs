@@ -237,6 +237,12 @@ public class PlayerCombat : MonoBehaviour
                             ExplosiveBarrel eb = spellHit.collider.gameObject.GetComponent<ExplosiveBarrel>();
                             eb.FireHit(transform);
                         }
+
+                        if (spellHit.collider.CompareTag("Puddle"))
+                        {
+                            ArcanePuddle ap = spellHit.collider.gameObject.GetComponent<ArcanePuddle>();
+                            ap.FireArcane(spell.damage);
+                        }
                     }
                 }
 
