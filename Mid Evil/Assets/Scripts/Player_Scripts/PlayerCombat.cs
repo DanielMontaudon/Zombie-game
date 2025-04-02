@@ -182,6 +182,7 @@ public class PlayerCombat : MonoBehaviour
             else if (spell.spellType == Spell.damageType.Air && playerStats.mana >= spell.manaCost)
             {
                 print("Air casted");
+                //LayerMask interactableLayer = LayerMask.GetMask("Interactable");
                 //LayerMask enemyLayer = LayerMask.GetMask("Enemy");
                 //RaycastHit[] raycastHits = Physics.RaycastAll(playerCam.position, playerCam.transform.forward, spell.range);
                 RaycastHit[] raycastHits = Physics.SphereCastAll(playerCam.position, 1f, orientation.transform.forward, spell.range);
@@ -189,7 +190,7 @@ public class PlayerCombat : MonoBehaviour
                 //foreach (RaycastHit hit in raycastHits)
                 for(int i = 0; i < raycastHits.Length; i++)
                 {
-                    if (!raycastHits[i].collider.CompareTag("Player"))
+                    if (!raycastHits[i].collider.CompareTag("Player") && !raycastHits[i].collider.CompareTag("Barrel"))
                     {
                         print(raycastHits[i].collider.tag + ": " + Vector3.Distance(raycastHits[i].point, transform.position));
                         if (!raycastHits[i].collider.CompareTag("Enemy"))
@@ -216,6 +217,7 @@ public class PlayerCombat : MonoBehaviour
             //Fire Spell - AoE Sphere that does massive damage
             else if (spell.spellType == Spell.damageType.Fire && playerStats.mana >= spell.manaCost)
             {
+                print("Fire Casted");
                 //Sphere Check
                 LayerMask enemyLayer = LayerMask.GetMask("Enemy");
                 Collider[] enemys = Physics.OverlapSphere(transform.position, spell.range, enemyLayer);
@@ -230,7 +232,7 @@ public class PlayerCombat : MonoBehaviour
                     foreach(Collider interactable in interactables)
                     {
                         RaycastHit spellHit;
-                        Physics.Linecast(transform.position + (Vector3.up * playerMovement.playerHeight / 2f), interactable.transform.position, out spellHit);
+                        Physics.Linecast(transform.position + (Vector3.up * playerMovement.playerHeight / 1.5f), interactable.transform.position, out spellHit, ~enemyLayer);
 
                         if (spellHit.collider.CompareTag("Barrel"))
                         {
@@ -253,7 +255,7 @@ public class PlayerCombat : MonoBehaviour
                     foreach (Collider enemy in enemys)
                     {
                         RaycastHit spellHit;
-                        Physics.Linecast(transform.position + (Vector3.up * playerMovement.playerHeight / 2f), enemy.transform.position + (Vector3.up * playerMovement.playerHeight / 2f), out spellHit);
+                        Physics.Linecast(transform.position + (Vector3.up * playerMovement.playerHeight / 1.5f), enemy.transform.position + (Vector3.up * playerMovement.playerHeight / 1.5f), out spellHit);
 
                         //Otherwise apply damage and such
                         if (spellHit.collider.CompareTag("Enemy"))
@@ -395,7 +397,7 @@ public class PlayerCombat : MonoBehaviour
             foreach (Collider enemy in enemys)
             {
                 RaycastHit spellHit;
-                Physics.Linecast(transform.position + (Vector3.up * playerMovement.playerHeight / 2f), enemy.transform.position + (Vector3.up * playerMovement.playerHeight / 2f), out spellHit);
+                Physics.Linecast(transform.position + (Vector3.up * playerMovement.playerHeight), enemy.transform.position + (Vector3.up * playerMovement.playerHeight / 2f), out spellHit);
 
                 //Otherwise apply damage and such
                 if (spellHit.collider.CompareTag("Enemy"))
@@ -420,11 +422,12 @@ public class PlayerCombat : MonoBehaviour
         Debug.DrawRay(playerCam.position, playerCam.transform.forward * leftSpell.range);
 
         //Air Debug
-        Debug.DrawRay(orientation.position, orientation.transform.forward * rightSpell.range);
+        Debug.DrawRay(playerCam.position, orientation.transform.forward * rightSpell.range);
 
         //Fire Debug
         Gizmos.color = new Color(1f, 1f, 0.5f, 0.25f);
         Gizmos.DrawSphere(gameObject.transform.position, specialSpell.range);
+        //Debug.DrawRay(transform.position + (Vector3.up * 3f), orientation.transform.forward * 5f);
 
     }
 }
