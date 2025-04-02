@@ -139,6 +139,7 @@ public class PlayerCombat : MonoBehaviour
             //Lightning Spell
             if (spell.spellType == Spell.damageType.Lightning && playerStats.mana >= spell.manaCost)
             {
+                //ADD A DEBUFF COUNTER INSTEAD OF CONTINUOS KNOCKBACK
                 print("Lightning casted");
                 RaycastHit raycastHit;
                 //Cast Ray straight in front of player 
