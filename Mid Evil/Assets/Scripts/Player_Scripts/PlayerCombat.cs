@@ -154,7 +154,8 @@ public class PlayerCombat : MonoBehaviour
                         //do something with enemy hit (take damage, shock, apply force)
                         print("Lightning casted on: " + raycastHit.collider.tag);
                         DealDamage(raycastHit.collider, spell.damage);
-                        ApplyKnockback(raycastHit.collider, spell.knockback);
+                        //Maybe make knockback into Card
+                        //ApplyKnockback(raycastHit.collider, spell.knockback);
                         CheckIfAttacked(raycastHit.collider);
                     }
 
