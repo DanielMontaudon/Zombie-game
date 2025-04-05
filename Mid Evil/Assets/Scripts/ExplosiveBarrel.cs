@@ -69,7 +69,7 @@ public class ExplosiveBarrel : MonoBehaviour
                     ea.ApplyDamage(barrelBlast.damage * 2);
 
                     em.target = lastHitBy;
-                    em.Knockback(transform.position, barrelBlast.knockback);
+                    em.Knockback(transform.position, barrelBlast.knockback, barrelBlast.stunTime);
 
                 }
 

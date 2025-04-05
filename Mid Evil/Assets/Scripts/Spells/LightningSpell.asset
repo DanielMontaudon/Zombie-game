@@ -17,4 +17,4 @@ MonoBehaviour:
   spellType: 0
   manaCost: 2
   cooldown: 0.5
-  knockback: 1
+  knockback: 20

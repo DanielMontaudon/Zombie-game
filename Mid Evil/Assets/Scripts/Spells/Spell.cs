@@ -9,6 +9,7 @@ public class Spell : ScriptableObject
     public float manaCost;
     public float cooldown;
     public float knockback;
+    public float stunTime;
 
     //Help Denote for ray type
     //Lightning - Primary

@@ -18,3 +18,4 @@ MonoBehaviour:
   manaCost: 0
   cooldown: 5
   knockback: 1500
+  stunTime: 0.3

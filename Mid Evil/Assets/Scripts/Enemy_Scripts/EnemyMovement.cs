@@ -151,15 +151,15 @@ public class EnemyMovement : MonoBehaviour
     /// Functions are called from PlayerCombat.cs/CastSpell function
     /// </summary>
     //Apply spell knockback from player position with specified spell force
-    public void Knockback(Vector3 forcePosition, float force)
+    public void Knockback(Vector3 forcePosition, float force, float stunTime)
     {
         //StopCoroutine(SwingAttack());
         state = EnemyState.knocked;
         rb.isKinematic = false;
         agent.enabled = false;
-
+        rb.AddTorque((transform.position - forcePosition).normalized * 5, ForceMode.Impulse);
         rb.AddForce((transform.position - forcePosition).normalized * force);
-        StartCoroutine(ResetEnemy(0.25f));
+        StartCoroutine(ResetEnemy(stunTime));
     }
 
     //Reset physics to knockbacked enemy
@@ -175,7 +175,7 @@ public class EnemyMovement : MonoBehaviour
     }
 
     //lifts enemy into air and resumes chase after landing
-    public void StopNav()
+    public void StopNav(Transform newTarget)
     {
         if(attackingCoroutine != null)
         {
@@ -183,21 +183,21 @@ public class EnemyMovement : MonoBehaviour
             attackingCoroutine = null;
         }
         //StopCoroutine(SwingAttack());
-        stunned = true;
+        //stunned = true;
         state = EnemyState.stunned;
         rb.isKinematic = false;
         rb.useGravity = false;
         agent.enabled = false;
 
-        rb.AddForce(transform.up * 1500f);
+        rb.AddForce(transform.up * 2000f);
 
-        StartCoroutine(ResumeNav());
+        StartCoroutine(ResumeNav(newTarget));
 
 
     }
 
     //Resume Agent after enemy has landed
-    private IEnumerator ResumeNav()
+    private IEnumerator ResumeNav(Transform newTarget)
     {
         yield return new WaitForSeconds(1f);
         rb.useGravity = true;
@@ -205,8 +205,10 @@ public class EnemyMovement : MonoBehaviour
 
         yield return new WaitForSeconds(1.5f);
         rb.isKinematic = true;
+
+        target = newTarget;
         agent.enabled = true;
-        stunned = false;
+        //stunned = false;
         state = EnemyState.chasing;
     }
 

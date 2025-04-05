@@ -209,8 +209,8 @@ public class PlayerCombat : MonoBehaviour
                 {
                     if (raycastHits[j].collider.CompareTag("Enemy") && Vector3.Distance(transform.position, raycastHits[j].point) < closestWall)
                     {
-                        CheckIfAttacked(raycastHits[j].collider);
-                        CCEnemy(raycastHits[j].collider);
+                        //CheckIfAttacked(raycastHits[j].collider);
+                        LiftEnemy(raycastHits[j].collider);
                     }
                 }
             
@@ -263,7 +263,7 @@ public class PlayerCombat : MonoBehaviour
                         if (spellHit.collider.CompareTag("Enemy"))
                         {
                             DealDamage(enemy, spell.damage);
-                            ApplyKnockback(enemy, spell.knockback);
+                            ApplyKnockback(enemy, spell.knockback, spell.stunTime);
                             CheckIfAttacked(enemy);
                         }
 
@@ -327,6 +327,7 @@ public class PlayerCombat : MonoBehaviour
         {
             enemyMovement.target = this.transform;
             enemyMovement.targetFound = true;
+            enemyMovement.state = EnemyMovement.EnemyState.chasing;
         }
 
     }
@@ -338,11 +339,11 @@ public class PlayerCombat : MonoBehaviour
         enemyAttributes.ApplyDamage(damage);
     }
 
-    private void ApplyKnockback(Collider enemy, float force)
+    private void ApplyKnockback(Collider enemy, float force, float stunTime)
     {
         EnemyMovement enemyMovement = enemy.gameObject.GetComponent<EnemyMovement>();
         if(enemyMovement.state != EnemyMovement.EnemyState.stunned)
-            enemyMovement.Knockback(transform.position, force);
+            enemyMovement.Knockback(transform.position, force, stunTime);
     }
 
     private IEnumerator Dash()
@@ -358,10 +359,10 @@ public class PlayerCombat : MonoBehaviour
         rb.useGravity = true;
     }
 
-    private void CCEnemy(Collider enemy)
+    private void LiftEnemy(Collider enemy)
     {
         EnemyMovement enemyMovement = enemy.gameObject.GetComponent<EnemyMovement>();
-        enemyMovement.StopNav();
+        enemyMovement.StopNav(transform);
     }
 
     private IEnumerator Tremor(Spell spell)
@@ -371,13 +372,13 @@ public class PlayerCombat : MonoBehaviour
         playerStats.health += 10 + extraRegen;
         playerStats.mana += 10 + extraRegen;
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(spell.stunTime + 0.1f);
 
         extraRegen = KnockbackLogic(spell);
         playerStats.health += 10 + extraRegen;
         playerStats.mana += 10 + extraRegen;
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(spell.stunTime + 0.1f);
 
         extraRegen = KnockbackLogic(spell);
         playerStats.health += 10 + extraRegen;
@@ -399,13 +400,14 @@ public class PlayerCombat : MonoBehaviour
             foreach (Collider enemy in enemys)
             {
                 RaycastHit spellHit;
+                //+ (Vector3.up * playerMovement.playerHeight / 2f)
                 Physics.Linecast(transform.position + (Vector3.up * playerMovement.playerHeight), enemy.transform.position + (Vector3.up * playerMovement.playerHeight / 2f), out spellHit);
 
                 //Otherwise apply damage and such
                 if (spellHit.collider.CompareTag("Enemy"))
                 {
                     hitCount += 1;
-                    ApplyKnockback(enemy, spell.knockback);
+                    ApplyKnockback(enemy, spell.knockback, spell.stunTime);
                     CheckIfAttacked(enemy);
 
                 }
