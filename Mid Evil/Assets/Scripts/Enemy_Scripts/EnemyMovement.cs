@@ -12,7 +12,6 @@ public class EnemyMovement : MonoBehaviour
     private EnemyAttributes ea;
 
     public Transform target;
-    public bool targetFound = false;
     public bool stunned = false;
     public bool readyToAttack = true;
     /*
@@ -153,7 +152,6 @@ public class EnemyMovement : MonoBehaviour
     //Apply spell knockback from player position with specified spell force
     public void Knockback(Vector3 forcePosition, float force, float stunTime)
     {
-        //StopCoroutine(SwingAttack());
         state = EnemyState.knocked;
         rb.isKinematic = false;
         agent.enabled = false;
@@ -177,13 +175,6 @@ public class EnemyMovement : MonoBehaviour
     //lifts enemy into air and resumes chase after landing
     public void StopNav(Transform newTarget)
     {
-        if(attackingCoroutine != null)
-        {
-            StopCoroutine(attackingCoroutine);
-            attackingCoroutine = null;
-        }
-        //StopCoroutine(SwingAttack());
-        //stunned = true;
         state = EnemyState.stunned;
         rb.isKinematic = false;
         rb.useGravity = false;

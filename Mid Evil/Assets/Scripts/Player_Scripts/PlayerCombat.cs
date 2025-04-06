@@ -204,7 +204,7 @@ public class PlayerCombat : MonoBehaviour
                         }
                     }
                 }
-                print("Closest Wall Located at: " + closestWall);
+                //print("Closest Wall Located at: " + closestWall);
                 for (int j = 0; j < raycastHits.Length; j++)
                 {
                     if (raycastHits[j].collider.CompareTag("Enemy") && Vector3.Distance(transform.position, raycastHits[j].point) < closestWall)
@@ -257,14 +257,18 @@ public class PlayerCombat : MonoBehaviour
                     foreach (Collider enemy in enemys)
                     {
                         RaycastHit spellHit;
-                        Physics.Linecast(transform.position + (Vector3.up * playerMovement.playerHeight / 1.5f), enemy.transform.position + (Vector3.up * playerMovement.playerHeight / 1.5f), out spellHit);
+                        //Look for better casting so it doesnt just aim at their feet
+                        //+ (Vector3.up * playerMovement.playerHeight / 1.5f)
+                        Physics.Linecast(transform.position + (Vector3.up * playerMovement.playerHeight / 1.5f), enemy.transform.position, out spellHit);
 
+                        print(spellHit.collider.name);
                         //Otherwise apply damage and such
                         if (spellHit.collider.CompareTag("Enemy"))
                         {
                             DealDamage(enemy, spell.damage);
-                            ApplyKnockback(enemy, spell.knockback, spell.stunTime);
+                            //ApplyKnockback(enemy, spell.knockback, spell.stunTime);
                             CheckIfAttacked(enemy);
+                            ApplyKnockback(enemy, spell.knockback, spell.stunTime);
                         }
 
                     }
@@ -274,13 +278,13 @@ public class PlayerCombat : MonoBehaviour
             //Earth Spell - Defensive stance that roots player and makes player invulnrable, healing and regen in the process
             else if (spell.spellType == Spell.damageType.Earth && playerStats.mana >= spell.manaCost)
             {
+                print("Earth casted");
                 playerMovement.pauseInput = true;
                 Rigidbody rb = gameObject.GetComponent<Rigidbody>();
                 rb.linearVelocity = Vector3.zero;
 
                 StartCoroutine(Tremor(spell));
 
-                print("Earth casted");
                 playerStats.mana -= spell.manaCost;
             }
             //Dash Spell - Dash in direction player is facing pushing enemies aside
@@ -323,10 +327,9 @@ public class PlayerCombat : MonoBehaviour
     {
         GameObject enemy = collider.gameObject;
         EnemyMovement enemyMovement = enemy.GetComponent<EnemyMovement>();
-        if(!enemyMovement.targetFound)
+        if(enemyMovement.state == EnemyMovement.EnemyState.idle)
         {
             enemyMovement.target = this.transform;
-            enemyMovement.targetFound = true;
             enemyMovement.state = EnemyMovement.EnemyState.chasing;
         }
 
@@ -368,18 +371,21 @@ public class PlayerCombat : MonoBehaviour
     private IEnumerator Tremor(Spell spell)
     {
         playerStats.stasis = true;
+        print("Cast 1");
         int extraRegen = KnockbackLogic(spell);
         playerStats.health += 10 + extraRegen;
         playerStats.mana += 10 + extraRegen;
 
         yield return new WaitForSeconds(spell.stunTime + 0.1f);
 
+        print("Cast 2");
         extraRegen = KnockbackLogic(spell);
         playerStats.health += 10 + extraRegen;
         playerStats.mana += 10 + extraRegen;
 
         yield return new WaitForSeconds(spell.stunTime + 0.1f);
 
+        print("Cast 3");
         extraRegen = KnockbackLogic(spell);
         playerStats.health += 10 + extraRegen;
         playerStats.mana += 10 + extraRegen;
@@ -406,6 +412,7 @@ public class PlayerCombat : MonoBehaviour
                 //Otherwise apply damage and such
                 if (spellHit.collider.CompareTag("Enemy"))
                 {
+                    print("hit enemy");
                     hitCount += 1;
                     ApplyKnockback(enemy, spell.knockback, spell.stunTime);
                     CheckIfAttacked(enemy);
