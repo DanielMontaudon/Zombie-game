@@ -148,15 +148,25 @@ public class PlayerCombat : MonoBehaviour
                 //If something was hit
                 if (rayHit)
                 {
+                    print(raycastHit.collider.GetType());
                     //If Enemy was hit
                     if (raycastHit.collider.CompareTag("Enemy"))
                     {
                         //do something with enemy hit (take damage, shock, apply force)
                         print("Lightning casted on: " + raycastHit.collider.tag);
-                        DealDamage(raycastHit.collider, spell.damage);
-                        //Maybe make knockback into Card
-                        //ApplyKnockback(raycastHit.collider, spell.knockback);
-                        CheckIfAttacked(raycastHit.collider);
+                        //Headshot Hitbox
+                        if(raycastHit.collider.GetType() == typeof(SphereCollider))
+                        {
+                            DealDamage(raycastHit.collider, spell.damage * playerStats.headshotMulti);
+                        }
+                        //Bodyshot Hitbox
+                        else if(raycastHit.collider.GetType() == typeof(CapsuleCollider))
+                        {
+                            DealDamage(raycastHit.collider, spell.damage);
+                        }
+                            //Maybe make knockback into Card
+                            //ApplyKnockback(raycastHit.collider, spell.knockback);
+                            CheckIfAttacked(raycastHit.collider);
                     }
 
                     //If Barrel was hit
@@ -261,7 +271,7 @@ public class PlayerCombat : MonoBehaviour
                         //+ (Vector3.up * playerMovement.playerHeight / 1.5f)
                         Physics.Linecast(transform.position + (Vector3.up * playerMovement.playerHeight / 1.5f), enemy.transform.position, out spellHit);
 
-                        print(spellHit.collider.name);
+                        print(spellHit.collider.GetType());
                         //Otherwise apply damage and such
                         if (spellHit.collider.CompareTag("Enemy"))
                         {

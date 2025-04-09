@@ -7,6 +7,7 @@ public class PlayerAttributes : MonoBehaviour
     public float stamina = 100f;
     public float mana = 100f;
     public bool stasis = false;
+    public float headshotMulti = 1.25f;
 
     float staminaTimeInterval = 0f;
     float manaTimeInterval = 0f;
