@@ -180,7 +180,7 @@ public class EnemyMovement : MonoBehaviour
         rb.useGravity = false;
         agent.enabled = false;
 
-        rb.AddForce(transform.up * 2000f);
+        rb.AddForce(transform.up * 1000f);
 
         StartCoroutine(ResumeNav(newTarget));
 
