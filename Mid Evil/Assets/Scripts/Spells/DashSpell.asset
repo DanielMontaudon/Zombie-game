@@ -17,3 +17,6 @@ MonoBehaviour:
   spellType: 5
   manaCost: 0
   cooldown: 2
+  knockback: 0
+  stunTime: 0
+  abilityIcon: {fileID: 2800000, guid: 9895f5f95566ceb47bb239149d90cb44, type: 3}

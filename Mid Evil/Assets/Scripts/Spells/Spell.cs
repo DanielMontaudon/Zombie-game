@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 [CreateAssetMenu(fileName = "Spell", menuName = "Scriptable Objects/Spell")]
 public class Spell : ScriptableObject
@@ -10,6 +11,7 @@ public class Spell : ScriptableObject
     public float cooldown;
     public float knockback;
     public float stunTime;
+    public Texture2D abilityIcon;
 
     //Help Denote for ray type
     //Lightning - Primary

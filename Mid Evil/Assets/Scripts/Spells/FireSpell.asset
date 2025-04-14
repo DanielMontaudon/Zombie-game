@@ -19,3 +19,4 @@ MonoBehaviour:
   cooldown: 15
   knockback: 5000
   stunTime: 3
+  abilityIcon: {fileID: 2800000, guid: c51afa706b02a044694b30f33f81d239, type: 3}

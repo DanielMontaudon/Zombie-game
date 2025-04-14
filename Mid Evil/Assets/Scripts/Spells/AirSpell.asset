@@ -18,3 +18,5 @@ MonoBehaviour:
   manaCost: 5
   cooldown: 10
   knockback: 0
+  stunTime: 0
+  abilityIcon: {fileID: 2800000, guid: cf6478ef684ce7f4c830edba147c7607, type: 3}
