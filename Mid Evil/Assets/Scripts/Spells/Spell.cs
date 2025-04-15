@@ -11,7 +11,7 @@ public class Spell : ScriptableObject
     public float cooldown;
     public float knockback;
     public float stunTime;
-    public Texture2D abilityIcon;
+    public Sprite abilityIcon;
 
     //Help Denote for ray type
     //Lightning - Primary

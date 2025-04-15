@@ -32,12 +32,13 @@ public class PlayerCombat : MonoBehaviour
     float startY;
     PlayerAttributes playerStats;
     PlayerMovement playerMovement;
+    ResourceBar resourceBar;
     //public LayerMask whatIsEnemy;
-    bool leftOffCooldown = true;
-    bool rightOffCooldown = true;
-    bool specialOffCooldown = true;
-    bool defensiveOffCooldown = true;
-    bool dashOffCooldown = true;
+    public bool leftOffCooldown = true;
+    public bool rightOffCooldown = true;
+    public bool specialOffCooldown = true;
+    public bool defensiveOffCooldown = true;
+    public bool dashOffCooldown = true;
 
 
     private void Start()
@@ -45,6 +46,7 @@ public class PlayerCombat : MonoBehaviour
         startY = leftHand.localPosition.y;
         playerStats = gameObject.GetComponent<PlayerAttributes>();
         playerMovement = gameObject.GetComponent<PlayerMovement>();
+        resourceBar = gameObject.GetComponentInChildren<ResourceBar>();
 
     }
 
@@ -84,7 +86,7 @@ public class PlayerCombat : MonoBehaviour
     //if spell can be casted, spell cooldown if held down
     void SpellLogic()
     {
-        //Primary Fire
+        //Primary Ability (Lightning)
         if (Input.GetKey(leftKeybind) && leftOffCooldown && playerStats.mana > leftSpell.manaCost)
         {
             leftOffCooldown = false;
@@ -93,7 +95,7 @@ public class PlayerCombat : MonoBehaviour
             Invoke(nameof(LeftCooldown), leftSpell.cooldown);
         }
         
-        //Secondary Fire
+        //Secondary Ability (Tornado)
         if (Input.GetKey(rightKeybind) && rightOffCooldown && playerStats.mana > rightSpell.manaCost)
         {
             rightOffCooldown = false;
@@ -102,7 +104,7 @@ public class PlayerCombat : MonoBehaviour
             Invoke(nameof(RightCooldown), rightSpell.cooldown);
         }
 
-        //Special Ability
+        //Special Ability (Fire)
         if (Input.GetKey(specialKeybind) && specialOffCooldown && playerStats.mana > specialSpell.manaCost)
         {
             specialOffCooldown = false;
@@ -269,16 +271,19 @@ public class PlayerCombat : MonoBehaviour
                         RaycastHit spellHit;
                         //Look for better casting so it doesnt just aim at their feet
                         //+ (Vector3.up * playerMovement.playerHeight / 1.5f)
-                        Physics.Linecast(transform.position + (Vector3.up * playerMovement.playerHeight / 1.5f), enemy.transform.position, out spellHit);
+                        bool lineHit = Physics.Linecast(transform.position + (Vector3.up * playerMovement.playerHeight / 1.5f), enemy.transform.position, out spellHit);
 
-                        print(spellHit.collider.GetType());
-                        //Otherwise apply damage and such
-                        if (spellHit.collider.CompareTag("Enemy"))
+                        if(lineHit)
                         {
-                            DealDamage(enemy, spell.damage);
-                            //ApplyKnockback(enemy, spell.knockback, spell.stunTime);
-                            CheckIfAttacked(enemy);
-                            ApplyKnockback(enemy, spell.knockback, spell.stunTime);
+                            //print(spellHit.collider.GetType());
+                            //Otherwise apply damage and such
+                            if (spellHit.collider.CompareTag("Enemy"))
+                            {
+                                DealDamage(enemy, spell.damage);
+                                //ApplyKnockback(enemy, spell.knockback, spell.stunTime);
+                                CheckIfAttacked(enemy);
+                                ApplyKnockback(enemy, spell.knockback, spell.stunTime);
+                            }
                         }
 
                     }

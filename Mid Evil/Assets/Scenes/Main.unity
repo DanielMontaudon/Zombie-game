@@ -779,7 +779,7 @@ GameObject:
   m_Component:
   - component: {fileID: 169710482}
   m_Layer: 5
-  m_Name: AbilitySlot3
+  m_Name: AbilitySlot3(Tornado)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1864,7 +1864,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: c51afa706b02a044694b30f33f81d239, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2989,6 +2989,18 @@ MonoBehaviour:
   healthbarImage: {fileID: 1951166843}
   staminabarImage: {fileID: 1473568598}
   manabarImage: {fileID: 586145270}
+  UltimateImage: {fileID: 1074656333}
+  DefensiveImage: {fileID: 304956028}
+  TornadoImage: {fileID: 1813132251}
+  DashImage: {fileID: 1271268265}
+  UltimateCDImage: {fileID: 1234680794}
+  DefensiveCDImage: {fileID: 2012018162}
+  TornadoCDImage: {fileID: 1351087413}
+  DashCDImage: {fileID: 1116945560}
+  UltCost: {fileID: 1806327615}
+  DefCost: {fileID: 244019924}
+  TorCost: {fileID: 768009221}
+  DashCost: {fileID: 1443855792}
 --- !u!1 &723980491
 GameObject:
   m_ObjectHideFlags: 0
@@ -2999,7 +3011,7 @@ GameObject:
   m_Component:
   - component: {fileID: 723980492}
   m_Layer: 5
-  m_Name: AbilitySlot4
+  m_Name: AbilitySlot4(Dash)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3348,7 +3360,7 @@ GameObject:
   m_Component:
   - component: {fileID: 827396379}
   m_Layer: 5
-  m_Name: AbilitySlot2
+  m_Name: AbilitySlot2(Defensive)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3976,7 +3988,7 @@ GameObject:
   m_Component:
   - component: {fileID: 876227648}
   m_Layer: 5
-  m_Name: AbilitySlot1
+  m_Name: AbilitySlot1(Ultimate)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4513,7 +4525,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 4dc051a0301cecb4aa1a85036ace2a58, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -5054,7 +5066,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 9895f5f95566ceb47bb239149d90cb44, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -6774,7 +6786,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: cf6478ef684ce7f4c830edba147c7607, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -7712,6 +7724,11 @@ MonoBehaviour:
   specialKeybind: 113
   defensiveKeybind: 101
   dashKeybind: 308
+  leftOffCooldown: 1
+  rightOffCooldown: 1
+  specialOffCooldown: 1
+  defensiveOffCooldown: 1
+  dashOffCooldown: 1
 --- !u!136 &2115770603
 CapsuleCollider:
   m_ObjectHideFlags: 0

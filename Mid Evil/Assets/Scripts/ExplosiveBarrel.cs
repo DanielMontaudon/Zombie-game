@@ -65,7 +65,7 @@ public class ExplosiveBarrel : MonoBehaviour
                 {
                     EnemyMovement em = enemy.gameObject.GetComponent<EnemyMovement>();
                     EnemyAttributes ea = enemy.gameObject.GetComponent<EnemyAttributes>();
-                    print(barrelBlast.damage);
+                    //print(barrelBlast.damage);
                     ea.ApplyDamage(barrelBlast.damage);
 
                     em.target = lastHitBy;
