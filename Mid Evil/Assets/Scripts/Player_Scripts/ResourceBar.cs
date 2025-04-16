@@ -87,13 +87,13 @@ public class ResourceBar : MonoBehaviour
             DefensiveCDImage.fillAmount = 0f;
         }
 
-        if (!pc.rightOffCooldown)
+        if (!pc.tornadoOffCooldown)
         {
             TorCooldown();
         }
         else
         {
-            torTimer = pc.rightSpell.cooldown;
+            torTimer = pc.tornadoSpell.cooldown;
             TornadoCDImage.fillAmount = 0f;
         }
 
@@ -133,7 +133,7 @@ public class ResourceBar : MonoBehaviour
         if (torTimer > 0)
         {
             torTimer -= Time.deltaTime;
-            TornadoCDImage.fillAmount = torTimer / pc.rightSpell.cooldown;
+            TornadoCDImage.fillAmount = torTimer / pc.tornadoSpell.cooldown;
         }
     }
 

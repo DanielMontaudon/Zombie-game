@@ -5741,9 +5741,9 @@ RectTransform:
   - {fileID: 723980492}
   m_Father: {fileID: 690078431}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0}
-  m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 125}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -299.84, y: 100}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1473568596
@@ -7718,16 +7718,19 @@ MonoBehaviour:
   rightSpell: {fileID: 11400000, guid: 24f94f5775272274b9a7af510b3be6a4, type: 2}
   specialSpell: {fileID: 11400000, guid: 8bc21b76b2190e048b71625674c53f15, type: 2}
   defensiveSpell: {fileID: 11400000, guid: 5debef6903dc01c45886bc6bda2a4fec, type: 2}
+  tornadoSpell: {fileID: 11400000, guid: 24f94f5775272274b9a7af510b3be6a4, type: 2}
   dashSpell: {fileID: 11400000, guid: 4d6dc0115c330ad4ab85288f4c20a133, type: 2}
   leftKeybind: 323
   rightKeybind: 324
   specialKeybind: 113
   defensiveKeybind: 101
+  tornadoKeybind: 102
   dashKeybind: 308
   leftOffCooldown: 1
   rightOffCooldown: 1
   specialOffCooldown: 1
   defensiveOffCooldown: 1
+  tornadoOffCooldown: 1
   dashOffCooldown: 1
 --- !u!136 &2115770603
 CapsuleCollider:

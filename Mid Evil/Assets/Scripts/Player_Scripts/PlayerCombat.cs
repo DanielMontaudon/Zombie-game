@@ -16,6 +16,7 @@ public class PlayerCombat : MonoBehaviour
     public Spell rightSpell;
     public Spell specialSpell;
     public Spell defensiveSpell;
+    public Spell tornadoSpell;
     public Spell dashSpell;
 
 
@@ -25,6 +26,7 @@ public class PlayerCombat : MonoBehaviour
     public KeyCode rightKeybind = KeyCode.Mouse1;
     public KeyCode specialKeybind = KeyCode.Q;
     public KeyCode defensiveKeybind = KeyCode.E;
+    public KeyCode tornadoKeybind = KeyCode.F;
     public KeyCode dashKeybind = KeyCode.LeftAlt;
 
 
@@ -38,6 +40,7 @@ public class PlayerCombat : MonoBehaviour
     public bool rightOffCooldown = true;
     public bool specialOffCooldown = true;
     public bool defensiveOffCooldown = true;
+    public bool tornadoOffCooldown = true;
     public bool dashOffCooldown = true;
 
 
@@ -123,6 +126,15 @@ public class PlayerCombat : MonoBehaviour
             Invoke(nameof(DefensiveCooldown), defensiveSpell.cooldown);
         }
 
+        //Tornado Ability
+        if (Input.GetKey(tornadoKeybind) && tornadoOffCooldown && playerStats.mana > tornadoSpell.manaCost)
+        {
+            tornadoOffCooldown = false;
+            CastSpell(tornadoSpell);
+            //Add some UI elements for CD (function to create a timer)
+            Invoke(nameof(TornadoCooldown), tornadoSpell.cooldown);
+        }
+
         //Dash Ability
         if (Input.GetKey(dashKeybind) && dashOffCooldown && playerStats.mana > dashSpell.manaCost)
         {
@@ -138,11 +150,12 @@ public class PlayerCombat : MonoBehaviour
     {
         if (playerStats.stasis != true)
         {
-            //Lightning Spell
-            if (spell.spellType == Spell.damageType.Lightning && playerStats.mana >= spell.manaCost)
+            //Bolt Spell
+            //spell.spellType == Spell.damageType.Lightning
+            if (spell.spellName.Equals("Bolt") && playerStats.mana >= spell.manaCost)
             {
                 //ADD A DEBUFF COUNTER INSTEAD OF CONTINUOS KNOCKBACK
-                print("Lightning casted");
+                print("Bolt casted");
                 RaycastHit raycastHit;
                 //Cast Ray straight in front of player 
                 bool rayHit = Physics.Raycast(playerCam.position, playerCam.transform.forward, out raycastHit, spell.range);
@@ -155,7 +168,7 @@ public class PlayerCombat : MonoBehaviour
                     if (raycastHit.collider.CompareTag("Enemy"))
                     {
                         //do something with enemy hit (take damage, shock, apply force)
-                        print("Lightning casted on: " + raycastHit.collider.tag);
+                        print("Bolt casted on: " + raycastHit.collider.tag);
                         //Headshot Hitbox
                         if(raycastHit.collider.GetType() == typeof(SphereCollider))
                         {
@@ -181,7 +194,7 @@ public class PlayerCombat : MonoBehaviour
                     //If Puddle was hit
                     if (raycastHit.collider.CompareTag("Puddle"))
                     {
-                        print("Lightning casted on: " + raycastHit.collider.tag);
+                        print("Bolt casted on: " + raycastHit.collider.tag);
                         ArcanePuddle ap = raycastHit.collider.gameObject.GetComponent<ArcanePuddle>();
                         ap.LightningArcane(spell.damage);
                         //Do arcane stuff
@@ -193,9 +206,9 @@ public class PlayerCombat : MonoBehaviour
             }
             //Air Spell - Tornado that lifts enemies for set time
             //Maybe Not tornado persay but wall of air, think moses
-            else if (spell.spellType == Spell.damageType.Air && playerStats.mana >= spell.manaCost)
+            else if (spell.spellName.Equals("Tornado") && playerStats.mana >= spell.manaCost)
             {
-                print("Air casted");
+                print("Tornado casted");
                 //LayerMask interactableLayer = LayerMask.GetMask("Interactable");
                 //LayerMask enemyLayer = LayerMask.GetMask("Enemy");
                 //RaycastHit[] raycastHits = Physics.RaycastAll(playerCam.position, playerCam.transform.forward, spell.range);
@@ -228,10 +241,10 @@ public class PlayerCombat : MonoBehaviour
             
                 playerStats.mana -= spell.manaCost;
             }
-            //Fire Spell - AoE Sphere that does massive damage
-            else if (spell.spellType == Spell.damageType.Fire && playerStats.mana >= spell.manaCost)
+            //Nova Spell - AoE Sphere that does massive damage
+            else if (spell.spellName.Equals("Nova") && playerStats.mana >= spell.manaCost)
             {
-                print("Fire Casted");
+                print("Nova Casted");
                 //Sphere Check
                 LayerMask enemyLayer = LayerMask.GetMask("Enemy");
                 Collider[] enemys = Physics.OverlapSphere(transform.position, spell.range, enemyLayer);
@@ -290,10 +303,10 @@ public class PlayerCombat : MonoBehaviour
                 }
                 playerStats.mana -= spell.manaCost;
             }
-            //Earth Spell - Defensive stance that roots player and makes player invulnrable, healing and regen in the process
-            else if (spell.spellType == Spell.damageType.Earth && playerStats.mana >= spell.manaCost)
+            //ArmorInvocate Spell - Defensive stance that roots player and makes player invulnrable, healing and regen in the process
+            else if (spell.spellName.Equals("ArmorInvocate") && playerStats.mana >= spell.manaCost)
             {
-                print("Earth casted");
+                print("ArmorInvocate casted");
                 playerMovement.pauseInput = true;
                 Rigidbody rb = gameObject.GetComponent<Rigidbody>();
                 rb.linearVelocity = Vector3.zero;
@@ -303,7 +316,7 @@ public class PlayerCombat : MonoBehaviour
                 playerStats.mana -= spell.manaCost;
             }
             //Dash Spell - Dash in direction player is facing pushing enemies aside
-            else if (spell.spellType == Spell.damageType.Dash && playerStats.mana >= spell.manaCost)
+            else if (spell.spellName.Equals("Dash") && playerStats.mana >= spell.manaCost)
             {
                 StartCoroutine(Dash());
 
@@ -332,7 +345,10 @@ public class PlayerCombat : MonoBehaviour
     {
         defensiveOffCooldown = true;
     }
-
+    void TornadoCooldown()
+    {
+        tornadoOffCooldown = true;
+    }
     void DashCooldown()
     {
         dashOffCooldown = true;

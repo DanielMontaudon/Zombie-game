@@ -39,7 +39,7 @@ public class ExplosiveBarrel : MonoBehaviour
             primed = true;
 
             lastHitBy = player;
-            Explode();
+            Invoke("Explode", 0.1f);
         }
     }
 
