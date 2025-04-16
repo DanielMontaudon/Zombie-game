@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 347de9e9d82bc274382c799c403d89d4, type: 3}
   m_Name: DashSpell
   m_EditorClassIdentifier: 
+  spellName: Dash
   damage: 0
   range: 20
   spellType: 5

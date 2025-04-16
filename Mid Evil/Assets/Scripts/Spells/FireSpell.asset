@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 347de9e9d82bc274382c799c403d89d4, type: 3}
   m_Name: FireSpell
   m_EditorClassIdentifier: 
+  spellName: Nova
   damage: 25
   range: 8
   spellType: 2
