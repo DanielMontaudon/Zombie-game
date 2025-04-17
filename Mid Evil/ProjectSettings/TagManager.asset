@@ -10,6 +10,7 @@ TagManager:
   - Terrain
   - Barrel
   - Puddle
+  - Chandelier
   layers:
   - Default
   - TransparentFX

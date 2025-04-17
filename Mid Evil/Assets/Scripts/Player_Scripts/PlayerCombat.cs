@@ -200,6 +200,13 @@ public class PlayerCombat : MonoBehaviour
                         //Do arcane stuff
                     }
 
+                    if(raycastHit.collider.CompareTag("Chandelier"))
+                    {
+                        print("Bolt casted on: " + raycastHit.collider.tag);
+                        ChandelierLogic cl = raycastHit.collider.gameObject.GetComponent<ChandelierLogic>();
+                        cl.DropChandelier();
+                    }
+
                         //Add some other spicy tags persay? (Explosive barrels, water)
                 }
                 playerStats.mana -= spell.manaCost;
