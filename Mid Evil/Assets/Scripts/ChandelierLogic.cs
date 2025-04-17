@@ -34,11 +34,21 @@ public class ChandelierLogic : MonoBehaviour
             }
         }
 
+        if(grounded)
+        {
+            Invoke(nameof(DestroyChandelier), 1f);
+        }
+
     }
 
     public void DropChandelier()
     {
         rb.isKinematic = false;
+    }
+
+    private void DestroyChandelier()
+    {
+        Destroy(this.gameObject);
     }
 
 
