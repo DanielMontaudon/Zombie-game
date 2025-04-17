@@ -6,7 +6,7 @@ public class ChandelierLogic : MonoBehaviour
     public LayerMask whatIsGround;
     public Transform chandelierModel;
 
-    bool grounded = false;
+    public bool grounded = false;
     Rigidbody rb;
     Collider[] enemies;
     LayerMask enemyLayer;
