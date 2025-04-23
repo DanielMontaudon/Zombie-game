@@ -163,7 +163,7 @@ public class PlayerCombat : MonoBehaviour
                 //If something was hit
                 if (rayHit)
                 {
-                    print(raycastHit.collider.GetType());
+                    print(raycastHit.collider.tag);
                     //If Enemy was hit
                     if (raycastHit.collider.CompareTag("Enemy"))
                     {
@@ -175,7 +175,7 @@ public class PlayerCombat : MonoBehaviour
                             DealDamage(raycastHit.collider, spell.damage * playerStats.headshotMulti);
                         }
                         //Bodyshot Hitbox
-                        else if(raycastHit.collider.GetType() == typeof(CapsuleCollider))
+                        else if(raycastHit.collider.GetType() == typeof(CapsuleCollider) || raycastHit.collider.GetType() == typeof(BoxCollider))
                         {
                             DealDamage(raycastHit.collider, spell.damage);
                         }
@@ -364,7 +364,7 @@ public class PlayerCombat : MonoBehaviour
     private void CheckIfAttacked(Collider collider)
     {
         GameObject enemy = collider.gameObject;
-        EnemyMovement enemyMovement = enemy.GetComponent<EnemyMovement>();
+        EnemyMovement enemyMovement = enemy.GetComponentInParent<EnemyMovement>();
         if(enemyMovement.state == EnemyMovement.EnemyState.idle)
         {
             enemyMovement.target = this.transform;
@@ -376,13 +376,13 @@ public class PlayerCombat : MonoBehaviour
     private void DealDamage(Collider collider, float damage)
     {
         GameObject enemy = collider.gameObject;
-        EnemyAttributes enemyAttributes = enemy.GetComponent<EnemyAttributes>();
+        EnemyAttributes enemyAttributes = enemy.GetComponentInParent<EnemyAttributes>();
         enemyAttributes.ApplyDamage(damage);
     }
 
     private void ApplyKnockback(Collider enemy, float force, float stunTime)
     {
-        EnemyMovement enemyMovement = enemy.gameObject.GetComponent<EnemyMovement>();
+        EnemyMovement enemyMovement = enemy.gameObject.GetComponentInParent<EnemyMovement>();
         if(enemyMovement.state != EnemyMovement.EnemyState.stunned)
             enemyMovement.Knockback(transform.position, force, stunTime);
     }
@@ -402,7 +402,7 @@ public class PlayerCombat : MonoBehaviour
 
     private void LiftEnemy(Collider enemy)
     {
-        EnemyMovement enemyMovement = enemy.gameObject.GetComponent<EnemyMovement>();
+        EnemyMovement enemyMovement = enemy.gameObject.GetComponentInParent<EnemyMovement>();
         enemyMovement.StopNav(transform);
     }
 

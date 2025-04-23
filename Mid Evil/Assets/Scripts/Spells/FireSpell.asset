@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: FireSpell
   m_EditorClassIdentifier: 
   spellName: Nova
-  damage: 25
+  damage: 1
   range: 8
   spellType: 2
   manaCost: 25

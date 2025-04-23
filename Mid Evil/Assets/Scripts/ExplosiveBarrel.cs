@@ -54,23 +54,28 @@ public class ExplosiveBarrel : MonoBehaviour
         //If enemys are within range
         if (enemys.Length > 0)
         {
+            print(enemys.Length);
             //for each enemy, see if they are behind structures/walls when in range
             foreach (Collider enemy in enemys)
             {
+                print(enemy.name);
                 RaycastHit spellHit;
-                Physics.Linecast(transform.position, enemy.transform.position, out spellHit);
+                bool lineHit = Physics.Linecast(transform.position, enemy.transform.position, out spellHit);
 
-                //Otherwise apply damage and such
-                if (spellHit.collider.CompareTag("Enemy"))
+                if(lineHit)
                 {
-                    EnemyMovement em = enemy.gameObject.GetComponent<EnemyMovement>();
-                    EnemyAttributes ea = enemy.gameObject.GetComponent<EnemyAttributes>();
-                    //print(barrelBlast.damage);
-                    ea.ApplyDamage(barrelBlast.damage);
+                    //Otherwise apply damage and such
+                    if (spellHit.collider.CompareTag("Enemy"))
+                    {
+                        EnemyMovement em = enemy.gameObject.GetComponentInParent<EnemyMovement>();
+                        EnemyAttributes ea = enemy.gameObject.GetComponentInParent<EnemyAttributes>();
+                        //print(barrelBlast.damage);
+                        ea.ApplyDamage(barrelBlast.damage);
 
-                    em.target = lastHitBy;
-                    em.Knockback(transform.position, barrelBlast.knockback, barrelBlast.stunTime);
+                        em.target = lastHitBy;
+                        em.Knockback(transform.position, barrelBlast.knockback, barrelBlast.stunTime);
 
+                    }
                 }
 
             }
