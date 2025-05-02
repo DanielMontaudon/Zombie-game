@@ -445,16 +445,19 @@ public class PlayerCombat : MonoBehaviour
             {
                 RaycastHit spellHit;
                 //+ (Vector3.up * playerMovement.playerHeight / 2f)
-                Physics.Linecast(transform.position + (Vector3.up * playerMovement.playerHeight), enemy.transform.position + (Vector3.up * playerMovement.playerHeight / 2f), out spellHit);
+                bool lineHit = Physics.Linecast(transform.position + (Vector3.up * playerMovement.playerHeight), enemy.transform.position + (Vector3.up * playerMovement.playerHeight / 2f), out spellHit);
 
-                //Otherwise apply damage and such
-                if (spellHit.collider.CompareTag("Enemy"))
+                if (lineHit)
                 {
-                    print("hit enemy");
-                    hitCount += 1;
-                    ApplyKnockback(enemy, spell.knockback, spell.stunTime);
-                    CheckIfAttacked(enemy);
+                    //Otherwise apply damage and such
+                    if (spellHit.collider.CompareTag("Enemy"))
+                    {
+                        print("hit enemy");
+                        hitCount += 1;
+                        ApplyKnockback(enemy, spell.knockback, spell.stunTime);
+                        CheckIfAttacked(enemy);
 
+                    }
                 }
 
             }

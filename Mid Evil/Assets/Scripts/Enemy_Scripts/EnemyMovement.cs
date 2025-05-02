@@ -8,7 +8,7 @@ public class EnemyMovement : MonoBehaviour
 {
 
     private NavMeshAgent agent;
-    private Rigidbody rb;
+    //private Rigidbody rb;
     private EnemyKinematics ek;
     private EnemyAttributes ea;
 
@@ -30,7 +30,8 @@ public class EnemyMovement : MonoBehaviour
         chasing,
         stunned,
         knocked,
-        attacking
+        attacking,
+        gettingUp
     }
 
     private Coroutine attackingCoroutine;
@@ -39,7 +40,6 @@ public class EnemyMovement : MonoBehaviour
     {
         state = EnemyState.idle;
         agent = gameObject.GetComponent<NavMeshAgent>();
-        rb = gameObject.GetComponent<Rigidbody>();
         ea = gameObject.GetComponent<EnemyAttributes>();
         ek = gameObject.GetComponent<EnemyKinematics>();
 
@@ -120,7 +120,7 @@ public class EnemyMovement : MonoBehaviour
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f);
             }
         }
-        else if(agent.enabled)
+        else if(agent.updatePosition)
         {
             agent.SetDestination(target.position);
         }
@@ -155,12 +155,10 @@ public class EnemyMovement : MonoBehaviour
     public void Knockback(Vector3 forcePosition, float force, float stunTime)
     {
         state = EnemyState.knocked;
-        //rb.isKinematic = false;
+ 
         ek.turnOffKinematics();
-        agent.enabled = false;
-
-        //rb.AddTorque((transform.position - forcePosition).normalized * 5, ForceMode.Impulse);
-        //rb.AddForce((transform.position - forcePosition).normalized * force);
+        agent.updatePosition = false;
+        //agent.enabled = false;
         ek.chestKnockback(forcePosition, force);
         StartCoroutine(ResetEnemy(stunTime));
     }
@@ -170,10 +168,11 @@ public class EnemyMovement : MonoBehaviour
     {
         yield return new WaitForSeconds(time);
 
+        agent.Warp(ek.hipRB.position);
         ek.turnOnKinematics();
-        //rb.isKinematic = true;
-        agent.enabled = true;
-  
+
+        agent.updatePosition = true;
+
         state = EnemyState.chasing;
 
     }
@@ -182,13 +181,12 @@ public class EnemyMovement : MonoBehaviour
     public void StopNav(Transform newTarget)
     {
         state = EnemyState.stunned;
-        //rb.isKinematic = false;
         ek.turnOffKinematics();
-        //rb.useGravity = false;
         ek.turnOffGravity();
-        agent.enabled = false;
 
-        //rb.AddForce(transform.up * 1000f);
+        agent.updatePosition = false;
+        //agent.enabled = false;
+
         ek.liftKinematics(1000f);
 
         StartCoroutine(ResumeNav(newTarget));
@@ -200,18 +198,15 @@ public class EnemyMovement : MonoBehaviour
     private IEnumerator ResumeNav(Transform newTarget)
     {
         yield return new WaitForSeconds(1f);
-        //rb.useGravity = true;
         ek.turnOnGravity();
-        //rb.AddForce(transform.up * -1000f);
         ek.liftKinematics(-1000f);
 
         yield return new WaitForSeconds(1.5f);
-        //rb.isKinematic = true;
         ek.turnOnKinematics();
 
         target = newTarget;
-        agent.enabled = true;
-        //stunned = false;
+        agent.updatePosition = true;
+        //agent.enabled = true;
         state = EnemyState.chasing;
     }
 

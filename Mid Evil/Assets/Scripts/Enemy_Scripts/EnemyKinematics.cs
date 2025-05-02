@@ -4,7 +4,7 @@ public class EnemyKinematics : MonoBehaviour
 {
     [SerializeField] Rigidbody headRB;
     [SerializeField] Rigidbody chestRB;
-    [SerializeField] Rigidbody hipRB;
+    [SerializeField] public Rigidbody hipRB;
     [SerializeField] Rigidbody leftUpperArmRB;
     [SerializeField] Rigidbody leftLowerRB;
     [SerializeField] Rigidbody rightUpperArmRB;
@@ -102,6 +102,36 @@ public class EnemyKinematics : MonoBehaviour
         rightUpperLegRB.useGravity = false;
         rightLowerLegRB.useGravity = false;
     }    
+
+    public void FreezeConstraints()
+    {
+        headRB.constraints = RigidbodyConstraints.FreezeAll;
+        chestRB.constraints = RigidbodyConstraints.FreezeAll;
+        hipRB.constraints = RigidbodyConstraints.FreezeAll;
+        leftUpperArmRB.constraints = RigidbodyConstraints.FreezeAll;
+        leftLowerRB.constraints = RigidbodyConstraints.FreezeAll;
+        rightUpperArmRB.constraints = RigidbodyConstraints.FreezeAll;
+        rightLowerArmRB.constraints = RigidbodyConstraints.FreezeAll;
+        leftUpperLegRB.constraints = RigidbodyConstraints.FreezeAll;
+        leftLowerLegRB.constraints = RigidbodyConstraints.FreezeAll;
+        rightUpperLegRB.constraints = RigidbodyConstraints.FreezeAll;
+        rightLowerLegRB.constraints = RigidbodyConstraints.FreezeAll;
+    }  
+    
+    public void FreeConstraints()
+    {
+        headRB.constraints = RigidbodyConstraints.None;
+        chestRB.constraints = RigidbodyConstraints.None;
+        hipRB.constraints = RigidbodyConstraints.None;
+        leftUpperArmRB.constraints = RigidbodyConstraints.None;
+        leftLowerRB.constraints = RigidbodyConstraints.None;
+        rightUpperArmRB.constraints = RigidbodyConstraints.None;
+        rightLowerArmRB.constraints = RigidbodyConstraints.None;
+        leftUpperLegRB.constraints = RigidbodyConstraints.None;
+        leftLowerLegRB.constraints = RigidbodyConstraints.None;
+        rightUpperLegRB.constraints = RigidbodyConstraints.None;
+        rightLowerLegRB.constraints = RigidbodyConstraints.None;
+    }
 
     public void chestKnockback(Vector3 forcePosition, float force)
     {
