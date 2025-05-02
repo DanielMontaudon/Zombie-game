@@ -170,6 +170,10 @@ public class EnemyMovement : MonoBehaviour
 
         agent.Warp(ek.hipRB.position);
         ek.turnOnKinematics();
+        //TRY USING ANIMATOR TO RESET RAGDOLL
+        //SAVE POSITION OF JOINTS AND BONES
+        //DEACTIVATE RAGDOLL AND ENABLE ANIMATOR
+        //SET ANIMATION FROM SAVED POSITIONS TO STAND STRAIGHT
 
         agent.updatePosition = true;
 
