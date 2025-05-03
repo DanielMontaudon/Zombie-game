@@ -157,8 +157,8 @@ public class EnemyMovement : MonoBehaviour
         state = EnemyState.knocked;
  
         ek.turnOffKinematics();
-        agent.updatePosition = false;
-        //agent.enabled = false;
+        //agent.updatePosition = false;
+        agent.enabled = false;
         ek.chestKnockback(forcePosition, force);
         StartCoroutine(ResetEnemy(stunTime));
     }
@@ -175,8 +175,8 @@ public class EnemyMovement : MonoBehaviour
         //DEACTIVATE RAGDOLL AND ENABLE ANIMATOR
         //SET ANIMATION FROM SAVED POSITIONS TO STAND STRAIGHT
 
-        agent.updatePosition = true;
-
+        //agent.updatePosition = true;
+        agent.enabled = true;
         state = EnemyState.chasing;
 
     }
@@ -188,8 +188,8 @@ public class EnemyMovement : MonoBehaviour
         ek.turnOffKinematics();
         ek.turnOffGravity();
 
-        agent.updatePosition = false;
-        //agent.enabled = false;
+        //agent.updatePosition = false;
+        agent.enabled = false;
 
         ek.liftKinematics(1000f);
 
@@ -209,8 +209,10 @@ public class EnemyMovement : MonoBehaviour
         ek.turnOnKinematics();
 
         target = newTarget;
-        agent.updatePosition = true;
-        //agent.enabled = true;
+
+        //agent.updatePosition = true;
+        agent.enabled = true;
+
         state = EnemyState.chasing;
     }
 
