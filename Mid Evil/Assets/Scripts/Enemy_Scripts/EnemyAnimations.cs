@@ -3,6 +3,8 @@ using Animancer;
 public class EnemyAnimations : MonoBehaviour
 {
     [SerializeField] AnimationClip enemyRunning;
+    [SerializeField] AnimationClip enemyIdle;
+
     [SerializeField] AnimancerComponent animancer;
     private EnemyMovement em;
     private EnemyMovement.EnemyState enemyState;
@@ -18,7 +20,12 @@ public class EnemyAnimations : MonoBehaviour
         enemyState = em.state;
         if(em.state == EnemyMovement.EnemyState.chasing)
         {
-            animancer.Play(enemyRunning);
+            animancer.Play(enemyRunning, 0.25f);
         }
+        else if(em.state == EnemyMovement.EnemyState.idle)
+        {
+            animancer.Play(enemyIdle, 0.25f);
+        }
+        
     }
 }

@@ -11,6 +11,7 @@ public class EnemyMovement : MonoBehaviour
     //private Rigidbody rb;
     private EnemyKinematics ek;
     private EnemyAttributes ea;
+    private Animator anim;
 
     public Transform target;
     public bool stunned = false;
@@ -40,6 +41,7 @@ public class EnemyMovement : MonoBehaviour
     {
         state = EnemyState.idle;
         agent = gameObject.GetComponent<NavMeshAgent>();
+        anim = gameObject.GetComponent<Animator>();
         ea = gameObject.GetComponent<EnemyAttributes>();
         ek = gameObject.GetComponent<EnemyKinematics>();
 
@@ -158,6 +160,7 @@ public class EnemyMovement : MonoBehaviour
  
         ek.turnOffKinematics();
         //agent.updatePosition = false;
+        anim.enabled = false;
         agent.enabled = false;
         ek.chestKnockback(forcePosition, force);
         StartCoroutine(ResetEnemy(stunTime));
@@ -176,6 +179,7 @@ public class EnemyMovement : MonoBehaviour
         //SET ANIMATION FROM SAVED POSITIONS TO STAND STRAIGHT
 
         //agent.updatePosition = true;
+        anim.enabled = true;
         agent.enabled = true;
         state = EnemyState.chasing;
 
@@ -189,6 +193,7 @@ public class EnemyMovement : MonoBehaviour
         ek.turnOffGravity();
 
         //agent.updatePosition = false;
+        anim.enabled = false;
         agent.enabled = false;
 
         ek.liftKinematics(1000f);
@@ -211,6 +216,7 @@ public class EnemyMovement : MonoBehaviour
         target = newTarget;
 
         //agent.updatePosition = true;
+        anim.enabled = true;
         agent.enabled = true;
 
         state = EnemyState.chasing;
