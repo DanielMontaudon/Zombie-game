@@ -9151,6 +9151,9 @@ MonoBehaviour:
   defensiveKeybind: 101
   tornadoKeybind: 102
   dashKeybind: 308
+  leftFirePoint: {fileID: 579718200}
+  vfx:
+  - {fileID: 5846976013062678067, guid: 6c6e5b9f26813874f93aa59c33b8ee46, type: 3}
   leftOffCooldown: 1
   rightOffCooldown: 1
   specialOffCooldown: 1

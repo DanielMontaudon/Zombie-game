@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
+using System.Collections.Generic;
+
 
 
 public class PlayerCombat : MonoBehaviour
@@ -29,7 +31,10 @@ public class PlayerCombat : MonoBehaviour
     public KeyCode tornadoKeybind = KeyCode.F;
     public KeyCode dashKeybind = KeyCode.LeftAlt;
 
-
+    [Header("VFX")]
+    public GameObject leftFirePoint;
+    public List<GameObject> vfx = new List<GameObject>();
+    private GameObject lightningEffectToSpawn;
 
     float startY;
     PlayerAttributes playerStats;
@@ -50,6 +55,7 @@ public class PlayerCombat : MonoBehaviour
         playerStats = gameObject.GetComponent<PlayerAttributes>();
         playerMovement = gameObject.GetComponent<PlayerMovement>();
         resourceBar = gameObject.GetComponentInChildren<ResourceBar>();
+        lightningEffectToSpawn = vfx[0];
 
     }
 
@@ -94,6 +100,7 @@ public class PlayerCombat : MonoBehaviour
         {
             leftOffCooldown = false;
             CastSpell(leftSpell);
+            SpawnVFX();
             //Add some UI elements for CD (function to create a timer)
             Invoke(nameof(LeftCooldown), leftSpell.cooldown);
         }
@@ -464,6 +471,21 @@ public class PlayerCombat : MonoBehaviour
         }
 
         return hitCount;
+    }
+
+    public void SpawnVFX()
+    {
+        GameObject vfxToSpawn;
+
+        if(leftFirePoint != null)
+        {
+            vfxToSpawn = Instantiate(lightningEffectToSpawn, leftFirePoint.transform.position, Quaternion.identity);
+            vfxToSpawn.transform.localRotation = playerCam.rotation;
+        }
+        else
+        {
+            print("No leftFirePoint");
+        }
     }
 
 
