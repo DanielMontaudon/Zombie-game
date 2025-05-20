@@ -20,8 +20,8 @@ public class ArcanePuddle : MonoBehaviour
         {
             currentlyActive = true;
             hal.damageFromSpell = damage / 2f;
-            hal.physicalEffect.GetComponent<MeshRenderer>().material = hal.lightningEffect;
-            hal.physicalEffect.SetActive(true);
+            //hal.physicalEffect.GetComponent<MeshRenderer>().material = hal.lightningEffect;
+            hal.lightningPhysicalEffect.SetActive(true);
             StartCoroutine(DeactivateHazard());
         }
     }
@@ -32,8 +32,8 @@ public class ArcanePuddle : MonoBehaviour
         {
             currentlyActive = true;
             hal.damageFromSpell = damage / 2f;
-            hal.physicalEffect.GetComponent<MeshRenderer>().material = hal.fireEffect;
-            hal.physicalEffect.SetActive(true);
+            //hal.physicalEffect.GetComponent<MeshRenderer>().material = hal.fireEffect;
+            hal.firePhysicalEffect.SetActive(true);
             StartCoroutine(DeactivateHazard());
         }
     }
@@ -46,7 +46,9 @@ public class ArcanePuddle : MonoBehaviour
 
         yield return new WaitForSeconds(hazardActiveTime);
 
-        hal.physicalEffect.SetActive(false);
+        //hal.physicalEffect.SetActive(false);
+        hal.lightningPhysicalEffect.SetActive(false);
+        hal.firePhysicalEffect.SetActive(false);
         hal.activated = false;
         currentlyActive = false;
 

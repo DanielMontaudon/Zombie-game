@@ -122,7 +122,7 @@ public class EnemyMovement : MonoBehaviour
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f);
             }
         }
-        else if(agent.updatePosition)
+        else if(agent.enabled)
         {
             agent.SetDestination(target.position);
         }

@@ -58,7 +58,7 @@ public class ExplosiveBarrel : MonoBehaviour
             //for each enemy, see if they are behind structures/walls when in range
             foreach (Collider enemy in enemys)
             {
-                print(enemy.name);
+                //print(enemy.name);
                 RaycastHit spellHit;
                 bool lineHit = Physics.Linecast(transform.position, enemy.transform.position, out spellHit);
 

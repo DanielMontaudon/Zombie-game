@@ -4992,7 +4992,7 @@ GameObject:
   - component: {fileID: 357715164270908240}
   - component: {fileID: 6332476666342540613}
   m_Layer: 0
-  m_Name: LightningVFX
+  m_Name: ProfectileVFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

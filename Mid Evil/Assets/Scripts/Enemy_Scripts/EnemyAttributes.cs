@@ -35,6 +35,8 @@ public class EnemyAttributes : MonoBehaviour
     {
         NavMeshAgent agent = gameObject.GetComponent<NavMeshAgent>();
         agent.enabled = false;
+
+        //Turn everything off and ragdoll
         
         yield return new WaitForSeconds(0.1f);
         Destroy(this.gameObject);

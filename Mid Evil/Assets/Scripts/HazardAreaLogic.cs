@@ -8,7 +8,8 @@ public class HazardAreaLogic : MonoBehaviour
     float timer = 0;
     public float damageFromSpell;
     public bool activated = false;
-    public GameObject physicalEffect;
+    public GameObject firePhysicalEffect;
+    public GameObject lightningPhysicalEffect;
     public Material lightningEffect;
     public Material fireEffect;
 
@@ -37,7 +38,7 @@ public class HazardAreaLogic : MonoBehaviour
                     }
                     else if (collider.CompareTag("Enemy"))
                     {
-                        collider.GetComponent<EnemyAttributes>().ApplyDamage(damageFromSpell);
+                        collider.GetComponentInParent<EnemyAttributes>().ApplyDamage(damageFromSpell);
                     }
                 }
             }
