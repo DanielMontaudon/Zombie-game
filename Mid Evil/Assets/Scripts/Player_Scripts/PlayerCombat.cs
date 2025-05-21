@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
 using System.Collections.Generic;
+using FIMSpace.FProceduralAnimation;
 
 
 
@@ -260,7 +261,7 @@ public class PlayerCombat : MonoBehaviour
             {
                 print("Nova Casted");
                 //Sphere Check
-                LayerMask enemyLayer = LayerMask.GetMask("Enemy");
+                LayerMask enemyLayer = LayerMask.GetMask("Ragdoll");
                 Collider[] enemys = Physics.OverlapSphere(transform.position, spell.range, enemyLayer);
 
                 //Add same sphere check for interactables? barrels persay??
@@ -371,7 +372,9 @@ public class PlayerCombat : MonoBehaviour
     private void CheckIfAttacked(Collider collider)
     {
         GameObject enemy = collider.gameObject;
-        EnemyMovement enemyMovement = enemy.GetComponentInParent<EnemyMovement>();
+        //Ragdoll and Physical body are seperate so you must get a reference to the physical parent to access data
+        RagdollAnimatorDummyReference enemyReference = enemy.GetComponentInParent<RagdollAnimatorDummyReference>();
+        EnemyMovement enemyMovement = enemyReference.ParentComponent.GetComponent<EnemyMovement>();
         if(enemyMovement.state == EnemyMovement.EnemyState.idle)
         {
             enemyMovement.target = this.transform;
@@ -383,13 +386,18 @@ public class PlayerCombat : MonoBehaviour
     private void DealDamage(Collider collider, float damage)
     {
         GameObject enemy = collider.gameObject;
-        EnemyAttributes enemyAttributes = enemy.GetComponentInParent<EnemyAttributes>();
+        //Ragdoll and Physical body are seperate so you must get a reference to the physical parent to access data
+        RagdollAnimatorDummyReference enemyReference = enemy.GetComponentInParent<RagdollAnimatorDummyReference>();
+        EnemyAttributes enemyAttributes = enemyReference.ParentComponent.GetComponent<EnemyAttributes>();
         enemyAttributes.ApplyDamage(damage);
     }
 
-    private void ApplyKnockback(Collider enemy, float force, float stunTime)
+    private void ApplyKnockback(Collider collider, float force, float stunTime)
     {
-        EnemyMovement enemyMovement = enemy.gameObject.GetComponentInParent<EnemyMovement>();
+        GameObject enemy = collider.gameObject;
+        //Ragdoll and Physical body are seperate so you must get a reference to the physical parent to access data
+        RagdollAnimatorDummyReference enemyReference = enemy.GetComponentInParent<RagdollAnimatorDummyReference>();
+        EnemyMovement enemyMovement = enemyReference.ParentComponent.GetComponent<EnemyMovement>();
         if(enemyMovement.state != EnemyMovement.EnemyState.stunned)
             enemyMovement.Knockback(transform.position, force, stunTime);
     }
@@ -407,9 +415,12 @@ public class PlayerCombat : MonoBehaviour
         rb.useGravity = true;
     }
 
-    private void LiftEnemy(Collider enemy)
+    private void LiftEnemy(Collider collider)
     {
-        EnemyMovement enemyMovement = enemy.gameObject.GetComponentInParent<EnemyMovement>();
+        GameObject enemy = collider.gameObject;
+        //Ragdoll and Physical body are seperate so you must get a reference to the physical parent to access data
+        RagdollAnimatorDummyReference enemyReference = enemy.GetComponentInParent<RagdollAnimatorDummyReference>();
+        EnemyMovement enemyMovement = enemyReference.ParentComponent.GetComponent<EnemyMovement>();
         enemyMovement.StopNav(transform);
     }
 

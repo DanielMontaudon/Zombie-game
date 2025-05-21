@@ -170,16 +170,17 @@ public class EnemyMovement : MonoBehaviour
     private IEnumerator ResetEnemy(float time)
     {
         yield return new WaitForSeconds(time);
-
-        agent.Warp(ek.hipRB.position);
+        state = EnemyState.gettingUp;
+        agent.Warp(ek.ragdollCenter());
         ek.turnOnKinematics();
+        anim.enabled = true;
         //TRY USING ANIMATOR TO RESET RAGDOLL
         //SAVE POSITION OF JOINTS AND BONES
         //DEACTIVATE RAGDOLL AND ENABLE ANIMATOR
         //SET ANIMATION FROM SAVED POSITIONS TO STAND STRAIGHT
-
+        yield return new WaitForSeconds(1f);
         //agent.updatePosition = true;
-        anim.enabled = true;
+        //anim.enabled = true;
         agent.enabled = true;
         state = EnemyState.chasing;
 

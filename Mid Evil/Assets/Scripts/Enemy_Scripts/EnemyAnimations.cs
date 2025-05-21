@@ -4,6 +4,7 @@ public class EnemyAnimations : MonoBehaviour
 {
     [SerializeField] AnimationClip enemyRunning;
     [SerializeField] AnimationClip enemyIdle;
+    [SerializeField] AnimationClip enemyGetUp;
 
     [SerializeField] AnimancerComponent animancer;
     private EnemyMovement em;
@@ -26,6 +27,12 @@ public class EnemyAnimations : MonoBehaviour
         {
             animancer.Play(enemyIdle, 0.25f);
         }
-        
+        else if(em.state == EnemyMovement.EnemyState.gettingUp)
+        {
+            animancer.Play(enemyGetUp);
+            
+        }
+
+
     }
 }

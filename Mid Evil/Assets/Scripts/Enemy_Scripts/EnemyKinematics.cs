@@ -1,4 +1,5 @@
 using UnityEngine;
+using FIMSpace.FProceduralAnimation;
 
 public class EnemyKinematics : MonoBehaviour
 {
@@ -13,6 +14,12 @@ public class EnemyKinematics : MonoBehaviour
     [SerializeField] Rigidbody leftLowerLegRB;
     [SerializeField] Rigidbody rightUpperLegRB;
     [SerializeField] Rigidbody rightLowerLegRB;
+    RagdollAnimator2 ra;
+    public bool raInUse;
+
+
+    //YOU MIGHT BE ABLE TO JUST GET RID OF ALL OF THIS SINCE YOURE NO LONGER USING PRESET RIGIDBODIES RAGDOLLS
+
 
     /*
         headRB
@@ -29,78 +36,105 @@ public class EnemyKinematics : MonoBehaviour
      */
     private void Start()
     {
-        headRB.isKinematic = true;
-        chestRB.isKinematic = true;
-        hipRB.isKinematic = true;
-        leftUpperArmRB.isKinematic = true;
-        leftLowerRB.isKinematic = true;
-        rightUpperArmRB.isKinematic = true;
-        rightLowerArmRB.isKinematic = true;
-        leftUpperLegRB.isKinematic = true;
-        leftLowerLegRB.isKinematic = true;
-        rightUpperLegRB.isKinematic = true;
-        rightLowerLegRB.isKinematic = true;
+        if (raInUse)
+        {
+            ra = gameObject.GetComponent<RagdollAnimator2>();
+        }
+        else
+        {
+            headRB.isKinematic = true;
+            chestRB.isKinematic = true;
+            hipRB.isKinematic = true;
+            leftUpperArmRB.isKinematic = true;
+            leftLowerRB.isKinematic = true;
+            rightUpperArmRB.isKinematic = true;
+            rightLowerArmRB.isKinematic = true;
+            leftUpperLegRB.isKinematic = true;
+            leftLowerLegRB.isKinematic = true;
+            rightUpperLegRB.isKinematic = true;
+            rightLowerLegRB.isKinematic = true;
+        }
     }
 
     public void turnOnKinematics()
     {
-        headRB.isKinematic = true;
-        chestRB.isKinematic = true;
-        hipRB.isKinematic = true;
-        leftUpperArmRB.isKinematic = true;
-        leftLowerRB.isKinematic = true;
-        rightUpperArmRB.isKinematic = true;
-        rightLowerArmRB.isKinematic = true;
-        leftUpperLegRB.isKinematic = true;
-        leftLowerLegRB.isKinematic = true;
-        rightUpperLegRB.isKinematic = true;
-        rightLowerLegRB.isKinematic = true;
+        if (raInUse)
+            ra.User_SetAllKinematic(true);
+        else
+        {
+            headRB.isKinematic = true;
+            chestRB.isKinematic = true;
+            hipRB.isKinematic = true;
+            leftUpperArmRB.isKinematic = true;
+            leftLowerRB.isKinematic = true;
+            rightUpperArmRB.isKinematic = true;
+            rightLowerArmRB.isKinematic = true;
+            leftUpperLegRB.isKinematic = true;
+            leftLowerLegRB.isKinematic = true;
+            rightUpperLegRB.isKinematic = true;
+            rightLowerLegRB.isKinematic = true;
+        }
     }
 
     public void turnOffKinematics()
     {
-        headRB.isKinematic = false;
-        chestRB.isKinematic = false;
-        hipRB.isKinematic = false;
-        leftUpperArmRB.isKinematic = false;
-        leftLowerRB.isKinematic = false;
-        rightUpperArmRB.isKinematic = false;
-        rightLowerArmRB.isKinematic = false;
-        leftUpperLegRB.isKinematic = false;
-        leftLowerLegRB.isKinematic = false;
-        rightUpperLegRB.isKinematic = false;
-        rightLowerLegRB.isKinematic = false;
+        if (raInUse)
+            ra.User_SetAllKinematic(false);
+        else
+        {
+            headRB.isKinematic = false;
+            chestRB.isKinematic = false;
+            hipRB.isKinematic = false;
+            leftUpperArmRB.isKinematic = false;
+            leftLowerRB.isKinematic = false;
+            rightUpperArmRB.isKinematic = false;
+            rightLowerArmRB.isKinematic = false;
+            leftUpperLegRB.isKinematic = false;
+            leftLowerLegRB.isKinematic = false;
+            rightUpperLegRB.isKinematic = false;
+            rightLowerLegRB.isKinematic = false;
+        }
     }
 
 
     public void turnOnGravity()
     {
-        headRB.useGravity = true;
-        chestRB.useGravity = true;
-        hipRB.useGravity = true;
-        leftUpperArmRB.useGravity = true;
-        leftLowerRB.useGravity = true;
-        rightUpperArmRB.useGravity = true;
-        rightLowerArmRB.useGravity = true;
-        leftUpperLegRB.useGravity = true;
-        leftLowerLegRB.useGravity = true;
-        rightUpperLegRB.useGravity = true;
-        rightLowerLegRB.useGravity = true;
+        if (raInUse)
+            ra.User_SwitchAllBonesUseGravity(true);
+        else
+        {
+            headRB.useGravity = true;
+            chestRB.useGravity = true;
+            hipRB.useGravity = true;
+            leftUpperArmRB.useGravity = true;
+            leftLowerRB.useGravity = true;
+            rightUpperArmRB.useGravity = true;
+            rightLowerArmRB.useGravity = true;
+            leftUpperLegRB.useGravity = true;
+            leftLowerLegRB.useGravity = true;
+            rightUpperLegRB.useGravity = true;
+            rightLowerLegRB.useGravity = true;
+        }
     }
 
     public void turnOffGravity()
     {
-        headRB.useGravity = false;
-        chestRB.useGravity = false;
-        hipRB.useGravity = false;
-        leftUpperArmRB.useGravity = false;
-        leftLowerRB.useGravity = false;
-        rightUpperArmRB.useGravity = false;
-        rightLowerArmRB.useGravity = false;
-        leftUpperLegRB.useGravity = false;
-        leftLowerLegRB.useGravity = false;
-        rightUpperLegRB.useGravity = false;
-        rightLowerLegRB.useGravity = false;
+        if (raInUse)
+            ra.User_SwitchAllBonesUseGravity(false);
+        else
+        {
+            headRB.useGravity = false;
+            chestRB.useGravity = false;
+            hipRB.useGravity = false;
+            leftUpperArmRB.useGravity = false;
+            leftLowerRB.useGravity = false;
+            rightUpperArmRB.useGravity = false;
+            rightLowerArmRB.useGravity = false;
+            leftUpperLegRB.useGravity = false;
+            leftLowerLegRB.useGravity = false;
+            rightUpperLegRB.useGravity = false;
+            rightLowerLegRB.useGravity = false;
+        }
     }    
 
     public void FreezeConstraints()
@@ -135,13 +169,26 @@ public class EnemyKinematics : MonoBehaviour
 
     public void chestKnockback(Vector3 forcePosition, float force)
     {
-        chestRB.AddTorque((transform.position - forcePosition).normalized * 5, ForceMode.Impulse);
-        chestRB.AddForce((transform.position - forcePosition).normalized * force);
+        //START FROM HERE MAYBE
+        //chestRB.AddTorque((transform.position - forcePosition).normalized * 5, ForceMode.Impulse);
+        //chestRB.AddForce((transform.position - forcePosition).normalized * force);
     }
 
     public void liftKinematics(float force)
     {
-        chestRB.AddForce(transform.up * force);
+        //chestRB.AddForce(transform.up * force);
+    }
+
+    public Vector3 ragdollCenter()
+    {
+        if(raInUse)
+        {
+            return ra.User_GetPosition_Center();
+        }
+        else
+        {
+            return hipRB.position;
+        }
     }
 
 }

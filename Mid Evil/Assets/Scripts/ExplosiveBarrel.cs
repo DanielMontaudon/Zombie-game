@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using FIMSpace.FProceduralAnimation;
 public class ExplosiveBarrel : MonoBehaviour
 {
     /*
@@ -46,7 +46,7 @@ public class ExplosiveBarrel : MonoBehaviour
     public void Explode()
     {
         //Sphere Check
-        LayerMask enemyLayer = LayerMask.GetMask("Enemy");
+        LayerMask enemyLayer = LayerMask.GetMask("Ragdoll");
         Collider[] enemys = Physics.OverlapSphere(transform.position, barrelBlast.range, enemyLayer);
 
         //Add same sphere check for interactables? barrels persay??
@@ -67,8 +67,12 @@ public class ExplosiveBarrel : MonoBehaviour
                     //Otherwise apply damage and such
                     if (spellHit.collider.CompareTag("Enemy"))
                     {
-                        EnemyMovement em = enemy.gameObject.GetComponentInParent<EnemyMovement>();
-                        EnemyAttributes ea = enemy.gameObject.GetComponentInParent<EnemyAttributes>();
+                        //Ragdoll and Physical body are seperate so you must get a reference to the physical parent to access data
+                        RagdollAnimatorDummyReference enemyReference = enemy.GetComponentInParent<RagdollAnimatorDummyReference>();
+                        EnemyMovement em = enemyReference.ParentComponent.GetComponent<EnemyMovement>();
+                        EnemyAttributes ea = enemyReference.ParentComponent.GetComponent<EnemyAttributes>();
+                        //EnemyMovement em = enemy.gameObject.GetComponentInParent<EnemyMovement>();
+                        //EnemyAttributes ea = enemy.gameObject.GetComponentInParent<EnemyAttributes>();
                         //print(barrelBlast.damage);
                         ea.ApplyDamage(barrelBlast.damage);
 
