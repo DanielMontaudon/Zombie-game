@@ -1,18 +1,23 @@
 using UnityEngine;
 using Animancer;
+using FIMSpace.FProceduralAnimation;
 public class EnemyAnimations : MonoBehaviour
 {
     [SerializeField] AnimationClip enemyRunning;
     [SerializeField] AnimationClip enemyIdle;
-    [SerializeField] AnimationClip enemyGetUp;
+    [SerializeField] AnimationClip enemyGetUpBack;
+    [SerializeField] AnimationClip enemyGetUpFront;
+
 
     [SerializeField] AnimancerComponent animancer;
     private EnemyMovement em;
     private EnemyMovement.EnemyState enemyState;
+    private RagdollAnimator2 ra;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         em = gameObject.GetComponent<EnemyMovement>();
+        ra = gameObject.GetComponent<RagdollAnimator2>();
     }
 
     // Update is called once per frame
@@ -29,8 +34,12 @@ public class EnemyAnimations : MonoBehaviour
         }
         else if(em.state == EnemyMovement.EnemyState.gettingUp)
         {
-            animancer.Play(enemyGetUp);
-            
+            if(ra.User_IsOnBack())
+                animancer.Play(enemyGetUpBack, 0.2f);
+            else
+                animancer.Play(enemyGetUpFront, 0.2f);
+
+
         }
 
 

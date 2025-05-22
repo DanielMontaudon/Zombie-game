@@ -225,16 +225,16 @@ public class PlayerCombat : MonoBehaviour
             {
                 print("Tornado casted");
                 //LayerMask interactableLayer = LayerMask.GetMask("Interactable");
-                //LayerMask enemyLayer = LayerMask.GetMask("Enemy");
+                LayerMask enemyLayer = LayerMask.GetMask("Enemy");
                 //RaycastHit[] raycastHits = Physics.RaycastAll(playerCam.position, playerCam.transform.forward, spell.range);
-                RaycastHit[] raycastHits = Physics.SphereCastAll(playerCam.position, 1f, orientation.transform.forward, spell.range);
+                RaycastHit[] raycastHits = Physics.SphereCastAll(playerCam.position, 1f, orientation.transform.forward, spell.range, ~enemyLayer);
                 float closestWall = float.MaxValue;
                 //foreach (RaycastHit hit in raycastHits)
                 for(int i = 0; i < raycastHits.Length; i++)
                 {
                     if (!raycastHits[i].collider.CompareTag("Player") && !raycastHits[i].collider.CompareTag("Barrel"))
                     {
-                        print(raycastHits[i].collider.tag + ": " + Vector3.Distance(raycastHits[i].point, transform.position));
+                        //print(raycastHits[i].collider.tag + ": " + Vector3.Distance(raycastHits[i].point, transform.position));
                         if (!raycastHits[i].collider.CompareTag("Enemy"))
                         {
                             if(Vector3.Distance(transform.position, raycastHits[i].point) < closestWall)
@@ -418,6 +418,7 @@ public class PlayerCombat : MonoBehaviour
     private void LiftEnemy(Collider collider)
     {
         GameObject enemy = collider.gameObject;
+        print(enemy.name);
         //Ragdoll and Physical body are seperate so you must get a reference to the physical parent to access data
         RagdollAnimatorDummyReference enemyReference = enemy.GetComponentInParent<RagdollAnimatorDummyReference>();
         EnemyMovement enemyMovement = enemyReference.ParentComponent.GetComponent<EnemyMovement>();

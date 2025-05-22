@@ -162,7 +162,7 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 1
+  m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!153 &27318360
@@ -1558,7 +1558,7 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 1
+  m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!153 &182050657
@@ -1745,7 +1745,7 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 1
+  m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!153 &197039165
@@ -2646,7 +2646,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyRunning: {fileID: -203655887218126122, guid: 6edffa3796f154c41949a4df3b301875, type: 3}
   enemyIdle: {fileID: -203655887218126122, guid: 13f1aaf1d11e5b64b80ef293a71dad78, type: 3}
-  enemyGetUp: {fileID: -203655887218126122, guid: 5e97d8070f3fd524498470bed3e190b5, type: 3}
+  enemyGetUpBack: {fileID: 0}
+  enemyGetUpFront: {fileID: 0}
   animancer: {fileID: 237255858}
 --- !u!1 &244019922
 GameObject:
@@ -3223,7 +3224,7 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 1
+  m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!144 &322278479
@@ -3802,7 +3803,7 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 1
+  m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!1 &456796511
@@ -4568,7 +4569,7 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 1
+  m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!1 &675836518
@@ -4614,7 +4615,7 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 1
+  m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!153 &675836520
@@ -6943,7 +6944,7 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 1
+  m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!153 &1005372387
@@ -7129,7 +7130,7 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 1
+  m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!153 &1015664292
@@ -7265,15 +7266,12 @@ GameObject:
   - component: {fileID: 1054220389}
   - component: {fileID: 1054220388}
   - component: {fileID: 1054220387}
-  - component: {fileID: 1054220386}
   - component: {fileID: 1054220385}
   - component: {fileID: 1054220384}
-  - component: {fileID: 1054220383}
   - component: {fileID: 1054220382}
   - component: {fileID: 1054220381}
   - component: {fileID: 1054220380}
   - component: {fileID: 1054220379}
-  - component: {fileID: 1054220391}
   m_Layer: 9
   m_Name: RagdollAnimatorEnemy
   m_TagString: Enemy
@@ -7298,7 +7296,7 @@ MonoBehaviour:
     _Editor_ChainCategory: 1
     _EditorCategory: 3
     _EditorMainCategory: 0
-    _EditorMotionCategory: 1
+    _EditorMotionCategory: 0
     m_hemi: {fileID: -2508796484986968503, guid: 44d994eaad14fdf49a2dd378b4d62094, type: 3}
     m_cyli: {fileID: 2534964839176971238, guid: 2ea99bbc50a9266448416f21d645a771, type: 3}
     m_sphere: {fileID: 4711208715938537054, guid: b43618aedd7473a4eb1aaa5e80012a1d, type: 3}
@@ -7403,14 +7401,7 @@ MonoBehaviour:
         rootSpaceRotation: {x: 0.625082, y: 0.32592848, z: 0.6316912, w: 0.322505}
       LastBaseTransform: {fileID: 1554233736}
     UseExtraFeatures: 1
-    ExtraFeatures:
-    - CustomName: 
-      enabled: 1
-      FeatureReference: {fileID: 0}
-      customStringList: []
-      customObjectList: []
-      customEventsList: []
-      variables: []
+    ExtraFeatures: []
     IsHumanoid: 1
     dummyContainer: {fileID: 1464619834}
     inBetweenPreGenerateMemory:
@@ -7463,7 +7454,7 @@ MonoBehaviour:
     RagdollSizeMultiplier: 1
     RagdollThicknessMultiplier: 1
     ReferenceMass: 50
-    RigidbodiesInterpolation: 1
+    RigidbodiesInterpolation: 0
     RigidbodiesDetectionMode: 0
     RigidbodyDragValue: 0
     RigidbodyAngularDragValue: 0.2
@@ -7481,19 +7472,19 @@ MonoBehaviour:
     MaxDepenetrationVelocity: 0
     ProjectionMode: 0
     PreProcessing: 0
-    RagdollBlend: 0.6516882
+    RagdollBlend: 0.80064553
     animatingMode: 1
     UseReconstruction: 0
     UnitySolverIterations: 12
     Calibrate: 1
     AnimatePhysics: 0
-    ApplyPositions: 0
+    ApplyPositions: 1
     OptimizeOnZeroBlend: 0
     HideDummyInSceneView: 0
     IgnoreBoundedColliders: 1
     RagdollDummyLayer: 11
     UnscaledTime: 0
-    FadeInAnimation: 0
+    FadeInAnimation: 0.1
     IgnoreSourceSkeletonColliders: 1
     WaitForInit: 1
     AnimationMatchLimits: 1
@@ -8577,7 +8568,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyRunning: {fileID: -203655887218126122, guid: 6edffa3796f154c41949a4df3b301875, type: 3}
   enemyIdle: {fileID: -203655887218126122, guid: 13f1aaf1d11e5b64b80ef293a71dad78, type: 3}
-  enemyGetUp: {fileID: -203655887218126122, guid: 5e97d8070f3fd524498470bed3e190b5, type: 3}
+  enemyGetUpBack: {fileID: -203655887218126122, guid: 5e97d8070f3fd524498470bed3e190b5, type: 3}
+  enemyGetUpFront: {fileID: -203655887218126122, guid: ad3837c4647c196419e05963fe18ce39, type: 3}
   animancer: {fileID: 1054220382}
 --- !u!95 &1054220381
 Animator:
@@ -8616,30 +8608,6 @@ MonoBehaviour:
   _Animator: {fileID: 1054220381}
   _Transitions: {fileID: 11400000, guid: 5ef6ab98e7b8e5f45811fa553cce55d9, type: 2}
   _ActionOnDisable: 2
---- !u!114 &1054220383
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1054220378}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8760f0c505c8411449e63ea5ee25e851, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  headRB: {fileID: 0}
-  chestRB: {fileID: 0}
-  hipRB: {fileID: 0}
-  leftUpperArmRB: {fileID: 0}
-  leftLowerRB: {fileID: 0}
-  rightUpperArmRB: {fileID: 0}
-  rightLowerArmRB: {fileID: 0}
-  leftUpperLegRB: {fileID: 0}
-  leftLowerLegRB: {fileID: 0}
-  rightUpperLegRB: {fileID: 0}
-  rightLowerLegRB: {fileID: 0}
-  raInUse: 1
 --- !u!135 &1054220384
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -8688,29 +8656,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!136 &1054220386
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1054220378}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 3
-  m_Direction: 1
-  m_Center: {x: 0, y: 1.5, z: 0}
 --- !u!195 &1054220387
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -8787,19 +8732,6 @@ Transform:
   - {fileID: 1464619834}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1054220391
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1054220378}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fae7c3f30b9d8cd4ea0dfab6f23ea62d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  References: []
 --- !u!1 &1057516176
 GameObject:
   m_ObjectHideFlags: 0
@@ -9495,7 +9427,7 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 1
+  m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!153 &1322248558
@@ -9756,7 +9688,7 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 1
+  m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!153 &1361301613
@@ -10286,7 +10218,7 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 1
+  m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!1 &1443855790
@@ -10468,7 +10400,7 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 1
+  m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!153 &1443935957
@@ -14008,7 +13940,7 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 1
+  m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!1 &2037249169
@@ -14161,7 +14093,7 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 1
+  m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!153 &2066134037

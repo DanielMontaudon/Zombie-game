@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
+using FIMSpace.FProceduralAnimation;
 
 
 
@@ -11,6 +12,7 @@ public class EnemyMovement : MonoBehaviour
     //private Rigidbody rb;
     private EnemyKinematics ek;
     private EnemyAttributes ea;
+    private RagdollAnimator2 ra;
     private Animator anim;
 
     public Transform target;
@@ -43,8 +45,8 @@ public class EnemyMovement : MonoBehaviour
         agent = gameObject.GetComponent<NavMeshAgent>();
         anim = gameObject.GetComponent<Animator>();
         ea = gameObject.GetComponent<EnemyAttributes>();
-        ek = gameObject.GetComponent<EnemyKinematics>();
-
+        //ek = gameObject.GetComponent<EnemyKinematics>();
+        ra = gameObject.GetComponent<RagdollAnimator2>();
     }
 
     void Update()
@@ -158,11 +160,14 @@ public class EnemyMovement : MonoBehaviour
     {
         state = EnemyState.knocked;
  
-        ek.turnOffKinematics();
-        //agent.updatePosition = false;
+        //ra.User_SetAllKinematic(false);
+
         anim.enabled = false;
         agent.enabled = false;
-        ek.chestKnockback(forcePosition, force);
+        ra.User_SwitchFallState(false);
+        ra.User_AddAllImpact((gameObject.transform.position - forcePosition).normalized * force, 0.01f, ForceMode.Force);
+        //ra.User_FallImpact((gameObject.transform.position - forcePosition).normalized, force*100f);
+
         StartCoroutine(ResetEnemy(stunTime));
     }
 
@@ -171,14 +176,14 @@ public class EnemyMovement : MonoBehaviour
     {
         yield return new WaitForSeconds(time);
         state = EnemyState.gettingUp;
-        agent.Warp(ek.ragdollCenter());
-        ek.turnOnKinematics();
+        //ra.User_TransitionToStandingMode();
+        //agent.Warp(ra.User_GetPosition_Center());
+        //ra.User_SetAllKinematic(true);
+
         anim.enabled = true;
-        //TRY USING ANIMATOR TO RESET RAGDOLL
-        //SAVE POSITION OF JOINTS AND BONES
-        //DEACTIVATE RAGDOLL AND ENABLE ANIMATOR
-        //SET ANIMATION FROM SAVED POSITIONS TO STAND STRAIGHT
-        yield return new WaitForSeconds(1f);
+
+        yield return new WaitForSeconds(2f);
+        ra.User_TransitionToStandingMode();
         //agent.updatePosition = true;
         //anim.enabled = true;
         agent.enabled = true;
@@ -190,14 +195,18 @@ public class EnemyMovement : MonoBehaviour
     public void StopNav(Transform newTarget)
     {
         state = EnemyState.stunned;
-        ek.turnOffKinematics();
-        ek.turnOffGravity();
 
-        //agent.updatePosition = false;
+        //ra.User_SetAllKinematic(false);
+        ra.User_SwitchAllBonesUseGravity(false);
+
         anim.enabled = false;
         agent.enabled = false;
 
-        ek.liftKinematics(1000f);
+        ra.User_SetAllVelocity(Vector3.zero);
+        ra.User_SwitchFallState(false);
+        ra.User_AddAllImpact(Vector3.up, 0.1f, ForceMode.Force);
+        //ra.User_FallImpact(Vector3.up, 2000f);
+        ra.User_FadeMusclesPower(0.15f);
 
         StartCoroutine(ResumeNav(newTarget));
 
@@ -208,15 +217,20 @@ public class EnemyMovement : MonoBehaviour
     private IEnumerator ResumeNav(Transform newTarget)
     {
         yield return new WaitForSeconds(1f);
-        ek.turnOnGravity();
-        ek.liftKinematics(-1000f);
-
+        ra.User_SwitchAllBonesUseGravity(true);
+        ra.User_AddAllImpact(Vector3.up * -1f,0.1f,ForceMode.Force);
         yield return new WaitForSeconds(1.5f);
-        ek.turnOnKinematics();
+        state = EnemyState.gettingUp;
+        //ra.User_TransitionToStandingMode();
+        //ra.User_SwitchFallState(true);
+        //agent.Warp(ra.User_GetPosition_Center());
+        //ra.User_SetAllKinematic(true);
 
+        yield return new WaitForSeconds(2f);
+        ra.User_FadeMusclesPower(1f);
+        ra.User_TransitionToStandingMode();
         target = newTarget;
 
-        //agent.updatePosition = true;
         anim.enabled = true;
         agent.enabled = true;
 
