@@ -163,7 +163,7 @@ public class PlayerCombat : MonoBehaviour
             if (spell.spellName.Equals("Bolt") && playerStats.mana >= spell.manaCost)
             {
                 //ADD A DEBUFF COUNTER INSTEAD OF CONTINUOS KNOCKBACK
-                print("Bolt casted");
+                //print("Bolt casted");
                 RaycastHit raycastHit;
                 //Cast Ray straight in front of player 
                 bool rayHit = Physics.Raycast(playerCam.position, playerCam.transform.forward, out raycastHit, spell.range);
@@ -176,7 +176,7 @@ public class PlayerCombat : MonoBehaviour
                     if (raycastHit.collider.CompareTag("Enemy"))
                     {
                         //do something with enemy hit (take damage, shock, apply force)
-                        print("Bolt casted on: " + raycastHit.collider.tag);
+                        //print("Bolt casted on: " + raycastHit.collider.tag);
                         //Headshot Hitbox
                         if(raycastHit.collider.GetType() == typeof(SphereCollider))
                         {
@@ -202,7 +202,7 @@ public class PlayerCombat : MonoBehaviour
                     //If Puddle was hit
                     if (raycastHit.collider.CompareTag("Puddle"))
                     {
-                        print("Bolt casted on: " + raycastHit.collider.tag);
+                        //print("Bolt casted on: " + raycastHit.collider.tag);
                         ArcanePuddle ap = raycastHit.collider.gameObject.GetComponent<ArcanePuddle>();
                         ap.LightningArcane(spell.damage);
                         //Do arcane stuff
@@ -210,7 +210,7 @@ public class PlayerCombat : MonoBehaviour
 
                     if(raycastHit.collider.CompareTag("Chandelier"))
                     {
-                        print("Bolt casted on: " + raycastHit.collider.tag);
+                        //print("Bolt casted on: " + raycastHit.collider.tag);
                         ChandelierLogic cl = raycastHit.collider.gameObject.GetComponent<ChandelierLogic>();
                         cl.DropChandelier();
                     }
@@ -223,7 +223,7 @@ public class PlayerCombat : MonoBehaviour
             //Maybe Not tornado persay but wall of air, think moses
             else if (spell.spellName.Equals("Tornado") && playerStats.mana >= spell.manaCost)
             {
-                print("Tornado casted");
+                //print("Tornado casted");
                 //LayerMask interactableLayer = LayerMask.GetMask("Interactable");
                 LayerMask enemyLayer = LayerMask.GetMask("Enemy");
                 //RaycastHit[] raycastHits = Physics.RaycastAll(playerCam.position, playerCam.transform.forward, spell.range);
@@ -259,7 +259,7 @@ public class PlayerCombat : MonoBehaviour
             //Nova Spell - AoE Sphere that does massive damage
             else if (spell.spellName.Equals("Nova") && playerStats.mana >= spell.manaCost)
             {
-                print("Nova Casted");
+                //print("Nova Casted");
                 //Sphere Check
                 LayerMask enemyLayer = LayerMask.GetMask("Ragdoll");
                 Collider[] enemys = Physics.OverlapSphere(transform.position, spell.range, enemyLayer);
@@ -321,7 +321,7 @@ public class PlayerCombat : MonoBehaviour
             //ArmorInvocate Spell - Defensive stance that roots player and makes player invulnrable, healing and regen in the process
             else if (spell.spellName.Equals("ArmorInvocate") && playerStats.mana >= spell.manaCost)
             {
-                print("ArmorInvocate casted");
+                //print("ArmorInvocate casted");
                 playerMovement.pauseInput = true;
                 Rigidbody rb = gameObject.GetComponent<Rigidbody>();
                 rb.linearVelocity = Vector3.zero;
@@ -335,7 +335,7 @@ public class PlayerCombat : MonoBehaviour
             {
                 StartCoroutine(Dash());
 
-                print("Dash casted");
+                //print("Dash casted");
                 playerStats.mana -= spell.manaCost;
             }
             //Water Spell ??
@@ -418,7 +418,7 @@ public class PlayerCombat : MonoBehaviour
     private void LiftEnemy(Collider collider)
     {
         GameObject enemy = collider.gameObject;
-        print(enemy.name);
+        //print(enemy.name);
         //Ragdoll and Physical body are seperate so you must get a reference to the physical parent to access data
         RagdollAnimatorDummyReference enemyReference = enemy.GetComponentInParent<RagdollAnimatorDummyReference>();
         EnemyMovement enemyMovement = enemyReference.ParentComponent.GetComponent<EnemyMovement>();
@@ -454,7 +454,7 @@ public class PlayerCombat : MonoBehaviour
 
     private int KnockbackLogic(Spell spell)
     {
-        LayerMask enemyLayer = LayerMask.GetMask("Enemy");
+        LayerMask enemyLayer = LayerMask.GetMask("Ragdoll");
         Collider[] enemys = Physics.OverlapSphere(transform.position, spell.range, enemyLayer);
         int hitCount = 0;
         if (enemys.Length > 0)

@@ -29,6 +29,7 @@ public class ChandelierLogic : MonoBehaviour
             {
                 for(int i = 0; i < enemies.Length; i++)
                 {
+                    //Maybe change layer and change code to find sole enemy object and then destroy from there
                     Destroy(enemies[i].gameObject);
                 }
             }

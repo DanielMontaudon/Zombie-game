@@ -1,4 +1,5 @@
 using UnityEngine;
+using FIMSpace.FProceduralAnimation;
 
 public class HazardAreaLogic : MonoBehaviour
 {
@@ -38,7 +39,12 @@ public class HazardAreaLogic : MonoBehaviour
                     }
                     else if (collider.CompareTag("Enemy"))
                     {
-                        collider.GetComponentInParent<EnemyAttributes>().ApplyDamage(damageFromSpell);
+                        GameObject enemy = collider.gameObject;
+                        //Ragdoll and Physical body are seperate so you must get a reference to the physical parent to access data
+                        RagdollAnimatorDummyReference enemyReference = enemy.GetComponentInParent<RagdollAnimatorDummyReference>();
+                        enemyReference.ParentComponent.GetComponent<EnemyAttributes>().ApplyDamage(damageFromSpell);
+
+                        //collider.GetComponentInParent<EnemyAttributes>().ApplyDamage(damageFromSpell);
                     }
                 }
             }

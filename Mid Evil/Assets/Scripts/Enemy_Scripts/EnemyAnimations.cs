@@ -7,6 +7,7 @@ public class EnemyAnimations : MonoBehaviour
     [SerializeField] AnimationClip enemyIdle;
     [SerializeField] AnimationClip enemyGetUpBack;
     [SerializeField] AnimationClip enemyGetUpFront;
+    [SerializeField] AnimationClip enemyAttack;
 
 
     [SerializeField] AnimancerComponent animancer;
@@ -32,16 +33,32 @@ public class EnemyAnimations : MonoBehaviour
         {
             animancer.Play(enemyIdle, 0.25f);
         }
-        else if(em.state == EnemyMovement.EnemyState.gettingUp)
+        else if(em.state != EnemyMovement.EnemyState.attacking && em.state != EnemyMovement.EnemyState.gettingUp)
         {
-            if(ra.User_IsOnBack())
-                animancer.Play(enemyGetUpBack, 0.2f);
-            else
-                animancer.Play(enemyGetUpFront, 0.2f);
-
-
+            animancer.Stop();
         }
 
 
+    }
+
+    public void GetUpAnimation()
+    {
+        //animancer.Play(enemyGetUpFront, 0.2f);
+        if (ra.User_IsOnBack())
+        {
+            print("Playing On Back");
+            animancer.Play(enemyGetUpBack, 0.2f);
+        }
+        else
+        {
+            print("Playing on Front");
+            animancer.Play(enemyGetUpFront, 0.2f);
+        }
+    }
+
+    public void AttackAnimation()
+    {
+        AnimancerState animancerState = animancer.Play(enemyAttack, 0.2f);
+        animancerState.Speed = 2f;
     }
 }
