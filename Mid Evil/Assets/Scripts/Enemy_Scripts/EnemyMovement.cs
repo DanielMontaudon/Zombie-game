@@ -97,8 +97,12 @@ public class EnemyMovement : MonoBehaviour
     private IEnumerator ChaseReset()
     {
         yield return new WaitForSeconds(ea.enemyAttackSpeed);
-        agent.enabled = true;
-        state = EnemyState.chasing;
+
+        if (state == EnemyState.attacking)
+        {
+            agent.enabled = true;
+            state = EnemyState.chasing;
+        }
     }
 
     private void ResetAttack()
