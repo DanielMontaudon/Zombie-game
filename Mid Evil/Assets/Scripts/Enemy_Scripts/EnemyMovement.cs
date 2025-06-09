@@ -187,7 +187,7 @@ public class EnemyMovement : MonoBehaviour
         //agent.Warp(ra.User_GetPosition_Center());
         yield return new WaitForSeconds(time + Random.Range(0f, 0.5f));
         RaycastHit belowHips = ra.User_ProbeGroundBelowHips(groundMask);
-        print(belowHips.point);
+        //print(belowHips.point);
         agent.Warp(belowHips.point);
         ra.User_TransitionToStandingMode();
         ra.User_FadeMusclesPower(1f, 0.02f);

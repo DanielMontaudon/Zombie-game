@@ -1,4 +1,5 @@
 using UnityEngine;
+using FIMSpace.FProceduralAnimation;
 
 public class ChandelierLogic : MonoBehaviour
 {
@@ -14,7 +15,7 @@ public class ChandelierLogic : MonoBehaviour
     void Start()
     {
         rb = gameObject.GetComponent<Rigidbody>();
-        enemyLayer = LayerMask.GetMask("Enemy");
+        enemyLayer = LayerMask.GetMask("Ragdoll");
 
     }
 
@@ -29,8 +30,17 @@ public class ChandelierLogic : MonoBehaviour
             {
                 for(int i = 0; i < enemies.Length; i++)
                 {
+                    GameObject enemy = enemies[i].gameObject;
+                    //Ragdoll and Physical body are seperate so you must get a reference to the physical parent to access data
+                    RagdollAnimatorDummyReference enemyReference = enemy.GetComponentInParent<RagdollAnimatorDummyReference>();
+
+                    EnemyMovement enemyMovement = enemyReference.ParentComponent.GetComponent<EnemyMovement>();
+                    enemyMovement.Knockback(enemyMovement.transform.position, 0, 1);
+
+                    Destroy(enemyMovement.gameObject, 0.6f);
                     //Maybe change layer and change code to find sole enemy object and then destroy from there
-                    Destroy(enemies[i].gameObject);
+                    //Destroy(enemy);
+                    //print(enemies[i].name);
                 }
             }
         }
