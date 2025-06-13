@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: ffbc73e74a1bc0a49b0cbc891768a15a
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 154662
+  packageName: Rope Toolkit
+  packageVersion: 2.2.2
+  assetPath: Assets/Toolkits/Rope/Examples/00_Main/SoftBackdrop/BackdropSpeck.mat
+  uploadId: 637510

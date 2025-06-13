@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: a923ccf3d276b0f47bd5c425d2ab6ada
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 154662
+  packageName: Rope Toolkit
+  packageVersion: 2.2.2
+  assetPath: Assets/Toolkits/Rope/Examples/00_Main/SoftBackdrop/SoftBackdrop.prefab
+  uploadId: 637510

@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 6c341fba7d5799942b92f6085edb4743
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 154662
+  packageName: Rope Toolkit
+  packageVersion: 2.2.2
+  assetPath: Assets/Toolkits/Rope/Examples/00_Main/SoftBackdrop/SoftBackdrop.cs
+  uploadId: 637510
