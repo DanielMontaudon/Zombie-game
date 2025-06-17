@@ -8,6 +8,12 @@ public class EnemyAnimations : MonoBehaviour
     [SerializeField] AnimationClip enemyGetUpBack;
     [SerializeField] AnimationClip enemyGetUpFront;
     [SerializeField] AnimationClip enemyAttack;
+    [SerializeField] AnimationClip enemyRotateLeft45;
+    [SerializeField] AnimationClip enemyRotateLeft90;
+    [SerializeField] AnimationClip enemyRotateRight45;
+    [SerializeField] AnimationClip enemyRotateRight90;
+
+
 
 
     [SerializeField] AnimancerComponent animancer;
@@ -33,7 +39,7 @@ public class EnemyAnimations : MonoBehaviour
         {
             animancer.Play(enemyIdle, 0.25f);
         }
-        else if(em.state != EnemyMovement.EnemyState.attacking && em.state != EnemyMovement.EnemyState.gettingUp)
+        else if(em.state != EnemyMovement.EnemyState.attacking && em.state != EnemyMovement.EnemyState.gettingUpKnock && em.state != EnemyMovement.EnemyState.gettingUpStun && em.state != EnemyMovement.EnemyState.rotating)
         {
             animancer.Stop();
         }
@@ -60,5 +66,34 @@ public class EnemyAnimations : MonoBehaviour
     {
         AnimancerState animancerState = animancer.Play(enemyAttack, 0.2f);
         animancerState.Speed = 2f;
+    }
+
+    public void RotateAnimation(float angle, bool isTurningRight)
+    {
+        if (isTurningRight)
+        {
+            animancer.Play(enemyRotateRight45, 0.2f);
+            /*if (angle < 45)
+            {
+                animancer.Play(enemyRotateRight45, 0.2f);
+            }
+            else
+            {
+                animancer.Play(enemyRotateRight90, 0.2f);
+            }*/
+
+        }
+        else
+        {
+            animancer.Play(enemyRotateLeft45, 0.2f);
+            /*if (angle < 45)
+            {
+                animancer.Play(enemyRotateLeft45, 0.2f);
+            }
+            else
+            {
+                animancer.Play(enemyRotateLeft90, 0.2f);
+            }*/
+        }
     }
 }

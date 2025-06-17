@@ -1333,6 +1333,7 @@ MonoBehaviour:
   target: {fileID: 0}
   stunned: 0
   readyToAttack: 1
+  ragdollBlendValue: 0
   playerMask:
     serializedVersion: 2
     m_Bits: 256
@@ -1507,6 +1508,10 @@ MonoBehaviour:
   enemyGetUpBack: {fileID: 0}
   enemyGetUpFront: {fileID: 0}
   enemyAttack: {fileID: 0}
+  enemyRotateLeft45: {fileID: 0}
+  enemyRotateLeft90: {fileID: 0}
+  enemyRotateRight45: {fileID: 0}
+  enemyRotateRight90: {fileID: 0}
   animancer: {fileID: 237255858}
 --- !u!1 &294494911
 GameObject:
@@ -5018,7 +5023,7 @@ MonoBehaviour:
   handler:
     _Editor_SelectedChain: 0
     _Editor_ChainCategory: 1
-    _EditorCategory: 2
+    _EditorCategory: 3
     _EditorMainCategory: 0
     _EditorMotionCategory: 2
     m_hemi: {fileID: -2508796484986968503, guid: 44d994eaad14fdf49a2dd378b4d62094, type: 3}
@@ -5196,7 +5201,7 @@ MonoBehaviour:
     MaxDepenetrationVelocity: 0
     ProjectionMode: 0
     PreProcessing: 0
-    RagdollBlend: 0.64548165
+    RagdollBlend: 0.24830426
     animatingMode: 1
     UseReconstruction: 0
     UnitySolverIterations: 12
@@ -6292,9 +6297,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyRunning: {fileID: 6610929218996927397, guid: 7f482112533370546a60fccf8ce02a21, type: 3}
   enemyIdle: {fileID: -1126531990376911838, guid: c6a45c8d00dda0344a84921b9e357275, type: 3}
-  enemyGetUpBack: {fileID: -203655887218126122, guid: 5e97d8070f3fd524498470bed3e190b5, type: 3}
-  enemyGetUpFront: {fileID: -203655887218126122, guid: ad3837c4647c196419e05963fe18ce39, type: 3}
-  enemyAttack: {fileID: -203655887218126122, guid: 7d4dddcf844990e4d8b8a47210a64aa7, type: 3}
+  enemyGetUpBack: {fileID: 3210895411123182068, guid: 62a36279b4345df4a9407eff0aec7529, type: 3}
+  enemyGetUpFront: {fileID: -5313752792778301790, guid: f8404920f8a77ee48a9aeee63490afda, type: 3}
+  enemyAttack: {fileID: 221409413640339461, guid: 7c2afb86ab4486048aaeecd492a0f49a, type: 3}
+  enemyRotateLeft45: {fileID: -6207861879356556537, guid: 8ec079253d094a54db41804430f71648, type: 3}
+  enemyRotateLeft90: {fileID: 6414925557971086905, guid: b801fa73943408342abf2c6b28a8b707, type: 3}
+  enemyRotateRight45: {fileID: 692825850830721471, guid: 5df5acb3513eb5d4999c972af52fd52c, type: 3}
+  enemyRotateRight90: {fileID: -4165180160139050404, guid: 632cfa86d47ffe5438f7fa7801044d5d, type: 3}
   animancer: {fileID: 1054220382}
 --- !u!95 &1054220381
 Animator:
@@ -6408,6 +6417,7 @@ MonoBehaviour:
   target: {fileID: 0}
   stunned: 0
   readyToAttack: 1
+  ragdollBlendValue: 0
   playerMask:
     serializedVersion: 2
     m_Bits: 256

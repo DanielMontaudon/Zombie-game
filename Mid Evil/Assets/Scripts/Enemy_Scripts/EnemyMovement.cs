@@ -20,6 +20,7 @@ public class EnemyMovement : MonoBehaviour
     /*
     public bool knocked = false;
     */
+    public float ragdollBlendValue;
 
     Collider[] players;
     public LayerMask playerMask;
@@ -34,7 +35,9 @@ public class EnemyMovement : MonoBehaviour
         stunned,
         knocked,
         attacking,
-        gettingUp
+        gettingUpKnock,
+        gettingUpStun,
+        rotating
     }
 
     private Coroutine attackingCoroutine;
@@ -47,6 +50,7 @@ public class EnemyMovement : MonoBehaviour
         ea = gameObject.GetComponent<EnemyAttributes>();
         eAnim = gameObject.GetComponent<EnemyAnimations>();
         ra = gameObject.GetComponent<RagdollAnimator2>();
+        ragdollBlendValue = ra.RagdollBlend;
     }
 
     void Update()
@@ -109,6 +113,36 @@ public class EnemyMovement : MonoBehaviour
     {
         readyToAttack = true;
     }
+
+    private void LookAtTarget()
+    {
+        state = EnemyState.rotating;
+        agent.enabled = false;
+
+        Vector3 direction = target.position - transform.position;
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+        bool isTurningRight = Vector3.Cross(transform.rotation * Vector3.forward, targetRotation * Vector3.forward).y > 0;
+        //Negative Y value = Turning LEFT, Positive y value = Turning RIGHT
+        print("Right(+)/Left(-) = " + Vector3.Cross(transform.rotation*Vector3.forward, targetRotation*Vector3.forward).y);
+        print("Angle = " + Quaternion.Angle(transform.rotation, targetRotation));
+        eAnim.RotateAnimation(Quaternion.Angle(transform.rotation, targetRotation), isTurningRight);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 30f);
+        //transform.rotation = targetRotation;
+
+        StartCoroutine(LookAtReset());
+    }
+
+    private IEnumerator LookAtReset()
+    {
+        yield return new WaitForSeconds(0.05f);
+
+        if (state == EnemyState.rotating)
+        {
+            agent.enabled = true;
+            state = EnemyState.chasing;
+        }
+    }
+
     private void FollowTarget()
     {
         //Make Head of enemy transform.LookAt
@@ -119,7 +153,8 @@ public class EnemyMovement : MonoBehaviour
             //Check if player/target is infront of them
             //Physics.Raycast(gameObject.transform.position + (Vector3.up * 1.5f), gameObject.transform.forward, out hitInfo, ea.enemyRange)
             //Physics.SphereCast(new Ray(transform.position + (Vector3.up * 1.5f), transform.forward), 1f, ea.enemyRange, playerMask)
-            if (Physics.Raycast(transform.position + (Vector3.up * 1.5f), transform.forward, ea.enemyRange, playerMask))
+            //Physics.Raycast(transform.position + (Vector3.up * 1.5f), transform.forward, ea.enemyRange, playerMask)
+            if (Physics.SphereCast(new Ray(transform.position + (Vector3.up * 1.5f), transform.forward), .5f, ea.enemyRange, playerMask))
             {
                 readyToAttack = false;
                 eAnim.AttackAnimation();
@@ -130,11 +165,8 @@ public class EnemyMovement : MonoBehaviour
             //else turn towards player
             else
             {
+                LookAtTarget();
                 //print("Rotating");
-                Vector3 direction = target.position - transform.position;
-                Quaternion targetRotation = Quaternion.LookRotation(direction);
-
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f);
             }
         }
         else if(agent.enabled)
@@ -178,7 +210,7 @@ public class EnemyMovement : MonoBehaviour
         //anim.enabled = false;
         agent.enabled = false;
         ra.User_SwitchFallState(false);
-        ra.RagdollBlend = 1f;
+        ra.RagdollBlend = .85f;
         ra.User_AddAllImpact((gameObject.transform.position - forcePosition).normalized * force, 0.01f, ForceMode.Force);
         ra.User_FadeMusclesPower(0.4f, 0.1f);
 
@@ -195,22 +227,25 @@ public class EnemyMovement : MonoBehaviour
         agent.Warp(belowHips.point);
         ra.User_TransitionToStandingMode();
         ra.User_FadeMusclesPower(1f, 0.02f);
-        state = EnemyState.gettingUp;
+        state = EnemyState.gettingUpKnock;
         //ra.User_TransitionToStandingMode();
         //agent.Warp(ra.User_GetPosition_Center());
         //ra.User_SetAllKinematic(true);
 
         //anim.enabled = true;
         //ra.User_FadeMusclesPower(1f, 0.02f);
-        ra.RagdollBlend = 0.65f;
+        ra.RagdollBlend = ragdollBlendValue;
         eAnim.GetUpAnimation();
         yield return new WaitForSeconds(2f);
         //ra.User_FadeMusclesPower(1f);
         //ra.User_TransitionToStandingMode();
-        
+
         //anim.enabled = true;
-        agent.enabled = true;
-        state = EnemyState.chasing;
+        if (state == EnemyState.gettingUpKnock)
+        {
+            agent.enabled = true;
+            state = EnemyState.chasing;
+        }
 
     }
 
@@ -230,7 +265,7 @@ public class EnemyMovement : MonoBehaviour
         //Unlock Anchor Bone
         ra.User_SwitchFallState(false);
         //Make Ragdoll Blend with Physical animated body 
-        ra.RagdollBlend = 1f;
+        ra.RagdollBlend = .85f;
         //Add Force Upward
         ra.User_AddAllImpact(Vector3.up * 0.7f, 0.1f, ForceMode.Impulse);
         ra.User_FadeMusclesPower(0.4f, 0.2f);
@@ -248,9 +283,9 @@ public class EnemyMovement : MonoBehaviour
         ra.User_AddAllImpact(Vector3.up * -0.7f,0.1f,ForceMode.Impulse);
         yield return new WaitForSeconds(1.75f + Random.Range(0f,0.5f));
         ra.User_TransitionToStandingMode();
-        state = EnemyState.gettingUp;
+        state = EnemyState.gettingUpStun;
         ra.User_FadeMusclesPower(1f,0.2f);
-        ra.RagdollBlend = 0.65f;
+        ra.RagdollBlend = ragdollBlendValue;
         eAnim.GetUpAnimation();
         //ra.User_TransitionToStandingMode();
         //ra.User_SwitchFallState(true);
@@ -262,9 +297,11 @@ public class EnemyMovement : MonoBehaviour
         target = newTarget;
 
         //anim.enabled = true;
-        agent.enabled = true;
-
-        state = EnemyState.chasing;
+        if (state == EnemyState.gettingUpStun)
+        {
+            agent.enabled = true;
+            state = EnemyState.chasing;
+        }
     }
 
 
