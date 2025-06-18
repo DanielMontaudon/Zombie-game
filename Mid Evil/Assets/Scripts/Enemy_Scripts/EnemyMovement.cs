@@ -17,6 +17,7 @@ public class EnemyMovement : MonoBehaviour
     public Transform target;
     public bool stunned = false;
     public bool readyToAttack = true;
+    public bool isDead = false;
     /*
     public bool knocked = false;
     */
@@ -37,7 +38,8 @@ public class EnemyMovement : MonoBehaviour
         attacking,
         gettingUpKnock,
         gettingUpStun,
-        rotating
+        rotating,
+        dead
     }
 
     private Coroutine attackingCoroutine;
@@ -63,6 +65,10 @@ public class EnemyMovement : MonoBehaviour
         else if (state == EnemyState.chasing)
         {
             FollowTarget();
+        }
+        else if(state == EnemyState.dead)
+        {
+            DyingSequence();
         }
 
     }
@@ -102,7 +108,7 @@ public class EnemyMovement : MonoBehaviour
     {
         yield return new WaitForSeconds(ea.enemyAttackSpeed);
 
-        if (state == EnemyState.attacking)
+        if (state == EnemyState.attacking && !isDead)
         {
             agent.enabled = true;
             state = EnemyState.chasing;
@@ -148,13 +154,13 @@ public class EnemyMovement : MonoBehaviour
         //Make Head of enemy transform.LookAt
         //Make body update using clamp motions
 
-        if(Vector3.Distance(target.position, gameObject.transform.position) < (ea.enemyRange) && readyToAttack)
+        if(Vector3.Distance(target.position, gameObject.transform.position) < (ea.enemyRange))
         {
             //Check if player/target is infront of them
             //Physics.Raycast(gameObject.transform.position + (Vector3.up * 1.5f), gameObject.transform.forward, out hitInfo, ea.enemyRange)
             //Physics.SphereCast(new Ray(transform.position + (Vector3.up * 1.5f), transform.forward), 1f, ea.enemyRange, playerMask)
             //Physics.Raycast(transform.position + (Vector3.up * 1.5f), transform.forward, ea.enemyRange, playerMask)
-            if (Physics.SphereCast(new Ray(transform.position + (Vector3.up * 1.5f), transform.forward), .5f, ea.enemyRange, playerMask))
+            if (Physics.SphereCast(new Ray(transform.position + (Vector3.up * 1.5f), transform.forward), .5f, ea.enemyRange, playerMask) && readyToAttack)
             {
                 readyToAttack = false;
                 eAnim.AttackAnimation();
@@ -241,7 +247,7 @@ public class EnemyMovement : MonoBehaviour
         //ra.User_TransitionToStandingMode();
 
         //anim.enabled = true;
-        if (state == EnemyState.gettingUpKnock)
+        if (state == EnemyState.gettingUpKnock && !isDead)
         {
             agent.enabled = true;
             state = EnemyState.chasing;
@@ -297,11 +303,23 @@ public class EnemyMovement : MonoBehaviour
         target = newTarget;
 
         //anim.enabled = true;
-        if (state == EnemyState.gettingUpStun)
+        if (state == EnemyState.gettingUpStun && !isDead)
         {
             agent.enabled = true;
             state = EnemyState.chasing;
         }
+    }
+
+    private void DyingSequence()
+    {
+        agent.enabled = true;
+        agent.isStopped = true;
+        RaycastHit belowHips = ra.User_ProbeGroundBelowHips(groundMask);
+        //print(belowHips.point);
+        agent.Warp(belowHips.point);
+        ra.User_SwitchFallState(false);
+        ra.RagdollBlend = .85f;
+        ra.User_FadeMusclesPower(0.4f, 0.1f);
     }
 
 

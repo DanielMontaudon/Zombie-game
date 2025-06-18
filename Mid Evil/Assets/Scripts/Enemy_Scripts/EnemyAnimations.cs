@@ -72,28 +72,28 @@ public class EnemyAnimations : MonoBehaviour
     {
         if (isTurningRight)
         {
-            animancer.Play(enemyRotateRight45, 0.2f);
-            /*if (angle < 45)
+            //animancer.Play(enemyRotateRight45, 0.1f);
+            if (angle < 45)
             {
-                animancer.Play(enemyRotateRight45, 0.2f);
+                animancer.Play(enemyRotateRight45, 0.15f);
             }
             else
             {
-                animancer.Play(enemyRotateRight90, 0.2f);
-            }*/
+                animancer.Play(enemyRotateRight90, 0.15f);
+            }
 
         }
         else
         {
-            animancer.Play(enemyRotateLeft45, 0.2f);
-            /*if (angle < 45)
+            //animancer.Play(enemyRotateLeft45, 0.1f);
+            if (angle < 45)
             {
-                animancer.Play(enemyRotateLeft45, 0.2f);
+                animancer.Play(enemyRotateLeft45, 0.15f);
             }
             else
             {
-                animancer.Play(enemyRotateLeft90, 0.2f);
-            }*/
+                animancer.Play(enemyRotateLeft90, 0.15f);
+            }
         }
     }
 }

@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 using System.Collections;
+using INab.Common;
 
 public class EnemyAttributes : MonoBehaviour
 {
@@ -33,12 +34,18 @@ public class EnemyAttributes : MonoBehaviour
 
     private IEnumerator KillEnemy()
     {
-        NavMeshAgent agent = gameObject.GetComponent<NavMeshAgent>();
-        agent.enabled = false;
+        EnemyMovement em = gameObject.GetComponent<EnemyMovement>();
+        em.isDead = true;
+        em.state = EnemyMovement.EnemyState.dead;
 
+        //NEEDS BIG WORK, CHANGE ORDER THINGS HAPPEN MAYBE
+        //MAKE SURE WHEN YOU GET A REAL ENEMY MODEL TO MAKE SURE THE MESH IS STANDING UPRIGHT
+
+        InteractiveEffect ie = gameObject.GetComponentInChildren<InteractiveEffect>();
+        ie.PlayEffect();
         //Turn everything off and ragdoll
         
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(5f);
         Destroy(this.gameObject);
     }
 }
