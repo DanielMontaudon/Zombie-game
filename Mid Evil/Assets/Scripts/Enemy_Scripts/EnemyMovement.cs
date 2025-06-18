@@ -11,8 +11,7 @@ public class EnemyMovement : MonoBehaviour
     private NavMeshAgent agent;
     private EnemyAnimations eAnim;
     private EnemyAttributes ea;
-    private RagdollAnimator2 ra;
-    private Animator anim;
+    public RagdollAnimator2 ra;
 
     public Transform target;
     public bool stunned = false;
@@ -42,13 +41,11 @@ public class EnemyMovement : MonoBehaviour
         dead
     }
 
-    private Coroutine attackingCoroutine;
 
     void Start()
     {
         state = EnemyState.idle;
         agent = gameObject.GetComponent<NavMeshAgent>();
-        anim = gameObject.GetComponent<Animator>();
         ea = gameObject.GetComponent<EnemyAttributes>();
         eAnim = gameObject.GetComponent<EnemyAnimations>();
         ra = gameObject.GetComponent<RagdollAnimator2>();
@@ -228,29 +225,30 @@ public class EnemyMovement : MonoBehaviour
     {
         //agent.Warp(ra.User_GetPosition_Center());
         yield return new WaitForSeconds(time + Random.Range(0f, 0.5f));
-        RaycastHit belowHips = ra.User_ProbeGroundBelowHips(groundMask);
-        //print(belowHips.point);
-        agent.Warp(belowHips.point);
-        ra.User_TransitionToStandingMode();
-        ra.User_FadeMusclesPower(1f, 0.02f);
-        state = EnemyState.gettingUpKnock;
-        //ra.User_TransitionToStandingMode();
-        //agent.Warp(ra.User_GetPosition_Center());
-        //ra.User_SetAllKinematic(true);
-
-        //anim.enabled = true;
-        //ra.User_FadeMusclesPower(1f, 0.02f);
-        ra.RagdollBlend = ragdollBlendValue;
-        eAnim.GetUpAnimation();
-        yield return new WaitForSeconds(2f);
-        //ra.User_FadeMusclesPower(1f);
-        //ra.User_TransitionToStandingMode();
-
-        //anim.enabled = true;
-        if (state == EnemyState.gettingUpKnock && !isDead)
+        if (!isDead)
         {
-            agent.enabled = true;
-            state = EnemyState.chasing;
+            WarpAgent();
+            ra.User_TransitionToStandingMode();
+            ra.User_FadeMusclesPower(1f, 0.02f);
+            state = EnemyState.gettingUpKnock;
+            //ra.User_TransitionToStandingMode();
+            //agent.Warp(ra.User_GetPosition_Center());
+            //ra.User_SetAllKinematic(true);
+
+            //anim.enabled = true;
+            //ra.User_FadeMusclesPower(1f, 0.02f);
+            ra.RagdollBlend = ragdollBlendValue;
+            eAnim.GetUpAnimation();
+            yield return new WaitForSeconds(2f);
+            //ra.User_FadeMusclesPower(1f);
+            //ra.User_TransitionToStandingMode();
+
+            //anim.enabled = true;
+            if (state == EnemyState.gettingUpKnock)
+            {
+                agent.enabled = true;
+                state = EnemyState.chasing;
+            }
         }
 
     }
@@ -288,25 +286,29 @@ public class EnemyMovement : MonoBehaviour
         ra.User_SwitchAllBonesUseGravity(true);
         ra.User_AddAllImpact(Vector3.up * -0.7f,0.1f,ForceMode.Impulse);
         yield return new WaitForSeconds(1.75f + Random.Range(0f,0.5f));
-        ra.User_TransitionToStandingMode();
-        state = EnemyState.gettingUpStun;
-        ra.User_FadeMusclesPower(1f,0.2f);
-        ra.RagdollBlend = ragdollBlendValue;
-        eAnim.GetUpAnimation();
-        //ra.User_TransitionToStandingMode();
-        //ra.User_SwitchFallState(true);
-        //agent.Warp(ra.User_GetPosition_Center());
-        //ra.User_SetAllKinematic(true);
-
-        yield return new WaitForSeconds(2f);
-        //ra.User_FadeMusclesPower(1f);
-        target = newTarget;
-
-        //anim.enabled = true;
-        if (state == EnemyState.gettingUpStun && !isDead)
+        if (!isDead)
         {
-            agent.enabled = true;
-            state = EnemyState.chasing;
+            WarpAgent();
+            ra.User_TransitionToStandingMode();
+            state = EnemyState.gettingUpStun;
+            ra.User_FadeMusclesPower(1f, 0.2f);
+            ra.RagdollBlend = ragdollBlendValue;
+            eAnim.GetUpAnimation();
+            //ra.User_TransitionToStandingMode();
+            //ra.User_SwitchFallState(true);
+            //agent.Warp(ra.User_GetPosition_Center());
+            //ra.User_SetAllKinematic(true);
+
+            yield return new WaitForSeconds(2f);
+            //ra.User_FadeMusclesPower(1f);
+            target = newTarget;
+
+            //anim.enabled = true;
+            if (state == EnemyState.gettingUpStun)
+            {
+                agent.enabled = true;
+                state = EnemyState.chasing;
+            }
         }
     }
 
@@ -314,12 +316,22 @@ public class EnemyMovement : MonoBehaviour
     {
         agent.enabled = true;
         agent.isStopped = true;
+        //WarpAgent();
+        ra.User_SwitchFallState(false);
+        ra.RagdollBlend = .85f;
+        ra.User_FadeMusclesPower(0.1f, 0.1f);
+    }
+
+    public void WarpAgent()
+    {
         RaycastHit belowHips = ra.User_ProbeGroundBelowHips(groundMask);
         //print(belowHips.point);
         agent.Warp(belowHips.point);
-        ra.User_SwitchFallState(false);
-        ra.RagdollBlend = .85f;
-        ra.User_FadeMusclesPower(0.4f, 0.1f);
+    }
+
+    public Vector3 PointBelowEnemyHips()
+    {
+        return ra.User_ProbeGroundBelowHips(groundMask).point;
     }
 
 

@@ -19731,7 +19731,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  duration: 4
+  duration: 2
   vfxEventOffset: 2
   resetOnInitial: 1
   useInstancedMaterials: 0
