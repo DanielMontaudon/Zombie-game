@@ -50,6 +50,7 @@ public class EnemyAnimations : MonoBehaviour
     public void GetUpAnimation()
     {
         //animancer.Play(enemyGetUpFront, 0.2f);
+        //ra.User_CanGetUpByRotation();
         if (ra.User_IsOnBack())
         {
             print("Playing On Back");

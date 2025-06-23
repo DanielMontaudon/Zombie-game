@@ -217,6 +217,14 @@ public class EnemyMovement : MonoBehaviour
         ra.User_AddAllImpact((gameObject.transform.position - forcePosition).normalized * force, 0.01f, ForceMode.Force);
         ra.User_FadeMusclesPower(0.4f, 0.1f);
 
+        /* Refresh method
+         * ra.User_UpdateRigidbodyParametersForAllBones()
+         * ra.User_UpdateColliderParametersForAllBones()
+         * ra.User_UpdatePhysicsParametersForAllBones()
+         * ra.User_UpdateAllBonesParametersAfterManualChanges()
+         */
+        RefreshRagdoll();
+
         StartCoroutine(ResetEnemy(stunTime));
     }
 
@@ -238,6 +246,9 @@ public class EnemyMovement : MonoBehaviour
             //anim.enabled = true;
             //ra.User_FadeMusclesPower(1f, 0.02f);
             ra.RagdollBlend = ragdollBlendValue;
+
+            RefreshRagdoll();
+
             eAnim.GetUpAnimation();
             yield return new WaitForSeconds(2f);
             //ra.User_FadeMusclesPower(1f);
@@ -274,6 +285,8 @@ public class EnemyMovement : MonoBehaviour
         ra.User_AddAllImpact(Vector3.up * 0.7f, 0.1f, ForceMode.Impulse);
         ra.User_FadeMusclesPower(0.4f, 0.2f);
 
+        RefreshRagdoll();
+
         StartCoroutine(ResumeNav(newTarget));
 
 
@@ -285,7 +298,7 @@ public class EnemyMovement : MonoBehaviour
         yield return new WaitForSeconds(1f);
         ra.User_SwitchAllBonesUseGravity(true);
         ra.User_AddAllImpact(Vector3.up * -0.7f,0.1f,ForceMode.Impulse);
-        yield return new WaitForSeconds(1.75f + Random.Range(0f,0.5f));
+        yield return new WaitForSeconds(1.75f + Random.Range(0.25f,0.75f));
         if (!isDead)
         {
             WarpAgent();
@@ -293,6 +306,8 @@ public class EnemyMovement : MonoBehaviour
             state = EnemyState.gettingUpStun;
             ra.User_FadeMusclesPower(1f, 0.2f);
             ra.RagdollBlend = ragdollBlendValue;
+
+            RefreshRagdoll();
             eAnim.GetUpAnimation();
             //ra.User_TransitionToStandingMode();
             //ra.User_SwitchFallState(true);
@@ -334,6 +349,13 @@ public class EnemyMovement : MonoBehaviour
         return ra.User_ProbeGroundBelowHips(groundMask).point;
     }
 
+    private void RefreshRagdoll()
+    {
+        ra.User_UpdateRigidbodyParametersForAllBones();
+        ra.User_UpdateColliderParametersForAllBones();
+        ra.User_UpdatePhysicsParametersForAllBones();
+        ra.User_UpdateAllBonesParametersAfterManualChanges();
+    }
 
 
     private void OnDrawGizmos()
