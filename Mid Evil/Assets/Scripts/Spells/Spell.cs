@@ -4,6 +4,10 @@ using UnityEngine.UI;
 [CreateAssetMenu(fileName = "Spell", menuName = "Scriptable Objects/Spell")]
 public class Spell : ScriptableObject
 {
+
+    [TextArea(10, 100)]
+    public string Description;
+
     public string spellName;
     public float damage;
     public float range;

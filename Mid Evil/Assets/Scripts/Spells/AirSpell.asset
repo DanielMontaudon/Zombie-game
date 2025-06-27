@@ -12,6 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 347de9e9d82bc274382c799c403d89d4, type: 3}
   m_Name: AirSpell
   m_EditorClassIdentifier: 
+  Description: 'Tornado Spell
+
+    Sends raycast in front of player and launches
+    enemies into the air'
   spellName: Tornado
   damage: 5
   range: 25

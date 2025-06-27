@@ -3,6 +3,7 @@ using Animancer;
 using FIMSpace.FProceduralAnimation;
 public class EnemyAnimations : MonoBehaviour
 {
+    [Header("Animation Clips")]
     [SerializeField] AnimationClip enemyRunning;
     [SerializeField] AnimationClip enemyIdle;
     [SerializeField] AnimationClip enemyGetUpBack;

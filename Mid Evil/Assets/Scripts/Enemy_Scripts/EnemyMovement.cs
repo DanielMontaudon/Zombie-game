@@ -335,6 +335,7 @@ public class EnemyMovement : MonoBehaviour
         ra.User_SwitchFallState(false);
         ra.RagdollBlend = .85f;
         ra.User_FadeMusclesPower(0.1f, 0.1f);
+        RefreshRagdoll();
     }
 
     public void WarpAgent()

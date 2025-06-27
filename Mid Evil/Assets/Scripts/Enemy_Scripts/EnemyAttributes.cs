@@ -7,14 +7,19 @@ using INab.Common;
 
 public class EnemyAttributes : MonoBehaviour
 {
+    [Header("Attributes")]
     public float enemyHealth = 100f;
     public float enemyArmor = 100f;
     public float enemyRange = 1f;
     public float enemyDamage = 2f;
     public float enemyAttackSpeed = 1f;
 
+    [Header("Special Enemy Type")]
+    public bool debugType = false;
     [SerializeField] private EnemyType enemyType = EnemyType.regular;
     [SerializeField] private GameObject enemyTypeVFX;
+
+    private bool emitReady = true;
     /*
      * Fire - 0
      * Earth - 1
@@ -24,6 +29,7 @@ public class EnemyAttributes : MonoBehaviour
      * Arcana - 5
      */
     public List<GameObject> enemyAuras = new List<GameObject>();
+    private GameObject auraInstantiated;
     //Different types resemble special infected
     public enum EnemyType
     {
@@ -36,6 +42,7 @@ public class EnemyAttributes : MonoBehaviour
         arcane
     }
 
+    [Header("Other")]
     [SerializeField] private Transform maskDissolve;
 
     private bool isDead = false;
@@ -43,24 +50,27 @@ public class EnemyAttributes : MonoBehaviour
 
     private void Start()
     {
-        float enemyTypeGenerator = Random.Range(1, 100);
-        if (enemyTypeGenerator <= 85)
-            enemyType = EnemyType.regular;
-        else if(enemyTypeGenerator <= 88)
-            enemyType = EnemyType.fire;
-        else if (enemyTypeGenerator <= 91)
-            enemyType = EnemyType.earth;
-        else if (enemyTypeGenerator <= 94)
-            enemyType = EnemyType.wind;
-        else if (enemyTypeGenerator <= 97)
-            enemyType = EnemyType.water;
-        else if (enemyTypeGenerator <= 100)
-            enemyType = EnemyType.lightning;
+        if (!debugType)
+        {
+            float enemyTypeGenerator = Random.Range(1, 100);
+            if (enemyTypeGenerator <= 85)
+                enemyType = EnemyType.regular;
+            else if (enemyTypeGenerator <= 88)
+                enemyType = EnemyType.fire;
+            else if (enemyTypeGenerator <= 91)
+                enemyType = EnemyType.earth;
+            else if (enemyTypeGenerator <= 94)
+                enemyType = EnemyType.wind;
+            else if (enemyTypeGenerator <= 97)
+                enemyType = EnemyType.water;
+            else if (enemyTypeGenerator <= 100)
+                enemyType = EnemyType.lightning;
+        }
 
         switch (enemyType)
         {
             case EnemyType.fire:
-                Instantiate(enemyAuras[0], enemyTypeVFX.transform);
+                auraInstantiated = Instantiate(enemyAuras[0], enemyTypeVFX.transform);
                 break;
             case EnemyType.earth:
                 //Instantiate(enemyAuras[1], enemyTypeVFX.transform);
@@ -69,10 +79,10 @@ public class EnemyAttributes : MonoBehaviour
                 //Instantiate(enemyAuras[2], enemyTypeVFX.transform);
                 break;
             case EnemyType.water:
-                Instantiate(enemyAuras[3], enemyTypeVFX.transform);
+                auraInstantiated = Instantiate(enemyAuras[3], enemyTypeVFX.transform);
                 break;
             case EnemyType.lightning:
-                Instantiate(enemyAuras[4], enemyTypeVFX.transform);
+                auraInstantiated = Instantiate(enemyAuras[4], enemyTypeVFX.transform);
                 break;
         }
         enemyMovement = gameObject.GetComponent<EnemyMovement>();
@@ -84,7 +94,12 @@ public class EnemyAttributes : MonoBehaviour
         switch (enemyType)
         {
             case EnemyType.fire:
-                EmitFire();
+                if (emitReady)
+                {
+                    emitReady = false;
+                    EmitFire();
+                    Invoke(nameof(EmitReset), 1f);
+                }
                 break;
             case EnemyType.earth:
                 break;
@@ -119,6 +134,7 @@ public class EnemyAttributes : MonoBehaviour
         EnemyMovement em = gameObject.GetComponent<EnemyMovement>();
         em.isDead = true;
         em.state = EnemyMovement.EnemyState.dead;
+        Destroy(auraInstantiated);
         yield return new WaitForSeconds(2f);
 
         //NEEDS BIG WORK, CHANGE ORDER THINGS HAPPEN MAYBE
@@ -132,9 +148,12 @@ public class EnemyAttributes : MonoBehaviour
         Destroy(this.gameObject);
     }
 
-
+    private void EmitReset()
+    {
+        emitReady = true;
+    }
     private void EmitFire()
     {
-
+        print("pulse");
     }
 }
