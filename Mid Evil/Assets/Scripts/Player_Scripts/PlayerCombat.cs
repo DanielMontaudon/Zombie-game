@@ -106,7 +106,7 @@ public class PlayerCombat : MonoBehaviour
             Invoke(nameof(LeftCooldown), leftSpell.cooldown);
         }
         
-        //Secondary Ability (Tornado)
+        //Secondary Ability (Tornado) Punch
         if (Input.GetKey(rightKeybind) && rightOffCooldown && playerStats.mana > rightSpell.manaCost)
         {
             rightOffCooldown = false;
@@ -337,6 +337,12 @@ public class PlayerCombat : MonoBehaviour
 
                 //print("Dash casted");
                 playerStats.mana -= spell.manaCost;
+            }
+            //Punch "Spell" - Uses Stamina to push enemies in vision (cone cast) back a bit
+            //zombie_hit_react_F_01 animation clip in mind
+            else if (spell.spellName.Equals("Punch") && playerStats.stamina >= spell.manaCost)
+            {
+
             }
             //Water Spell ??
         }
