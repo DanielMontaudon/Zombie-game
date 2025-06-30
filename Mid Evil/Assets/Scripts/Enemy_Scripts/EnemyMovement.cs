@@ -206,26 +206,30 @@ public class EnemyMovement : MonoBehaviour
     //Apply spell knockback from player position with specified spell force
     public void Knockback(Vector3 forcePosition, float force, float stunTime)
     {
-        state = EnemyState.knocked;
- 
-        //ra.User_SetAllKinematic(false);
+        //Earth enemy type is unaffected by cc
+        if (ea.GetEnemyType() != EnemyAttributes.EnemyType.earth)
+        {
+            state = EnemyState.knocked;
 
-        //anim.enabled = false;
-        agent.enabled = false;
-        ra.User_SwitchFallState(false);
-        ra.RagdollBlend = .85f;
-        ra.User_AddAllImpact((gameObject.transform.position - forcePosition).normalized * force, 0.01f, ForceMode.Force);
-        ra.User_FadeMusclesPower(0.4f, 0.1f);
+            //ra.User_SetAllKinematic(false);
 
-        /* Refresh method
-         * ra.User_UpdateRigidbodyParametersForAllBones()
-         * ra.User_UpdateColliderParametersForAllBones()
-         * ra.User_UpdatePhysicsParametersForAllBones()
-         * ra.User_UpdateAllBonesParametersAfterManualChanges()
-         */
-        RefreshRagdoll();
+            //anim.enabled = false;
+            agent.enabled = false;
+            ra.User_SwitchFallState(false);
+            ra.RagdollBlend = .85f;
+            ra.User_AddAllImpact((gameObject.transform.position - forcePosition).normalized * force, 0.01f, ForceMode.Force);
+            ra.User_FadeMusclesPower(0.4f, 0.1f);
 
-        StartCoroutine(ResetEnemy(stunTime));
+            /* Refresh method
+             * ra.User_UpdateRigidbodyParametersForAllBones()
+             * ra.User_UpdateColliderParametersForAllBones()
+             * ra.User_UpdatePhysicsParametersForAllBones()
+             * ra.User_UpdateAllBonesParametersAfterManualChanges()
+             */
+            RefreshRagdoll();
+
+            StartCoroutine(ResetEnemy(stunTime));
+        }
     }
 
     //Reset physics to knockbacked enemy
@@ -267,27 +271,31 @@ public class EnemyMovement : MonoBehaviour
     //lifts enemy into air and resumes chase after landing
     public void StopNav(Transform newTarget)
     {
-        state = EnemyState.stunned;
+        //Earth enemy type is unaffected by cc
+        if (ea.GetEnemyType() != EnemyAttributes.EnemyType.earth)
+        {
+            state = EnemyState.stunned;
 
-        //ra.User_SetAllKinematic(false);
-        ra.User_SwitchAllBonesUseGravity(false);
+            //ra.User_SetAllKinematic(false);
+            ra.User_SwitchAllBonesUseGravity(false);
 
-        //anim.enabled = false;
-        agent.enabled = false;
+            //anim.enabled = false;
+            agent.enabled = false;
 
-        //Stop Enemy
-        ra.User_SetAllVelocity(Vector3.zero);
-        //Unlock Anchor Bone
-        ra.User_SwitchFallState(false);
-        //Make Ragdoll Blend with Physical animated body 
-        ra.RagdollBlend = .85f;
-        //Add Force Upward
-        ra.User_AddAllImpact(Vector3.up * 0.7f, 0.1f, ForceMode.Impulse);
-        ra.User_FadeMusclesPower(0.4f, 0.2f);
+            //Stop Enemy
+            ra.User_SetAllVelocity(Vector3.zero);
+            //Unlock Anchor Bone
+            ra.User_SwitchFallState(false);
+            //Make Ragdoll Blend with Physical animated body 
+            ra.RagdollBlend = .85f;
+            //Add Force Upward
+            ra.User_AddAllImpact(Vector3.up * 0.7f, 0.1f, ForceMode.Impulse);
+            ra.User_FadeMusclesPower(0.4f, 0.2f);
 
-        RefreshRagdoll();
+            RefreshRagdoll();
 
-        StartCoroutine(ResumeNav(newTarget));
+            StartCoroutine(ResumeNav(newTarget));
+        }
 
 
     }

@@ -30,6 +30,7 @@ public class EnemyAttributes : MonoBehaviour
      */
     public List<GameObject> enemyAuras = new List<GameObject>();
     private GameObject auraInstantiated;
+
     //Different types resemble special infected
     public enum EnemyType
     {
@@ -41,6 +42,9 @@ public class EnemyAttributes : MonoBehaviour
         lightning,
         arcane
     }
+    [Header("Nav Agent Attributes")]
+    private NavMeshAgent agent;
+    public float enemySpeed;
 
     [Header("Other")]
     [SerializeField] private Transform maskDissolve;
@@ -50,6 +54,9 @@ public class EnemyAttributes : MonoBehaviour
 
     private void Start()
     {
+        agent = gameObject.GetComponent<NavMeshAgent>();
+        agent.speed = enemySpeed;
+
         if (!debugType)
         {
             float enemyTypeGenerator = Random.Range(1, 100);
@@ -73,6 +80,7 @@ public class EnemyAttributes : MonoBehaviour
                 auraInstantiated = Instantiate(enemyAuras[0], enemyTypeVFX.transform);
                 break;
             case EnemyType.earth:
+                agent.speed = enemySpeed/2;
                 //Instantiate(enemyAuras[1], enemyTypeVFX.transform);
                 break;
             case EnemyType.wind:
@@ -102,6 +110,7 @@ public class EnemyAttributes : MonoBehaviour
                 }
                 break;
             case EnemyType.earth:
+                EarthLoop();
                 break;
             case EnemyType.wind:
                 break;
@@ -155,5 +164,15 @@ public class EnemyAttributes : MonoBehaviour
     private void EmitFire()
     {
         print("pulse");
+    }
+
+    private void EarthLoop()
+    {
+
+    }
+
+    public EnemyType GetEnemyType()
+    {
+        return enemyType;
     }
 }
